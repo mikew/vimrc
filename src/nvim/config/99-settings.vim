@@ -8,6 +8,7 @@ set number
 syntax enable         " Turn on syntax highlighting allowing local overrides
 
 colorscheme base16-eighties
+set termguicolors
 
 ""
 "" Whitespace
@@ -20,6 +21,8 @@ set expandtab                     " use spaces, not tabs
 set list                          " Show invisible characters
 set backspace=indent,eol,start    " backspace through everything in insert mode
 set cursorline
+set mouse=a
+set colorcolumn=80
 
 " List chars
 set listchars=""                  " Reset the listchars
@@ -29,6 +32,7 @@ set listchars+=extends:>          " The character to show in the last column whe
                                   " off and the line continues beyond the right of the screen
 set listchars+=precedes:<         " The character to show in the last column when wrap is
                                   " off and the line continues beyond the left of the screen
+set guioptions=
 
 ""
 "" Searching
@@ -68,10 +72,21 @@ set wildignore+=*.swp,*~,._*
 "" Backup and swap files
 ""
 
-" where to put backup files.
-" exe 'set backupdir^=' . g:janus_vim_path . '/tmp'
-" where to put swap files.
-" exe 'set directory^=' . g:janus_vim_path . '/tmp'
-" where to put undo files.
-" exe 'set undodir^=' . g:janus_vim_path . '/tmp'
+set undofile
+set undodir^=~/.cache/vim
+set backupdir=~/.cache/vim
+set directory=~/.cache/vim
+let g:netrw_home='~/.cache/vim'
+if !has('nvim')
+  set viminfofile=~/.cache/vim/viminfo
+endif
 
+if has('gui')
+  if has('unix')
+    source $VIMRUNTIME/mswin.vim
+    behave mswin
+  endif
+endif
+
+map Q <Nop>
+map q: :q
