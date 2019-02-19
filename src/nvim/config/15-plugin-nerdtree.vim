@@ -1,7 +1,8 @@
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
-let NERDTreeHijackNetrw = 0
+let g:NERDTreeHijackNetrw = 0
+let g:NERDTreeRespectWildIgnore = 1
 let NERDTreeIgnore=['\.pyc$', '\.pyo$', '\.rbc$', '\.rbo$', '\.class$', '\.o$', '\~$', '\.git$']
 
 map <leader>n :NERDTreeToggle<CR>
