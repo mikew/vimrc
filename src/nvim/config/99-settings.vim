@@ -81,12 +81,5 @@ if !has('nvim')
   set viminfofile=~/.cache/vim/viminfo
 endif
 
-if has('gui')
-  if has('unix')
-    source $VIMRUNTIME/mswin.vim
-    behave mswin
-  endif
-endif
-
 map Q <Nop>
 map q: :q
