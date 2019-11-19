@@ -14,3 +14,5 @@ let g:ale_fixers['typescript.tsx'] = g:ale_fixers['typescript']
 
 let g:ale_fixers['javascript'] = ['eslint', 'prettier']
 let g:ale_fixers['javascript.jsx'] = g:ale_fixers['javascript']
+
+nmap gh <Plug>(ale_hover)
