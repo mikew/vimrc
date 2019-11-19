@@ -117,3 +117,6 @@ endif
 
 map Q <Nop>
 map q: :q
+
+command PlugSync PlugClean | PlugInstall | PlugUpdate
+set showtabline=2
