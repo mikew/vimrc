@@ -4,8 +4,12 @@
 
 " Show line numbers
 set number
-" set ruler             " Show line and column number
-syntax enable         " Turn on syntax highlighting allowing local overrides
+
+" Show line and column number
+" set ruler
+
+" Turn on syntax highlighting allowing local overrides
+syntax enable
 
 colorscheme base16-eighties
 set termguicolors
@@ -14,34 +18,64 @@ set termguicolors
 "" Whitespace
 ""
 
-set nowrap                        " don't wrap lines
-set tabstop=2                     " a tab is two spaces
-set shiftwidth=2                  " an autoindent (with <<) is two spaces
-set expandtab                     " use spaces, not tabs
-set list                          " Show invisible characters
-set backspace=indent,eol,start    " backspace through everything in insert mode
+" don't wrap lines
+set nowrap
+
+" a tab is two spaces
+set tabstop=2
+
+" an autoindent (with <<) is two spaces
+set shiftwidth=2
+
+" use spaces, not tabs
+set expandtab
+
+" Show invisible characters
+set list
+
+" backspace through everything in insert mode
+set backspace=indent,eol,start
+
 set cursorline
-set mouse=a
 set colorcolumn=80
+set mouse=a
 
 " List chars
-set listchars=""                  " Reset the listchars
-set listchars=tab:\ \             " a tab should display as "  ", trailing whitespace as "."
-set listchars+=trail:.            " show trailing spaces as dots
-set listchars+=extends:>          " The character to show in the last column when wrap is
-                                  " off and the line continues beyond the right of the screen
-set listchars+=precedes:<         " The character to show in the last column when wrap is
-                                  " off and the line continues beyond the left of the screen
+
+" Reset the listchars
+set listchars=""
+
+" a tab should display as "  ", trailing whitespace as "."
+set listchars=tab:\ \  " comment just so whitespace isn't truncated.
+
+" show trailing spaces as dots
+set listchars+=trail:.
+
+" The character to show in the last column when wrap is
+" off and the line continues beyond the right of the screen
+set listchars+=extends:>
+
+" The character to show in the last column when wrap is
+" off and the line continues beyond the left of the screen
+set listchars+=precedes:<
+
 set guioptions=
 
 ""
 "" Searching
 ""
 
-set hlsearch    " highlight matches
-set incsearch   " incremental searching
-set ignorecase  " searches are case insensitive...
-set smartcase   " ... unless they contain at least one capital letter
+" highlight matches
+set hlsearch
+
+" incremental searching
+set incsearch
+
+" searches are case insensitive...
+set ignorecase
+
+" ... unless they contain at least one capital letter
+set smartcase
 
 ""
 "" Wild settings
