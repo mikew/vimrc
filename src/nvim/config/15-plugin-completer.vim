@@ -8,18 +8,13 @@ let g:asyncomplete_smart_completion = 1
 let g:asyncomplete_auto_popup = 1
 let g:asyncomplete_remove_duplicates = 1
 
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
-imap <c-space> <Plug>(asyncomplete_force_refresh)
+imap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+imap <expr> <Down>  pumvisible() ? "\<C-n>" : "\<Down>"
+imap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+imap <expr> <Up>    pumvisible() ? "\<C-p>" : "\<Up>"
+imap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
 
-au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
-      \ 'name': 'buffer',
-      \ 'priority': 10,
-      \ 'whitelist': ['*'],
-      \ 'blacklist': [],
-      \ 'completor': function('asyncomplete#sources#buffer#completor'),
-      \ }))
+imap <c-space> <Plug>(asyncomplete_force_refresh)
 
 au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#ale#get_source_options({
       \ 'priority': 10,

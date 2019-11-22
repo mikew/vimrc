@@ -1,5 +1,4 @@
 Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
 
 let g:NERDTreeHijackNetrw = 0
 let g:NERDTreeRespectWildIgnore = 1
@@ -15,7 +14,17 @@ let NERDTreeIgnore=[
       \ '\.git$'
       \ ]
 
-map <leader>n :NERDTreeToggle<CR>
+" map <leader>n :NERDTreeToggle<CR>
+map <leader>n :call <sid>wut()<cr>
+
+function! s:wut()
+  if g:NERDTree.IsOpen()
+    NERDTreeClose
+  else
+    NERDTree
+    NERDTreeMirror
+  endif
+endfunction
 
 " Open nerdtree when not passed a file
 autocmd stdinreadpre * let s:std_in=1
