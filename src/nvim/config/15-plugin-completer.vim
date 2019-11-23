@@ -16,6 +16,14 @@ imap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR\<Plug>Discre
 
 imap <c-space> <Plug>(asyncomplete_force_refresh)
 
+au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+      \ 'name': 'buffer',
+      \ 'priority': 10,
+      \ 'whitelist': ['*'],
+      \ 'blacklist': [],
+      \ 'completor': function('asyncomplete#sources#buffer#completor'),
+      \ }))
+
 au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#ale#get_source_options({
       \ 'priority': 10,
       \ }))
