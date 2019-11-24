@@ -4,6 +4,11 @@ Plug 'Shougo/neco-vim'
 Plug 'prabirshrestha/asyncomplete-necovim.vim'
 Plug 'prabirshrestha/asyncomplete-file.vim'
 
+Plug 'prabirshrestha/async.vim'
+Plug 'tsufeki/asyncomplete-fuzzy-match', {
+      \ 'do': 'cargo build --release',
+      \ }
+
 let g:asyncomplete_smart_completion = 1
 let g:asyncomplete_auto_popup = 1
 let g:asyncomplete_remove_duplicates = 1
