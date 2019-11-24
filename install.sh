@@ -16,7 +16,7 @@ main() {
     ~/.cache/vim \
     ~/.cache/vim-plug
 
-  vim +'PlugClean | PlugInstall | PlugUpdate | PlugClean'
+  vim +PlugSync
 }
 
 main "$@"
