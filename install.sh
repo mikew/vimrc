@@ -9,8 +9,10 @@ main() {
   # vim
   mv ~/.vimrc ~/.vimrc.bak || true
   mv ~/.vim ~/.vim.bak || true
+  mv ~/.gvimrc ~/.gvimrc.bak || true
   ln -sf "$PWD/src/nvim" ~/.vim
   ln -sf "$PWD/src/nvim/init.vim" ~/.vimrc
+  ln -sf "$PWD/src/nvim/.gvimrc" ~/.gvimrc
 
   mkdir -p \
     ~/.cache/vim \

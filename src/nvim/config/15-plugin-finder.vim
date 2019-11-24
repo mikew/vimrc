@@ -5,3 +5,7 @@ let g:ctrlp_prompt_mappings = {
       \ 'AcceptSelection("e")': ['<c-t>'],
       \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
       \ }
+
+if has('gui_running') && has('mac')
+  let g:ctrlp_map="<D-t>"
+endif

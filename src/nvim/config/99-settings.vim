@@ -122,3 +122,11 @@ set noerrorbells
 
 command PlugSync PlugClean | PlugInstall | PlugUpdate
 set showtabline=2
+
+if has('gui_running')
+  set linespace=3
+
+  if has('gui_macvim')
+    set guifont=FiraMono-Regular:h12
+  endif
+endif
