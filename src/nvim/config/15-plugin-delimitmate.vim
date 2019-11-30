@@ -4,6 +4,7 @@ let g:endwise_no_mappings = 1
 imap <C-X><CR> <CR><Plug>AlwaysEnd
 
 Plug 'Raimondi/delimitMate'
+" Handled with completer.
 "let delimitMate_expand_cr = 1
 let delimitMate_balance_matchpairs = 1
 let delimitMate_excluded_regions = ""
