@@ -130,3 +130,6 @@ if has('gui_running')
     set guifont=FiraMono-Regular:h12
   endif
 endif
+
+" quickfix open in new tabs by default.
+set switchbuf+=usetab,newtab
