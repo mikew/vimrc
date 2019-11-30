@@ -1,0 +1,15 @@
+{
+  "suggest.autoTrigger": "always",
+  "tsserver.formatOnType": false,
+  "typescript.format.enabled": false,
+  "javascript.format.enabled": false,
+  "tsserver.implicitProjectConfig.checkJs": true,
+
+  "coc.preferences.formatOnType": false,
+
+  "diagnostic.displayByAle": true,
+
+  "eslint.autoFix":false,
+  "eslint.autoFixOnSave": false,
+  "eslint.run": "onSave"
+}

@@ -1,47 +1,68 @@
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-buffer.vim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'Shougo/neco-vim'
-Plug 'prabirshrestha/asyncomplete-necovim.vim'
-Plug 'prabirshrestha/asyncomplete-file.vim'
-
-Plug 'prabirshrestha/async.vim'
-Plug 'tsufeki/asyncomplete-fuzzy-match', {
-      \ 'do': 'cargo build --release',
-      \ }
-
-let g:asyncomplete_smart_completion = 1
-let g:asyncomplete_auto_popup = 1
-let g:asyncomplete_remove_duplicates = 1
+Plug 'neoclide/coc-neco'
 
 imap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 imap <expr> <Down>  pumvisible() ? "\<C-n>" : "\<Down>"
 imap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 imap <expr> <Up>    pumvisible() ? "\<C-p>" : "\<Up>"
-imap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
 
-imap <c-space> <Plug>(asyncomplete_force_refresh)
+" imap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+imap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
 
-au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
-      \ 'name': 'buffer',
-      \ 'priority': 10,
-      \ 'whitelist': ['*'],
-      \ 'blacklist': [],
-      \ 'completor': function('asyncomplete#sources#buffer#completor'),
-      \ }))
+inoremap <silent><expr> <c-space> coc#refresh()
 
-au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#ale#get_source_options({
-      \ 'priority': 10,
-      \ }))
+" autocmd CursorHold * silent call CocActionAsync('highlight')
 
-au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#necovim#get_source_options({
-      \ 'name': 'necovim',
-      \ 'whitelist': ['vim'],
-      \ 'completor': function('asyncomplete#sources#necovim#completor'),
-      \ }))
+" TODO Move to settings.vim?
 
-au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
-      \ 'name': 'file',
-      \ 'whitelist': ['*'],
-      \ 'priority': 10,
-      \ 'completor': function('asyncomplete#sources#file#completor')
-      \ }))
+" if hidden is not set, TextEdit might fail.
+set hidden
+
+" Some servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
+
+" Better display for messages
+" set cmdheight=2
+
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
+
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
+
+" always show signcolumns
+set signcolumn=yes
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+nnoremap <silent> gh :call CocActionAsync('doHover')<cr>
+nnoremap <silent> K :call <SID>goto_definition()<CR>
+
+function! s:goto_definition()
+  if (index(['vim', 'help'], &filetype) >= 0)
+    execute 'help ' . expand('<cword>')
+  else
+    call CocActionAsync('doHover')
+  endif
+endfunction
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Update signature help on jump placeholder
+autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
