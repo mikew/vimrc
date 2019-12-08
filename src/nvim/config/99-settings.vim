@@ -119,6 +119,8 @@ map Q <Nop>
 map q: :q
 
 set noerrorbells
+set belloff=all
+set vb t_vb=
 
 command PlugSync PlugClean | PlugInstall | PlugUpdate
 set showtabline=2
