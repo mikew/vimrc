@@ -1,6 +1,4 @@
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'Shougo/neco-vim'
-Plug 'neoclide/coc-neco'
 
 imap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 imap <expr> <Down>  pumvisible() ? "\<C-n>" : "\<Down>"
