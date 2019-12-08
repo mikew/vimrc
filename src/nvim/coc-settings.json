@@ -1,5 +1,7 @@
 {
   "suggest.autoTrigger": "always",
+  // https://github.com/neoclide/coc.nvim/wiki/F.A.Q#sign-of-diagnostics-not-shown
+  "diagnostic.signOffset": 9999999,
   "tsserver.formatOnType": false,
   "typescript.format.enabled": false,
   "javascript.format.enabled": false,
