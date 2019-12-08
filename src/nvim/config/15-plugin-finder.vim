@@ -1,18 +1,18 @@
-Plug 'ctrlpvim/ctrlp.vim'
+Plug '/usr/local/opt/fzf'
 
-let g:ctrlp_map = ''
-let g:ctrlp_user_command = 'ag %s --files-with-matches --nocolor --hidden --ignore .git -g ""'
-let g:ctrlp_prompt_mappings = {
-      \ 'AcceptSelection("e")': ['<c-t>'],
-      \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
+let $FZF_DEFAULT_COMMAND="fd --type file --color never --hidden --exclude .git"
+let $FZF_DEFAULT_OPTS = ' --inline-info'
+
+let g:fzf_action = {
+      \ 'enter': 'tab split'
       \ }
 
-nmap <C-p> :CtrlP<cr>
-imap <C-p> <esc>:CtrlP<cr>
+nmap <C-p> :FZF<cr>
+imap <C-p> <esc>:FZF<cr>
 
-if has('gui_running') && has('mac')
-  nmap <D-t> :CtrlP<cr>
-  imap <D-t> <esc>:CtrlP<cr>
-  nmap <D-p> :CtrlP<cr>
-  imap <D-p> <esc>:CtrlP<cr>
+if (has('gui_running') && has('mac')) || has('gui_vimr')
+  nmap <D-t> :FZF<cr>
+  imap <D-t> <esc>:FZF<cr>
+  nmap <D-p> :FZF<cr>
+  imap <D-p> <esc>:FZF<cr>
 endif
