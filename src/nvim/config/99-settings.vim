@@ -135,3 +135,6 @@ endif
 
 " quickfix open in new tabs by default.
 set switchbuf+=usetab,newtab
+
+" Hide ~ / EOF markers
+autocmd User * highlight NonText guifg=bg ctermfg=bg
