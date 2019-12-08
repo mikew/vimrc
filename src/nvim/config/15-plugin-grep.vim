@@ -1,8 +1,11 @@
-Plug 'yegappan/grep'
+Plug 'dyng/ctrlsf.vim'
 
-" Only wrapped in execute cause we want the space at the end of the line.
-execute 'nnoremap <C-F> :Ag '
+nmap <C-F>f <Plug>CtrlSFPrompt
 
-if has('gui_running') && has('mac')
-  execute 'nnoremap <D-F> :Ag '
+if (has('gui_running') && has('mac')) || has('gui_vimr')
+  if has('nvim')
+    nmap <S-D-f> <Plug>CtrlSFPrompt
+  else
+    nmap <D-F> <Plug>CtrlSFPrompt
+  endif
 endif
