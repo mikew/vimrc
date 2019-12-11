@@ -1,13 +1,21 @@
 {
+  // Main.
   "suggest.autoTrigger": "always",
+  "coc.preferences.jumpCommand": "split",
   // https://github.com/neoclide/coc.nvim/wiki/F.A.Q#sign-of-diagnostics-not-shown
   "diagnostic.signOffset": 9999999,
+
+  // Use diagnostic-languageserver for formatting when possible.
   "tsserver.formatOnType": false,
   "typescript.format.enabled": false,
   "javascript.format.enabled": false,
-  "tsserver.implicitProjectConfig.checkJs": true,
-
   "coc.preferences.formatOnType": false,
+
+  "coc.preferences.colorSupport": false,
+
+  // TypeScript.
+  "tsserver.implicitProjectConfig.checkJs": true,
+  "tsserver.disableAutomaticTypeAcquisition": true,
 
   // Auto formatting.
   "coc.preferences.formatOnSaveFiletypes": [
