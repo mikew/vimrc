@@ -64,3 +64,7 @@ nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 
 " Find symbol of current document
 nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+
+autocmd VimLeave * silent !prettier_d_slim stop
+autocmd VimLeave * silent !eslint_d stop
+autocmd VimLeave * silent !stylelint_d stop
