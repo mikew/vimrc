@@ -6,7 +6,7 @@ map <C-_> :TComment<cr>
 imap <C-_> <Esc>:TComment<cr>i
 vmap <C-_> :TComment<cr>gv
 
-if has('gui_running') && has('mac')
+if vimrc#has_gui_mac()
   map <D-/> :TComment<cr>
   imap <D-/> <Esc>:TComment<cr>i
   vmap <D-/> :TComment<cr>gv

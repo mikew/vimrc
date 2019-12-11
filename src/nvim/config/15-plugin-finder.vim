@@ -10,7 +10,7 @@ let g:fzf_action = {
 nmap <C-p> :FZF<cr>
 imap <C-p> <esc>:FZF<cr>
 
-if (has('gui_running') && has('mac')) || has('gui_vimr')
+if vimrc#has_gui_mac()
   nmap <D-t> :FZF<cr>
   imap <D-t> <esc>:FZF<cr>
   nmap <D-p> :FZF<cr>
