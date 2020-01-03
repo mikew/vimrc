@@ -24,4 +24,13 @@ let s:font = s:get_value_or_star(s:font_map, s:vim_ui)
 let s:font_size = s:get_value_or_star(s:font_size_map, s:vim_ui)
 let s:linespace = s:get_value_or_star(s:linespace_map, s:vim_ui)
 
+if s:vim_ui == 'macvim'
+  " macmenu *needs* to be called in gvimrc
+  macmenu File.New\ Tab key=<nop>
+  macmenu File.Print key=<nop>
+
+  execute 'set linespace=' . s:linespace
+  execute 'set guifont=' . s:font . ':h' . s:font_size
+endif
+
 doautocmd User VimrcGUIEnter

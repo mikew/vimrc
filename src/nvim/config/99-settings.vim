@@ -125,14 +125,6 @@ set vb t_vb=
 command PlugSync PlugClean | PlugInstall | PlugUpdate
 set showtabline=2
 
-if has('gui_running')
-  set linespace=3
-
-  if has('gui_macvim')
-    set guifont=FiraMono-Regular:h12
-  endif
-endif
-
 " quickfix open in new tabs by default.
 set switchbuf+=usetab,newtab
 
