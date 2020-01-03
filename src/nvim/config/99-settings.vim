@@ -130,11 +130,3 @@ set switchbuf+=usetab,newtab
 
 " Hide ~ / EOF markers
 autocmd User * highlight NonText guifg=bg ctermfg=bg
-
-if has('gui_vimr')
-  nmap <S-D-{> gT
-  nmap <S-D-}> gt
-
-  imap <S-D-{> <esc>gT
-  imap <S-D-}> <esc>gt
-endif

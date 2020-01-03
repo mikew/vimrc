@@ -33,4 +33,12 @@ if s:vim_ui == 'macvim'
   execute 'set guifont=' . s:font . ':h' . s:font_size
 endif
 
+if s:vim_ui == 'vimr'
+  nmap <S-D-{> gT
+  nmap <S-D-}> gt
+
+  imap <S-D-{> <C-o>gT
+  imap <S-D-}> <C-o>gt
+endif
+
 doautocmd User VimrcGUIEnter
