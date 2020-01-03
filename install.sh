@@ -12,7 +12,7 @@ main() {
   mv ~/.gvimrc ~/.gvimrc.bak || true
   ln -sf "$PWD/src/nvim" ~/.vim
   ln -sf "$PWD/src/nvim/init.vim" ~/.vimrc
-  ln -sf "$PWD/src/nvim/.gvimrc" ~/.gvimrc
+  ln -sf "$PWD/src/nvim/ginit.vim" ~/.gvimrc
 
   mkdir -p \
     ~/.cache/vim \
