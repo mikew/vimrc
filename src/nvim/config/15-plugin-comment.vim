@@ -3,11 +3,9 @@ Plug 'tomtom/tcomment_vim'
 let g:tcomment#blank_lines = 0
 
 map <C-_> :TComment<cr>
-imap <C-_> <Esc>:TComment<cr>i
+imap <C-_> <C-o>:TComment<cr>i
 vmap <C-_> :TComment<cr>gv
 
-if vimrc#has_gui_mac()
-  map <D-/> :TComment<cr>
-  imap <D-/> <Esc>:TComment<cr>i
-  vmap <D-/> :TComment<cr>gv
-endif
+autocmd User VimrcGUIEnter map <D-/> :TComment<cr>
+autocmd User VimrcGUIEnter imap <D-/> <C-o>:TComment<cr>i
+autocmd User VimrcGUIEnter vmap <D-/> :TComment<cr>gv

@@ -23,3 +23,5 @@ let s:linespace_map = {
 let s:font = s:get_value_or_star(s:font_map, s:vim_ui)
 let s:font_size = s:get_value_or_star(s:font_size_map, s:vim_ui)
 let s:linespace = s:get_value_or_star(s:linespace_map, s:vim_ui)
+
+doautocmd User VimrcGUIEnter
