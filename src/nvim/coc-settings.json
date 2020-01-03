@@ -110,6 +110,8 @@
       "debounce": 50,
       "args": [
         "--stdin",
+        "--stdin-filename",
+        "%filepath",
         "--format",
         "json"
       ],
@@ -186,6 +188,8 @@
       "command": "./node_modules/.bin/eslint_d",
       "args": [
         "--stdin",
+        "--stdin-filename",
+        "%filepath",
         "--fix-to-stdout"
       ],
       "rootPatterns": [
