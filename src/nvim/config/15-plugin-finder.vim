@@ -7,12 +7,10 @@ let g:fzf_action = {
       \ 'enter': 'tab split'
       \ }
 
-nmap <C-p> :FZF<cr>
-imap <C-p> <esc>:FZF<cr>
+nmap <C-P> :FZF<cr>
+imap <C-P> <C-o>:FZF<cr>
 
-if vimrc#has_gui_mac()
-  nmap <D-t> :FZF<cr>
-  imap <D-t> <esc>:FZF<cr>
-  nmap <D-p> :FZF<cr>
-  imap <D-p> <esc>:FZF<cr>
-endif
+autocmd User VimrcGUIEnter nmap <D-T> :FZF<cr>
+autocmd User VimrcGUIEnter imap <D-T> <C-o>:FZF<cr>
+autocmd User VimrcGUIEnter nmap <D-P> :FZF<cr>
+autocmd User VimrcGUIEnter imap <D-P> <C-o>:FZF<cr>

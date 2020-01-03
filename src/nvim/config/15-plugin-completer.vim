@@ -57,13 +57,14 @@ nmap <leader>rn <Plug>(coc-rename)
 autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 
 " Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
+nmap <leader>ac <Plug>(coc-codeaction)
+autocmd User VimrcGUIEnter nmap <D-.> <Plug>(coc-codeaction)
 
 " Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+nnoremap <silent> <space>a :<C-u>CocList diagnostics<cr>
 
 " Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+nnoremap <silent> <space>o :<C-u>CocList outline<cr>
 
 autocmd VimLeave * silent !prettier_d_slim stop
 autocmd VimLeave * silent !eslint_d stop

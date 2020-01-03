@@ -17,6 +17,15 @@
   "tsserver.implicitProjectConfig.checkJs": true,
   "tsserver.disableAutomaticTypeAcquisition": true,
 
+  "languageserver": {
+    "clangd": {
+      "command": "clangd",
+      "args": ["--background-index"],
+      "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["c", "cpp", "objc", "objcpp"]
+    }
+  },
+
   // Auto formatting.
   "coc.preferences.formatOnSaveFiletypes": [
     "css",

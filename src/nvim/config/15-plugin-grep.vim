@@ -2,10 +2,9 @@ Plug 'dyng/ctrlsf.vim'
 
 nmap <C-F>f <Plug>CtrlSFPrompt
 
-if vimrc#has_gui_mac()
-  if has('nvim')
-    nmap <S-D-f> <Plug>CtrlSFPrompt
-  else
-    nmap <D-F> <Plug>CtrlSFPrompt
-  endif
+if has('nvim')
+  autocmd User VimrcGUIEnter nmap <S-D-f> <Plug>CtrlSFPrompt
+  autocmd User VimrcGUIEnter nmap <S-D-F> <Plug>CtrlSFPrompt
+else
+  autocmd User VimrcGUIEnter nmap <D-F> <Plug>CtrlSFPrompt
 endif
