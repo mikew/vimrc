@@ -1,5 +1,7 @@
 Plug 'dyng/ctrlsf.vim'
 
+let g:ctrlsf_case_sensitive = 'smart'
+
 nmap <C-F>f <Plug>CtrlSFPrompt
 
 if has('nvim')
