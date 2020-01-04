@@ -4,6 +4,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-eunuch'
 Plug 'rchicoli/vim-zoomwin'
+Plug 'farmergreg/vim-lastplace'
 Plug 'ntpeters/vim-better-whitespace'
 let g:better_whitespace_operator = ''
 
