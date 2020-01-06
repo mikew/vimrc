@@ -58,6 +58,7 @@ autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 
 " Remap for do codeAction of current line
 nmap <leader>ac <Plug>(coc-codeaction)
+nmap <C-.> <Plug>(coc-codeaction)
 autocmd User VimrcGUIEnter nmap <D-.> <Plug>(coc-codeaction)
 
 " Show all diagnostics

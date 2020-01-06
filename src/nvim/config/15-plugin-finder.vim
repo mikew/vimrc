@@ -29,10 +29,12 @@ let g:fzf_action = {
       \ 'enter': 'tab split'
       \ }
 
-nmap <C-P> :FZF<cr>
-imap <C-P> <C-o>:FZF<cr>
+nmap <C-p> :FZF<cr>
+imap <C-p> <C-o>:FZF<cr>
+nmap <C-t> :FZF<cr>
+imap <C-t> <C-o>:FZF<cr>
 
-autocmd User VimrcGUIEnter nmap <D-T> :FZF<cr>
-autocmd User VimrcGUIEnter imap <D-T> <C-o>:FZF<cr>
-autocmd User VimrcGUIEnter nmap <D-P> :FZF<cr>
-autocmd User VimrcGUIEnter imap <D-P> <C-o>:FZF<cr>
+autocmd User VimrcGUIEnter nmap <D-t> :FZF<cr>
+autocmd User VimrcGUIEnter imap <D-t> <C-o>:FZF<cr>
+autocmd User VimrcGUIEnter nmap <D-p> :FZF<cr>
+autocmd User VimrcGUIEnter imap <D-p> <C-o>:FZF<cr>
