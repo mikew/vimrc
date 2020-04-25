@@ -80,24 +80,32 @@ if s:vim_ui == 'nvim-qt'
     nmap <M-Right> w
     imap <M-Right> <C-o>w
 
-    " Tab navigation.
-    nmap <S-D-]> gt
-    imap <S-D-]> <C-o>gt
+    " New Tab.
+    nmap <D-n> :tabnew<CR>
+    " Intentionally leave insert mode due to switching buffers.
+    imap <D-n> <Esc>:tabnew<CR>
 
-    nmap <S-D-[> gT
-    imap <S-D-[> <C-o>gT
+    " Tab navigation.
+    nmap <D-}> gt
+    " Intentionally leave insert mode due to switching buffers.
+    imap <D-}> <Esc>gt
+
+    nmap <D-{> gT
+    " Intentionally leave insert mode due to switching buffers.
+    imap <D-{> <Esc>gT
 
     " Close Tab.
     nmap <D-w> :tabclose<CR>
-    imap <D-w> :tabclose<CR>
+    " Intentionally leave insert mode due to switching buffers.
+    imap <D-w> <Esc>:tabclose<CR>
 
     " Close Window.
-    nmap <D-w> :qa<CR>
-    imap <D-w> :qa<CR>
+    nmap <D-W> :qa<CR>
+    imap <D-W> :qa<CR>
 
     " Close all but current.
     nmap <M-D-w> :tabonly<CR>
-    imap <M-D-w> :tabonly<CR>
+    imap <M-D-w> <C-o>:tabonly<CR>
 
     " Cut.
     vmap <D-x> "+x
@@ -163,7 +171,7 @@ if s:vim_ui == 'nvim-qt'
 
     " Close all but current.
     nmap <M-W> :tabonly<CR>
-    imap <M-W> :tabonly<CR>
+    imap <M-W> <Esc>:tabonly<CR>
 
     " Cut.
     vmap <C-x> "+x
