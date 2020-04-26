@@ -208,10 +208,9 @@
     "prettier": {
       "command": "./node_modules/.bin/prettier_d_slim",
       "args": [
+        "--stdin",
         "--stdin-filepath",
-        "%filepath",
-        "--text",
-        "%text"
+        "%filepath"
       ],
       "rootPatterns": [
         ".git"
