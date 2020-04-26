@@ -38,3 +38,22 @@ function! vimrc#determine_ui()
 
   return 'term'
 endfunction
+
+let s:os = ''
+function! vimrc#os()
+  if s:os == ''
+    if has('win64') || has('win32') || has('win16')
+      let s:os = 'win32'
+    else
+      let l:uname = substitute(system('uname'), '\n', '', '')
+
+      if l:uname == 'Darwin'
+        let s:os = 'mac'
+      else
+        let s:os = 'unix'
+      endif
+    endif
+  endif
+
+  return s:os
+endfunction
