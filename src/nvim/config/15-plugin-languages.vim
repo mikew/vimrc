@@ -19,6 +19,8 @@ let g:vim_markdown_conceal_code_blocks = 0
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_json_frontmatter = 1
 
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+
 Plug 'digitaltoad/vim-pug'
 Plug 'vim-python/python-syntax'
 
