@@ -130,3 +130,6 @@ set switchbuf+=usetab,newtab
 
 " Hide ~ / EOF markers
 autocmd User * highlight NonText guifg=bg ctermfg=bg
+
+" shorten debounce on leader key
+set timeoutlen=300
