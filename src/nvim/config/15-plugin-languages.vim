@@ -7,6 +7,7 @@ Plug 'ap/vim-css-color'
 Plug 'neoclide/jsonc.vim'
 autocmd BufNewFile,BufRead tsconfig.json setlocal filetype=jsonc
 autocmd BufNewFile,BufRead tsconfig.*.json setlocal filetype=jsonc
+autocmd BufNewFile,BufRead *.json setlocal filetype=jsonc
 
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'tpope/vim-git'
