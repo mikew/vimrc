@@ -4,15 +4,23 @@ if s:vim_ui == 'term'
   finish
 endif
 
-function! s:get_value_or_star(dictionary, key)
-  return get(a:dictionary, a:key, get(a:dictionary, '*'))
+function! s:get_value_or_star(dictionary, keys)
+  for key in a:keys
+    if has_key(a:dictionary, key)
+      return a:dictionary[key]
+    endif
+  endfor
+
+  return get(a:dictionary, '*')
 endfunction
 
 let s:font_map = {
       \ 'nvim-qt': 'Fira Mono',
+      \ 'nvim-qt/unix': 'SF Mono:l',
       \ '*': 'FiraMono-Regular',
       \ }
 let s:font_size_map = {
+      \ 'nvim-qt/unix': 9,
       \ '*': 12,
       \ }
 let s:linespace_map = {
@@ -20,9 +28,14 @@ let s:linespace_map = {
       \ '*': 3,
       \ }
 
-let s:font = s:get_value_or_star(s:font_map, s:vim_ui)
-let s:font_size = s:get_value_or_star(s:font_size_map, s:vim_ui)
-let s:linespace = s:get_value_or_star(s:linespace_map, s:vim_ui)
+let s:client_lookups = [
+      \ s:vim_ui . '/' . vimrc#os(),
+      \ s:vim_ui,
+      \ vimrc#os(),
+      \ ]
+let s:font = s:get_value_or_star(s:font_map, s:client_lookups)
+let s:font_size = s:get_value_or_star(s:font_size_map, s:client_lookups)
+let s:linespace = s:get_value_or_star(s:linespace_map, s:client_lookups)
 
 if s:vim_ui == 'macvim'
   " macmenu *needs* to be called in gvimrc
