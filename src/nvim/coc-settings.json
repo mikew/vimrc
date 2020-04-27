@@ -1,7 +1,7 @@
 {
   // Main.
   "suggest.autoTrigger": "always",
-  "coc.preferences.jumpCommand": "split",
+  "coc.preferences.jumpCommand": "tab drop",
   // https://github.com/neoclide/coc.nvim/wiki/F.A.Q#sign-of-diagnostics-not-shown
   "diagnostic.signOffset": 9999999,
 
