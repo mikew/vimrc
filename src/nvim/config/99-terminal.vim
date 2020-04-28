@@ -45,9 +45,6 @@ function! QuickTerminalOpen(should_start_terminal)
   if QuickTerminalDoesExist()
     " TODO needs to support multiple quick_terminal_ buffers
     buffer quick_terminal_1
-    if a:should_start_terminal
-      startinsert!
-    endif
   else
     if a:should_start_terminal
       " Start the actual shell.
@@ -56,11 +53,14 @@ function! QuickTerminalOpen(should_start_terminal)
       else
         terminal ++curwin ++kill=kill
       endif
-      startinsert!
     endif
 
     " TODO needs to support multiple quick_terminal_ buffers
     file quick_terminal_1
+  endif
+
+  if a:should_start_terminal
+    startinsert!
   endif
 endfunction
 

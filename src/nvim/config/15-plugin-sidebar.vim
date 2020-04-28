@@ -54,7 +54,6 @@ function! s:autocmd_tableave()
   let g:was_nerdtree_open_before_tabchange = g:NERDTree.IsOpen()
   NERDTreeFocus
   let g:last_nerdtree_size = winwidth(0)
-
   call UnfocusNERDTreeWindow()
 endfunction
 
