@@ -94,6 +94,7 @@ endfunction
 autocmd BufEnter * call s:autocmd_bufenter()
 
 " Not restricted to s: cause it's used in tabdo
+" TODO thats not the case anymore so safe to convert to whatever.
 function! UnfocusNERDTreeWindow()
   if bufname() == t:NERDTreeBufName
     wincmd p
