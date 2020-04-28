@@ -1,4 +1,4 @@
-" :function Mylen() dict
+":function Mylen() dict
 " :   return len(self.data)
 " :endfunction
 " :let mydict = {'data': [0, 1, 2, 3], 'len': function("Mylen")}
@@ -7,7 +7,6 @@
 let s:instances = []
 
 function! CreateDrawer(opts)
-  call s:log('createdrawer' . a:opts.BufNamePrefix)
   let a:opts.last_size = 0
   let a:opts.was_open_before_tabchange = 0
 
@@ -16,7 +15,6 @@ function! CreateDrawer(opts)
         \ }
 
   function! l:instance.Toggle(should_start_terminal) dict
-    call s:log('l:instance.Toggle')
     if self.IsOpen()
       call self.Close()
     else
@@ -25,7 +23,6 @@ function! CreateDrawer(opts)
   endfunction
 
   function! l:instance.Open(should_start_terminal) dict
-    call s:log('l:instance.Open')
     if self.IsOpen()
       return
     endif
@@ -34,7 +31,7 @@ function! CreateDrawer(opts)
     execute self.Look() . 'new'
     if a:should_start_terminal
       setlocal bufhidden=hide
-      " setlocal nobuflisted
+      setlocal nobuflisted
       call self.opts.OnOpenSplit()
     endif
 
@@ -58,7 +55,6 @@ function! CreateDrawer(opts)
   endfunction
 
   function! l:instance.Close() dict
-    call s:log('l:instance.Close')
     if !self.IsOpen()
       return
     endif
@@ -69,12 +65,10 @@ function! CreateDrawer(opts)
   endfunction
 
   function! l:instance.IsOpen() dict
-    call s:log('l:instance.IsOpen')
     return self.GetWinNum() != -1
   endfunction
 
   function! l:instance.GetWinNum() dict
-    call s:log('l:instance.GetWinNum')
     " Search all windows.
     for w in range(1,winnr('$'))
       if self.IsBuffer(bufname(winbufnr(w)))
@@ -86,18 +80,15 @@ function! CreateDrawer(opts)
   endfunction
 
   function! l:instance.DoesExist() dict
-    call s:log('l:instance.DoesExist')
     " TODO needs to support multiple buffers
     return bufnr(self.opts.BufNamePrefix . '1') != -1
   endfunction
 
   function! l:instance.IsBuffer(name) dict
-    call s:log('l:instance.IsBuffer')
     return bufname(a:name) =~# '^' . self.opts.BufNamePrefix . '\d\+$'
   endfunction
 
   function! l:instance.Focus() dict
-    call s:log('l:instance.Focus')
     if self.IsOpen()
       " wincmd w seems to focus the wrong window if this is called from the
       " terminal itself.
@@ -113,15 +104,16 @@ function! CreateDrawer(opts)
   endfunction
 
   function! l:instance.Unfocus() dict
-    call s:log('l:instance.Unfocus')
+    " TODO technically this should go to "wincmd p, if wincmd w is a drawer
+    " then wincmd w
     if self.IsBuffer(bufname())
-      wincmd p
+      " wincmd p
+      1wincmd w
     endif
   endfunction
 
   " Adapted from nuake
   function! l:instance.Look() dict
-    call s:log('l:instance.Look')
     let l:winnr = self.GetWinNum()
 
     if self.opts.Position == 'bottom'
@@ -143,7 +135,6 @@ function! CreateDrawer(opts)
   endfunction
 
   function! l:instance.StoreSize() dict
-    call s:log('l:instance.StoreSize')
     let l:size = winheight(0)
 
     if self.opts.Position == 'left' || self.opts.Position == 'right'
@@ -154,17 +145,18 @@ function! CreateDrawer(opts)
   endfunction
 
   function! l:instance.RestoreSize() dict
-    call s:log('l:instance.RestoreSize')
-    let l:size = self.opts.last_size != 0
-          \ ? self.opts.last_size
-          \ : self.opts.Size
-
     let l:command = 'resize'
     if self.opts.Position == 'left' || self.opts.Position == 'right'
       let l:command = 'vertical resize'
     endif
-    " TODO handle bottom / side
-    exec l:command . ' ' . l:size
+
+    exec l:command . ' ' . self.GetSize()
+  endfunction
+
+  function! l:instance.GetSize() dict
+    return self.opts.last_size != 0
+          \ ? self.opts.last_size
+          \ : self.opts.Size
   endfunction
 
   call add(s:instances, l:instance)
@@ -186,7 +178,10 @@ function! s:autocmd_tableave()
     endif
   endfor
 
-  exec l:winnr . 'wincmd w'
+  " TODO technically this should go to "wincmd p, if wincmd w is a drawer then
+  " wincmd w
+  " exec l:winnr . 'wincmd w'
+  1wincmd w
 endfunction
 
 autocmd TabLeave * call s:autocmd_tableave()
@@ -195,16 +190,25 @@ function! s:autocmd_tabenter()
   let l:winnr = winnr()
 
   for instance in s:instances
-    if !instance.opts.was_open_before_tabchange
-      continue
-    endif
+    let l:size = instance.GetSize()
 
-    call instance.Open(0)
-    call instance.Focus()
-    call instance.RestoreSize()
+    if instance.opts.was_open_before_tabchange
+      call instance.Open(0)
+      call instance.Focus()
+      call instance.RestoreSize()
+    else
+      call instance.Close()
+
+      " HACK the close may have overwritten the last size, it shouldn't here
+      " so fuck it
+      let instance.opts.last_size = l:size
+    endif
   endfor
 
-  exec l:winnr . 'wincmd w'
+  " TODO technically this should go to "wincmd p, if wincmd w is a drawer then
+  " wincmd w
+  " exec l:winnr . 'wincmd w'
+  1wincmd w
 endfunction
 
 autocmd TabEnter * call s:autocmd_tabenter()
@@ -223,96 +227,3 @@ function! s:autocmd_bufenter()
 endfunction
 
 autocmd BufEnter * call s:autocmd_bufenter()
-
-function! s:OnOpenSplit()
-  " Buffer-local options
-  " setlocal filetype=nuake
-  " setlocal bufhidden=hide
-  " setlocal nobuflisted
-  setlocal noswapfile
-  setlocal nomodified
-
-  " Window-local options
-  setlocal winfixwidth
-  setlocal winfixheight
-
-  setlocal nolist
-  setlocal nowrap
-  setlocal nospell
-  setlocal nonumber
-  setlocal norelativenumber
-  setlocal nofoldenable
-  setlocal foldcolumn=0
-  setlocal signcolumn=no
-  setlocal listchars=
-  setlocal colorcolumn=
-endfunction
-
-function! s:OnCreate()
-  " if has('nvim')
-  "   call termopen($SHELL, {"detach": 0})
-  " else
-  "   terminal ++curwin ++kill=kill
-  " endif
-endfunction
-
-function! s:OnOpen()
-  " startinsert!
-endfunction
-
-function! s:log(msg)
-  " call s:append_to_file(expand('~/vimbs.log'), [a:msg])
-  " echom a:msg
-endfunction
-
-function! s:append_to_file(file, lines)
-  call writefile(readfile(a:file) + a:lines, a:file, "a")
-endfunction
-
-" TODO
-" vim kinda sucks at some stuff. the order these splits are open is important.
-" so we could add an `Order` prop.
-" Thing is, that would only be taken into account when drawers are recreated
-" on tab switching. Otherwise the user is in total control of the order
-" drawers open.
-" Maybe there's a way to force them to open?
-
-let t1 = CreateDrawer({
-      \ 'Size': 5,
-      \ 'BufNamePrefix': 'qt1_',
-      \ 'Position': 'top',
-      \ 'OnOpenSplit': function('s:OnOpenSplit'),
-      \ 'OnCreate': function('s:OnCreate'),
-      \ 'OnOpen': function('s:OnOpen'),
-      \ })
-nnoremap <silent><leader>1 :call t1.Toggle(1)<CR>
-
-let t2 = CreateDrawer({
-      \ 'Size': 10,
-      \ 'BufNamePrefix': 'qt2_',
-      \ 'Position': 'right',
-      \ 'OnOpenSplit': function('s:OnOpenSplit'),
-      \ 'OnCreate': function('s:OnCreate'),
-      \ 'OnOpen': function('s:OnOpen'),
-      \ })
-nnoremap <silent><leader>2 :call t2.Toggle(1)<CR>
-
-let t3 = CreateDrawer({
-      \ 'Size': 15,
-      \ 'BufNamePrefix': 'qt3_',
-      \ 'Position': 'bottom',
-      \ 'OnOpenSplit': function('s:OnOpenSplit'),
-      \ 'OnCreate': function('s:OnCreate'),
-      \ 'OnOpen': function('s:OnOpen'),
-      \ })
-nnoremap <silent><leader>3 :call t3.Toggle(1)<CR>
-
-let t4 = CreateDrawer({
-      \ 'Size': 20,
-      \ 'BufNamePrefix': 'qt4_',
-      \ 'Position': 'left',
-      \ 'OnOpenSplit': function('s:OnOpenSplit'),
-      \ 'OnCreate': function('s:OnCreate'),
-      \ 'OnOpen': function('s:OnOpen'),
-      \ })
-nnoremap <silent><leader>4 :call t4.Toggle(1)<CR>
