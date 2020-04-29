@@ -1,9 +1,3 @@
-":function Mylen() dict
-" :   return len(self.data)
-" :endfunction
-" :let mydict = {'data': [0, 1, 2, 3], 'len': function("Mylen")}
-" :echo mydict.len()
-
 let s:instances = []
 
 function! CreateDrawer(opts)
@@ -104,12 +98,11 @@ function! CreateDrawer(opts)
   endfunction
 
   function! l:instance.Unfocus() dict
-    " TODO technically this should go to "wincmd p, if wincmd w is a drawer
-    " then wincmd w
-    if self.IsBuffer(bufname())
-      " wincmd p
-      1wincmd w
-    endif
+    " if self.IsBuffer(bufname())
+    "   " wincmd p
+    "   1wincmd w
+    " endif
+    call DrawerGotoPreviousOrFirst()
   endfunction
 
   " Adapted from nuake
@@ -159,14 +152,16 @@ function! CreateDrawer(opts)
           \ : self.opts.Size
   endfunction
 
+  function! l:instance.GetCacheTabVarName() dict
+    return 't:drawer_' . self.opts.BufNamePrefix
+  endfunction
+
   call add(s:instances, l:instance)
 
   return l:instance
 endfunction
 
 function! s:autocmd_tableave()
-  let l:winnr = winnr()
-
   for instance in s:instances
     if instance.IsOpen()
       let instance.opts.was_open_before_tabchange = 1
@@ -178,15 +173,18 @@ function! s:autocmd_tableave()
     endif
   endfor
 
-  " TODO technically this should go to "wincmd p, if wincmd w is a drawer then
-  " wincmd w
-  " exec l:winnr . 'wincmd w'
-  1wincmd w
+  call DrawerGotoPreviousOrFirst()
 endfunction
 
 autocmd TabLeave * call s:autocmd_tableave()
 
 function! s:autocmd_tabenter()
+  " Since we do a lot to maintain the fact that ...
+  " - no drawer is selected when a tab is left
+  " - the previous window (or first) was selected when unfocusing
+  " ... it means we don't have to muck around with anything when loading a
+  " tab. Just grab the current window, set everything up again, and select
+  " that same window.
   let l:winnr = winnr()
 
   for instance in s:instances
@@ -205,10 +203,8 @@ function! s:autocmd_tabenter()
     endif
   endfor
 
-  " TODO technically this should go to "wincmd p, if wincmd w is a drawer then
-  " wincmd w
-  " exec l:winnr . 'wincmd w'
-  1wincmd w
+  exec l:winnr . 'wincmd w'
+  " call DrawerGotoPreviousOrFirst()
 endfunction
 
 autocmd TabEnter * call s:autocmd_tabenter()
@@ -222,7 +218,31 @@ function! s:autocmd_bufenter()
   endfor
 
   if winnr("$") == l:total_open
-    qa
+    if tabpagenr('$') > 1
+      tabclose
+    else
+      qa
+    endif
+  endif
+endfunction
+
+function! IsBufnrDrawer(bufnr)
+  for instance in s:instances
+    if instance.IsBuffer(a:bufnr)
+      return 1
+    endif
+  endfor
+
+  return 0
+endfunction
+
+function! DrawerGotoPreviousOrFirst()
+  " vim only knows the previous selected window, and without a proper stack,
+  " there's no reliable way to 'go back to the last non-drawer window'.
+
+  wincmd p
+  if IsBufnrDrawer(bufnr())
+    1wincmd w
   endif
 endfunction
 
