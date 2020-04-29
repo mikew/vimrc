@@ -1,10 +1,6 @@
 function! s:OnOpenSplit()
-  " Buffer-local options
   setlocal noswapfile
   setlocal nomodified
-
-  " Window-local options
-
   setlocal nolist
   setlocal nowrap
   setlocal nospell

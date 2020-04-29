@@ -23,9 +23,12 @@ function! CreateDrawer(opts)
 
     " Open and configure the split.
     execute self.Look() . 'new'
+    setlocal bufhidden=hide
+    setlocal nobuflisted
+    setlocal winfixwidth
+    setlocal winfixheight
+
     if a:should_start_terminal
-      setlocal bufhidden=hide
-      setlocal nobuflisted
       call self.opts.OnOpenSplit()
     endif
 
