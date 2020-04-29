@@ -33,7 +33,7 @@ endfunction
 " vim can access script local functions in mappings
 " vim is just wonderful
 function! s:Toggle(...)
-  call s:drawer.Toggle(1)
+  call call(s:drawer.Toggle, a:000, s:drawer)
 endfunction
 
 let s:drawer = CreateDrawer({
