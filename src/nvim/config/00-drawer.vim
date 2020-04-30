@@ -8,11 +8,13 @@ function! CreateDrawer(opts)
         \ 'opts': a:opts,
         \ }
 
-  function! l:instance.Toggle(should_start_terminal) dict
+  function! l:instance.Toggle() dict
     if self.IsOpen()
       call self.Close()
     else
-      call self.Open(a:should_start_terminal)
+      call self.Open(1)
+    endif
+  endfunction
     endif
   endfunction
 
