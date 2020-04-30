@@ -15,6 +15,17 @@ function! CreateDrawer(opts)
       call self.Open(1)
     endif
   endfunction
+
+  function! l:instance.FocusOrToggle() dict
+    if self.IsOpen()
+      if self.IsFocused()
+        call self.Close()
+      else
+        call self.Focus()
+        call self.opts.OnOpen()
+      endif
+    else
+      call self.Open(1)
     endif
   endfunction
 
