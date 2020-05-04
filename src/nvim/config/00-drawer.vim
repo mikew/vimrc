@@ -4,7 +4,8 @@ function! CreateDrawer(opts)
   let a:opts.last_size = 0
   let a:opts.was_open_before_tabchange = 0
   let a:opts.buffers = []
-  let a:opts.index = 0
+  let a:opts.previous_buffer = ''
+  let a:opts.counter = 0
 
   let l:instance = {
         \ 'opts': a:opts,
@@ -14,7 +15,7 @@ function! CreateDrawer(opts)
     if self.IsOpen()
       call self.Close()
     else
-      call self.Open(1)
+      call self.OpenMostRecent()
     endif
   endfunction
 
@@ -24,78 +25,69 @@ function! CreateDrawer(opts)
         call self.Close()
       else
         call self.Focus()
-        call self.opts.OnOpen()
       endif
     else
-      call self.Open(1)
+      call self.OpenMostRecent()
     endif
   endfunction
 
-  function! l:instance.Open(should_start_terminal) dict
+  function! l:instance.OpenMostRecent() dict
+    call self.OpenAndFocusSplit()
+    let l:bufname = self.opts.previous_buffer
+    if l:bufname == ''
+      let l:bufname = self.NextBufName()
+    endif
+    call self.EditExisting(l:bufname)
+  endfunction
+
+  function! l:instance.CreateNew() dict
+    call self.OpenAndFocusSplit()
+    " TODO This needs to happen in case the split is already open when
+    " CreateNew is called.
+    enew
+    call self.EditExisting(self.NextBufName())
+  endfunction
+
+  function! l:instance.NextBufName() dict
+    let l:id = self.opts.counter + 1
+    let self.opts.counter = l:id
+
+    return self.opts.BufNamePrefix . string(l:id)
+  endfunction
+
+  function! l:instance.OpenAndFocusSplit() dict
     if self.IsOpen()
+      call self.Focus()
+      call self.RestoreSize()
       return
     endif
 
-    " Open and configure the split.
-    " execute self.Look() . 'new'
-    execute self.Look() . ' split enew'
+    execute self.Look() . ' new'
+    call self.opts.OnOpenSplit()
+  endfunction
+
+  function! l:instance.EditExisting(bufname) dict
+    if bufnr(a:bufname) == -1
+      call self.opts.OnCreate()
+      exec 'file ' . a:bufname
+    else
+      exec 'buffer ' . a:bufname
+    endif
+    call self.opts.OnOpen()
     setlocal bufhidden=hide
     setlocal nobuflisted
-    " setlocal winfixwidth
-    " setlocal winfixheight
-    " setlocal noequalalways
+    setlocal winfixwidth
+    setlocal winfixheight
+    setlocal noequalalways
 
-    " call self.RestoreSize()
-
-    if a:should_start_terminal
-      call self.opts.OnOpenSplit()
-    endif
-
-    if self.DoesExist()
-      " TODO needs to support multiple buffers
-      exec 'buffer ' . self.opts.BufNamePrefix . string(self.opts.index + 1)
-    else
-      if a:should_start_terminal
-        call self.opts.OnCreate()
-      endif
-
-      " TODO needs to support multiple buffers
-      exec 'file ' . self.opts.BufNamePrefix . string(len(self.opts.buffers) + 1)
-      call self.RegisterBuffer()
-      let self.opts.index = len(self.opts.buffers) - 1
-    endif
-
-    if a:should_start_terminal
-      call self.opts.OnOpen()
-    endif
+    let self.opts.previous_buffer = a:bufname
+    call self.RegisterBuffer(a:bufname)
   endfunction
 
-  function! l:instance.RegisterBuffer() dict
-    let l:bufname = bufname()
-    if index(self.opts.buffers, l:bufname) == -1
-      call add(self.opts.buffers, l:bufname)
+  function! l:instance.RegisterBuffer(bufname) dict
+    if index(self.opts.buffers, a:bufname) == -1
+      call add(self.opts.buffers, a:bufname)
     endif
-  endfunction
-
-  function l:instance.CreateNew() dict
-    if self.IsOpen()
-      call self.Focus()
-      enew
-    else
-      execute self.Look() . ' split enew'
-      setlocal bufhidden=hide
-      setlocal nobuflisted
-      " setlocal winfixwidth
-      " setlocal winfixheight
-      " setlocal noequalalways
-    endif
-
-    call self.opts.OnOpenSplit()
-    call self.opts.OnCreate()
-    exec 'file ' . self.opts.BufNamePrefix . string(len(self.opts.buffers) + 1)
-    call self.RegisterBuffer()
-    let self.opts.index = len(self.opts.buffers) - 1
-    call self.opts.OnOpen()
   endfunction
 
   function! l:instance.Close() dict
@@ -108,13 +100,12 @@ function! CreateDrawer(opts)
     q
   endfunction
 
-  " TODO
-  " I think at this point that Open, CreateNew, and Go do the same thing in
-  " slightly different ways:
-  " - open or focus the split
-  " - create or load an existing buffer
   function! l:instance.Go(num) dict
-    let l:next_index = self.opts.index + a:num
+    let l:index = index(self.opts.buffers, self.opts.previous_buffer)
+    if self.opts.previous_buffer == ''
+      let l:index = 0
+    endif
+    let l:next_index = l:index + a:num
     if l:next_index > len(self.opts.buffers) - 1
       let l:next_index = 0
     endif
@@ -122,18 +113,10 @@ function! CreateDrawer(opts)
       let l:next_index = len(self.opts.buffers) - 1
     endif
 
-    call self.Open(0)
-    call self.Focus()
-    exec 'buffer ' . self.opts.BufNamePrefix . string(l:next_index + 1)
-    let self.opts.index = l:next_index
-    call self.opts.OnOpen()
+    call self.OpenAndFocusSplit()
+    call self.EditExisting(self.opts.BufNamePrefix . string(l:next_index + 1))
   endfunction
 
-  " TODO
-  " I think at this point that Open, CreateNew, and Go do the same thing in
-  " slightly different ways:
-  " - open or focus the split
-  " - create or load an existing buffer
   function! l:instance.GoTo(num) dict
     let l:next_index = a:num
     if l:next_index > len(self.opts.buffers) - 1
@@ -143,11 +126,8 @@ function! CreateDrawer(opts)
       let l:next_index = len(self.opts.buffers) - 1
     endif
 
-    call self.Open(0)
-    call self.Focus()
-    exec 'buffer ' . self.opts.buffers[l:next_index]
-    let self.opts.index = l:next_index
-    call self.opts.OnOpen()
+    call self.OpenAndFocusSplit()
+    call self.EditExisting(self.opts.BufNamePrefix . string(l:next_index + 1))
   endfunction
 
   function! l:instance.IsOpen() dict
@@ -156,18 +136,13 @@ function! CreateDrawer(opts)
 
   function! l:instance.GetWinNum() dict
     " Search all windows.
-    for w in range(1,winnr('$'))
+    for w in range(1, winnr('$'))
       if self.IsBuffer(bufname(winbufnr(w)))
         return w
       endif
     endfor
 
     return -1
-  endfunction
-
-  function! l:instance.DoesExist() dict
-    " TODO needs to support multiple buffers
-    return bufnr(self.opts.BufNamePrefix . '1') != -1
   endfunction
 
   function! l:instance.IsBuffer(name) dict
@@ -191,14 +166,6 @@ function! CreateDrawer(opts)
 
   function! l:instance.IsFocused() dict
     return self.IsBuffer(bufnr())
-  endfunction
-
-  function! l:instance.Unfocus() dict
-    " if self.IsBuffer(bufname())
-    "   " wincmd p
-    "   1wincmd w
-    " endif
-    call DrawerGotoPreviousOrFirst()
   endfunction
 
   " Adapted from nuake
@@ -245,10 +212,6 @@ function! CreateDrawer(opts)
           \ : self.opts.Size
   endfunction
 
-  function! l:instance.GetCacheTabVarName() dict
-    return 't:drawer_' . self.opts.BufNamePrefix
-  endfunction
-
   call add(s:instances, l:instance)
 
   return l:instance
@@ -260,7 +223,6 @@ function! s:autocmd_tableave()
       let instance.opts.was_open_before_tabchange = 1
       call instance.Focus()
       call instance.StoreSize()
-      " call instance.Unfocus()
     else
       let instance.opts.was_open_before_tabchange = 0
     endif
@@ -284,9 +246,7 @@ function! s:autocmd_tabenter()
     let l:size = instance.GetSize()
 
     if instance.opts.was_open_before_tabchange
-      call instance.Open(0)
-      call instance.Focus()
-      call instance.RestoreSize()
+      call instance.OpenMostRecent()
     else
       call instance.Close()
 
@@ -303,7 +263,12 @@ endfunction
 autocmd TabEnter * call s:autocmd_tabenter()
 
 function! s:autocmd_bufenter()
-  let l:total_open = len(filter(s:instances, 'v:val.IsOpen()'))
+  let l:total_open = 0
+  for instance in s:instances
+    if instance.IsOpen()
+      let l:total_open += 1
+    endif
+  endfor
 
   if winnr("$") == l:total_open
     if tabpagenr('$') > 1
