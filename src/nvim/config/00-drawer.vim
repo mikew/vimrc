@@ -63,17 +63,23 @@ function! CreateDrawer(opts)
     endif
 
     execute self.Look() . ' new'
-    call self.opts.OnOpenSplit()
+    if has_key(self.opts, 'OnOpenSplit')
+      call self.opts.OnOpenSplit()
+    endif
   endfunction
 
   function! l:instance.EditExisting(bufname) dict
     if bufnr(a:bufname) == -1
-      call self.opts.OnCreate()
+      if has_key(self.opts, 'OnCreate')
+        call self.opts.OnCreate(a:bufname)
+      endif
       exec 'file ' . a:bufname
     else
       exec 'buffer ' . a:bufname
     endif
-    call self.opts.OnOpen()
+    if has_key(self.opts, 'OnOpen')
+      call self.opts.OnOpen(a:bufname)
+    endif
     setlocal bufhidden=hide
     setlocal nobuflisted
     setlocal winfixwidth
