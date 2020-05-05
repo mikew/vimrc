@@ -18,22 +18,16 @@ let NERDTreeIgnore=[
       \ '\.git$'
       \ ]
 
-function! s:OnOpenSplit()
+function! s:OnOpenSplit(...)
   edit NERD_tree_1
   set ft=nerdtree
-endfunction
-
-function! s:OnCreate()
-endfunction
-
-function! s:OnOpen()
 endfunction
 
 " vim can't access script local vars in mappings
 " vim can access script local functions in mappings
 " vim is just wonderful
 function! s:Toggle(...)
-  call call(s:drawer.Toggle, a:000, s:drawer)
+  call call(s:drawer.FocusOrToggle, a:000, s:drawer)
 endfunction
 
 let s:drawer = CreateDrawer({
@@ -41,11 +35,9 @@ let s:drawer = CreateDrawer({
       \ 'BufNamePrefix': 'NERD_tree_',
       \ 'Position': 'right',
       \ 'OnOpenSplit': function('s:OnOpenSplit'),
-      \ 'OnCreate': function('s:OnCreate'),
-      \ 'OnOpen': function('s:OnOpen'),
       \ })
 
-nnoremap <silent><leader>n :call <sid>Toggle(1)<CR>
+nnoremap <silent><leader>n :call <sid>Toggle()<CR>
 
 function! s:autocmd_vimenter()
   " Hack to hide netrw if vim was passed a directory.
@@ -56,18 +48,16 @@ function! s:autocmd_vimenter()
   endif
 
   " Open nerdtree and close it so the buffer exists.
-  NERDTreeToggle
-  NERDTreeToggle
+  NERDTree
+  NERDTreeClose
 
   " Open our own mirror.
-  call s:drawer.Toggle(1)
+  call s:drawer.Toggle()
 
   " Gotta refresh when we do shit all hacky like my life.
   NERDTreeRefresh
 
-  call s:drawer.Unfocus()
+  call DrawerGotoPreviousOrFirst()
 endfunction
 
 autocmd VimEnter * :call s:autocmd_vimenter()
-
-let g:sidebar = s:drawer
