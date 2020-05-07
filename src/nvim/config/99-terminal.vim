@@ -1,12 +1,13 @@
-function! s:OnCreate(...)
+function! s:OnWillCreateBuffer(...)
   if has('nvim')
-    call termopen($SHELL, {"detach": 0})
+    " call termopen($SHELL, {"detach": 0})
+    terminal
   else
     terminal ++curwin ++kill=kill
   endif
 endfunction
 
-function! s:OnOpen(...)
+function! s:OnDidOpenDrawer(...)
   setlocal noswapfile
   setlocal nomodified
   setlocal nolist
@@ -19,6 +20,7 @@ function! s:OnOpen(...)
   setlocal signcolumn=no
   setlocal listchars=
   setlocal colorcolumn=
+  setlocal nocursorline
   " startinsert!
 endfunction
 
@@ -35,17 +37,19 @@ function! s:Go(...)
   call call(s:drawer.Go, a:000, s:drawer)
 endfunction
 
-let s:drawer = CreateDrawer({
-      \ 'Size': 15,
-      \ 'BufNamePrefix': 'quick_terminal_',
-      \ 'Position': 'bottom',
-      \ 'OnCreate': function('s:OnCreate'),
-      \ 'OnOpen': function('s:OnOpen'),
-      \ })
+function! s:autocmd_vimenter()
+  let s:drawer = drawer#Create({
+        \ 'Size': 15,
+        \ 'BufNamePrefix': 'quick_terminal_',
+        \ 'Position': 'bottom',
+        \ 'OnWillCreateBuffer': function('s:OnWillCreateBuffer'),
+        \ 'OnDidOpenDrawer': function('s:OnDidOpenDrawer'),
+        \ })
+endfunction
+
+autocmd VimEnter * :call s:autocmd_vimenter()
 
 if has('nvim')
-  au TermOpen * setlocal
-        \ nocursorline
   au BufLeave term://* stopinsert
   au BufLeave quick_terminal_* stopinsert
 endif

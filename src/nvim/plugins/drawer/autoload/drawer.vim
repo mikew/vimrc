@@ -1,6 +1,6 @@
 let s:instances = []
 
-function! CreateDrawer(opts)
+function! drawer#Create(opts)
   let a:opts.last_size = 0
   let a:opts.was_open_before_tabchange = 0
   let a:opts.buffers = []
@@ -63,22 +63,19 @@ function! CreateDrawer(opts)
     endif
 
     execute self.Look() . ' new'
-    if has_key(self.opts, 'OnOpenSplit')
-      call self.opts.OnOpenSplit()
+    if has_key(self.opts, 'OnDidOpenSplit')
+      call self.opts.OnDidOpenSplit()
     endif
   endfunction
 
   function! l:instance.EditExisting(bufname) dict
     if bufnr(a:bufname) == -1
-      if has_key(self.opts, 'OnCreate')
-        call self.opts.OnCreate(a:bufname)
+      if has_key(self.opts, 'OnWillCreateBuffer')
+        call self.opts.OnWillCreateBuffer(a:bufname)
       endif
       exec 'file ' . a:bufname
     else
       exec 'buffer ' . a:bufname
-    endif
-    if has_key(self.opts, 'OnOpen')
-      call self.opts.OnOpen(a:bufname)
     endif
     setlocal bufhidden=hide
     setlocal nobuflisted
@@ -88,6 +85,16 @@ function! CreateDrawer(opts)
 
     let self.opts.previous_buffer = a:bufname
     call self.RegisterBuffer(a:bufname)
+
+    if !exists('t:_drawer_cache')
+      let t:_drawer_cache = {}
+    endif
+
+    let t:_drawer_cache[self.opts.BufNamePrefix] = a:bufname
+
+    if has_key(self.opts, 'OnDidOpenDrawer')
+      call self.opts.OnDidOpenDrawer(a:bufname)
+    endif
   endfunction
 
   function! l:instance.RegisterBuffer(bufname) dict
@@ -141,6 +148,12 @@ function! CreateDrawer(opts)
   endfunction
 
   function! l:instance.GetWinNum() dict
+    if exists('t:_drawer_cache')
+      if has_key(t:_drawer_cache, self.opts.BufNamePrefix)
+        return bufwinnr(t:_drawer_cache[self.opts.BufNamePrefix])
+      endif
+    endif
+
     " Search all windows.
     for w in range(1, winnr('$'))
       if self.IsBuffer(bufname(winbufnr(w)))
@@ -223,23 +236,48 @@ function! CreateDrawer(opts)
   return l:instance
 endfunction
 
-function! s:autocmd_tableave()
+function! drawer#GotoPreviousOrFirst()
+  " vim only knows the previous selected window, and without a proper stack,
+  " there's no reliable way to 'go back to the last non-drawer window'.
+  " So all we can do is go to the previous window, and if that's also a
+  " drawer, go to the first.
+  " TODO That's also not guaranteed to work. Might need something like
+  " 'FindFirstNonDrawerWindow()'.
+
+  wincmd p
+  if drawer#IsBufnrDrawer(bufnr())
+    1wincmd w
+  endif
+endfunction
+
+function! drawer#IsBufnrDrawer(bufnr)
   for instance in s:instances
-    if instance.IsOpen()
-      let instance.opts.was_open_before_tabchange = 1
-      call instance.Focus()
-      call instance.StoreSize()
-    else
-      let instance.opts.was_open_before_tabchange = 0
+    if instance.IsBuffer(a:bufnr)
+      return 1
     endif
   endfor
 
-  call DrawerGotoPreviousOrFirst()
+  return 0
 endfunction
 
-autocmd TabLeave * call s:autocmd_tableave()
+function! drawer#autocmd_bufenter()
+  let l:total_open = 0
+  for instance in s:instances
+    if instance.IsOpen()
+      let l:total_open += 1
+    endif
+  endfor
 
-function! s:autocmd_tabenter()
+  if winnr("$") == l:total_open
+    if tabpagenr('$') > 1
+      tabclose
+    else
+      qa
+    endif
+  endif
+endfunction
+
+function! drawer#autocmd_tabenter()
   " Since we do a lot to maintain the fact that ...
   " - no drawer is selected when a tab is left
   " - the previous window (or first) was selected when unfocusing
@@ -263,50 +301,18 @@ function! s:autocmd_tabenter()
   endfor
 
   exec l:winnr . 'wincmd w'
-  " call DrawerGotoPreviousOrFirst()
 endfunction
 
-autocmd TabEnter * call s:autocmd_tabenter()
-
-function! s:autocmd_bufenter()
-  let l:total_open = 0
+function! drawer#autocmd_tableave()
   for instance in s:instances
     if instance.IsOpen()
-      let l:total_open += 1
-    endif
-  endfor
-
-  if winnr("$") == l:total_open
-    if tabpagenr('$') > 1
-      tabclose
+      let instance.opts.was_open_before_tabchange = 1
+      call instance.Focus()
+      call instance.StoreSize()
     else
-      qa
-    endif
-  endif
-endfunction
-
-autocmd BufEnter * call s:autocmd_bufenter()
-
-function! IsBufnrDrawer(bufnr)
-  for instance in s:instances
-    if instance.IsBuffer(a:bufnr)
-      return 1
+      let instance.opts.was_open_before_tabchange = 0
     endif
   endfor
 
-  return 0
-endfunction
-
-function! DrawerGotoPreviousOrFirst()
-  " vim only knows the previous selected window, and without a proper stack,
-  " there's no reliable way to 'go back to the last non-drawer window'.
-  " So all we can do is go to the previous window, and if that's also a
-  " drawer, go to the first.
-  " TODO That's also not guaranteed to work. Might need something like
-  " 'FindFirstNonDrawerWindow()'.
-
-  wincmd p
-  if IsBufnrDrawer(bufnr())
-    1wincmd w
-  endif
+  call drawer#GotoPreviousOrFirst()
 endfunction
