@@ -128,7 +128,8 @@ if s:vim_ui == 'nvim-qt'
 
     " Paste.
     nmap <D-v> "+P
-    imap <D-v> <C-o>"+P
+    imap <D-v> <C-r>+
+    cmap <D-v> <C-r>+
   else
     " Save.
     nmap <C-s> :w<CR>
