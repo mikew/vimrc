@@ -37,4 +37,3 @@ let g:vue_pre_processors = 'detect_on_enter'
 Plug 'stephpy/vim-yaml'
 
 Plug 'chriskempson/base16-vim'
-Plug 'keith/parsec.vim'
