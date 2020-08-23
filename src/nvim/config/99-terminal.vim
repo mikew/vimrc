@@ -62,3 +62,5 @@ nnoremap <silent><leader>tt :call <sid>Go(1)<CR>
 tnoremap <silent><leader>tt <C-\><C-n>:call <sid>Go(1)<CR>
 nnoremap <silent><leader>tT :call <sid>Go(-1)<CR>
 tnoremap <silent><leader>tT <C-\><C-n>:call <sid>Go(-1)<CR>
+
+tnoremap <silent><D-v> <C-\><C-n>"+pi
