@@ -29,7 +29,10 @@ let NERDTreeCustomOpenArgs = {
 function! s:OnDidOpenSplit(...)
   edit NERD_tree_1
   set ft=nerdtree
-  let t:NERDTreeBufName = 'NERD_tree_1'
+endfunction
+
+function! s:OnDidOpenDrawer(...)
+  let t:NERDTreeBufName = a:1
 endfunction
 
 " vim can't access script local vars in mappings
@@ -51,9 +54,10 @@ function! s:autocmd_vimenter()
 
   let s:drawer = drawer#Create({
         \ 'Size': 30,
-        \ 'BufNamePrefix': 'NERD_tree_',
+        \ 'BufNamePrefix': 'nerdtree_drawer_',
         \ 'Position': 'right',
         \ 'OnDidOpenSplit': function('s:OnDidOpenSplit'),
+        \ 'OnDidOpenDrawer': function('s:OnDidOpenDrawer'),
         \ })
 
   " Open nerdtree and close it so the buffer exists.
