@@ -3,13 +3,13 @@ set -ex
 
 main() {
   # nvim
-  mv ~/.config/nvim ~/.config/nvim.bak || true
+  backup-file ~/.config/nvim
   ln -sf "$PWD/src/nvim" ~/.config/nvim
 
   # vim
-  mv ~/.vimrc ~/.vimrc.bak || true
-  mv ~/.vim ~/.vim.bak || true
-  mv ~/.gvimrc ~/.gvimrc.bak || true
+  backup-file ~/.vimrc
+  backup-file ~/.vim
+  backup-file ~/.gvimrc
   ln -sf "$PWD/src/nvim" ~/.vim
   ln -sf "$PWD/src/nvim/init.vim" ~/.vimrc
   ln -sf "$PWD/src/nvim/ginit.vim" ~/.gvimrc
@@ -23,5 +23,15 @@ main() {
 
   vim +PlugSync
 }
+
+backup-file () {
+  if [ -e "$1" ]; then
+    mv "$1" "$1.$backup_extension"
+  fi
+}
+
+# Do this outside the actual backup function so we can ensure the time is
+# consistent between calls.
+backup_extension="backup.$(date '+%F %T')"
 
 main "$@"
