@@ -7,30 +7,37 @@ imap <expr> <Up>    pumvisible() ? "\<C-p>" : "\<Up>"
 
 " imap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
 imap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
 
-inoremap <silent><expr> <c-space> coc#refresh()
-
+" Highlight the symbol and its references when holding the cursor.
 " autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " TODO Move to settings.vim?
 
-" if hidden is not set, TextEdit might fail.
+" TextEdit might fail if hidden is not set.
 set hidden
 
 " Some servers have issues with backup files, see #649
 set nobackup
 set nowritebackup
 
-" Better display for messages
+" Give more space for displaying messages.
 " set cmdheight=2
 
-" You will have bad experience for diagnostic messages when it's default 4000.
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
 set updatetime=300
 
-" don't give |ins-completion-menu| messages.
+" Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
 
-" always show signcolumns
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
 set signcolumn=yes
 
 " Remap keys for gotos
@@ -43,10 +50,12 @@ nnoremap <silent> gh :call CocActionAsync('doHover')<cr>
 nnoremap <silent> K :call <SID>goto_definition()<CR>
 
 function! s:goto_definition()
-  if (index(['vim', 'help'], &filetype) >= 0)
-    execute 'help ' . expand('<cword>')
-  else
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'help '.expand('<cword>')
+  elseif (coc#rpc#ready())
     call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
   endif
 endfunction
 
