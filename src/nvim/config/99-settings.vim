@@ -133,3 +133,6 @@ autocmd User * highlight NonText guifg=bg ctermfg=bg
 
 " shorten debounce on leader key
 set timeoutlen=300
+
+set encoding=utf-8
+set fileencoding=utf-8
