@@ -107,9 +107,9 @@ set wildignore+=*.swp,*~,._*
 ""
 
 set undofile
-set undodir^=~/.cache/vim
-set backupdir=~/.cache/vim
-set directory=~/.cache/vim
+set undodir^=~/.cache/vim/undo//
+set backupdir=~/.cache/vim/backup//
+set directory=~/.cache/vim/swap//
 let g:netrw_home='~/.cache/vim'
 if !has('nvim')
   set viminfofile=~/.cache/vim/viminfo

@@ -16,6 +16,9 @@ main() {
 
   mkdir -p \
     ~/.cache/vim \
+    ~/.cache/vim/swap \
+    ~/.cache/vim/backup \
+    ~/.cache/vim/undo \
     ~/.cache/vim-plug
 
   vim +PlugSync
