@@ -39,6 +39,7 @@ set backspace=indent,eol,start
 set cursorline
 set colorcolumn=80
 set mouse=a
+set ttymouse=xterm2
 
 " List chars
 
