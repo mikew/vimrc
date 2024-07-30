@@ -24,14 +24,14 @@ main() {
   vim +PlugSync
 }
 
+# Do this outside the actual backup function so we can ensure the time is
+# consistent between calls.
+backup_extension="backup.$(date '+%F %T')"
+
 backup-file () {
   if [ -e "$1" ]; then
     mv "$1" "$1.$backup_extension"
   fi
 }
-
-# Do this outside the actual backup function so we can ensure the time is
-# consistent between calls.
-backup_extension="backup.$(date '+%F %T')"
 
 main "$@"
