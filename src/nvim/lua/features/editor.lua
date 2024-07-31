@@ -1,5 +1,9 @@
 local vimrc = require('vimrc')
 
+local vim_ui = vimrc.determine_ui()
+local vim_os = vimrc.determine_os()
+local has_gui_running = vimrc.has_gui_running()
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be
@@ -20,6 +24,10 @@ vim.wo.list = false
 vim.opt.foldmethod = 'indent'
 -- Don't fold by default.
 vim.opt.foldlevelstart = 100
+
+-- Indent / outdent.
+vim.keymap.set('v', '<', '<gv')
+vim.keymap.set('v', '>', '>gv')
 
 if not vim.g.vscode then
   -- Always show tab bar.
@@ -271,6 +279,8 @@ mod.plugins = {
   --     vim.g.loaded_netrwPlugin = 1
   --   end,
   -- },
+  -- Prefer this to neo-tree.
+  -- - Persist state across tabs by default.
   {
     'nvim-tree/nvim-tree.lua',
     cond = not vim.g.vscode,
@@ -278,6 +288,25 @@ mod.plugins = {
       { '<leader>e', ':NvimTreeFindFile<CR>', desc = 'NvimTreeFindFile' },
     },
     opts = {
+      on_attach = function(bufnr)
+        local api = require("nvim-tree.api")
+
+        local function opts(desc)
+          return {
+            desc = "nvim-tree: " .. desc,
+            buffer = bufnr,
+            noremap = true,
+            silent = true,
+            nowait = true,
+          }
+        end
+
+        api.config.mappings.default_on_attach(bufnr)
+
+        vim.keymap.set('n', '<CR>', api.node.open.tab, opts('Open: New Tab'))
+        vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
+      end,
+
       disable_netrw = true,
 
       view = {
@@ -378,12 +407,20 @@ mod.plugins = {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
         -- pickers = {}
+        defaults = {
+          mappings = {
+            i = {
+              -- ['<c-enter>'] = 'to_fuzzy_refine',
+              ['<CR>'] = 'select_tab',
+              ['<C-CR>'] = 'select_default',
+            },
+            n = {
+              ['<CR>'] = 'select_tab',
+              ['<C-CR>'] = 'select_default',
+            },
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -399,11 +436,30 @@ mod.plugins = {
       local builtin = require('telescope.builtin')
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
+
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<C-p>', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('i', '<C-p>', builtin.find_files, { desc = '[S]earch [F]iles' })
+      if has_gui_running then
+        if vim_os == 'macos' then
+          vim.keymap.set('n', '<D-t>', builtin.find_files, { desc = '[S]earch [F]iles' })
+          vim.keymap.set('i', '<D-t>', builtin.find_files, { desc = '[S]earch [F]iles' })
+          vim.keymap.set('n', '<D-p>', builtin.find_files, { desc = '[S]earch [F]iles' })
+          vim.keymap.set('i', '<D-p>', builtin.find_files, { desc = '[S]earch [F]iles' })
+        end
+      end
+
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      if has_gui_running then
+        if vim_os == 'macos' then
+          vim.keymap.set('n', '<D-F>', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+          vim.keymap.set('i', '<D-F>', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+        end
+      end
+
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set(

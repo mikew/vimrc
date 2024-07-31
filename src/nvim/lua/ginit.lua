@@ -104,13 +104,18 @@ if vim_ui == 'nvim-qt' then
     -- Copy.
     vim.keymap.set('x', '<D-c>', '"+y')
 
-    -- " Paste.
-    -- nmap <D-v> "+P
-    -- imap <D-v> <C-r>+
-    -- cmap <D-v> <C-r>+
+    -- Paste.
     vim.keymap.set('n', '<D-v>', '"+P')
     -- vim.keymap.set('i', '<D-v>', '<C-r>+')
     vim.keymap.set('i', '<D-v>', '<C-o>"+P')
     vim.keymap.set('c', '<D-v>', '<C-r>+')
+
+    -- Indent / outdent.
+    vim.keymap.set('n', '<D-[>', '<<')
+    vim.keymap.set('n', '<D-]>', '>>')
+    vim.keymap.set('i', '<D-[>', '<C-o><<')
+    vim.keymap.set('i', '<D-]>', '<C-o>>>')
+    vim.keymap.set('v', '<D-[>', '<gv')
+    vim.keymap.set('v', '<D-]>', '>gv')
   end
 end
