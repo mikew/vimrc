@@ -37,6 +37,13 @@ if not vim.g.vscode then
   vim.diagnostic.config({
     virtual_text = false,
   })
+  vim.api.nvim_set_keymap(
+    'n',
+    '<Leader>d',
+    ':lua vim.diagnostic.open_float()<CR>',
+    { noremap = true, silent = true }
+  )
+
   -- Hide intro message.
   vim.opt.shortmess:append('I', 'l', 'm', 'r')
 
