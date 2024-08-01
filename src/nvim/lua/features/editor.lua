@@ -179,6 +179,16 @@ mod.plugins = {
     'numToStr/Comment.nvim',
     cond = not vim.g.vscode,
     opts = {},
+    config = function(_, opts)
+      require('Comment').setup(opts)
+      if has_gui_running then
+        if vim_os == 'macos' then
+          vim.keymap.set('n', '<D-/>', '<Plug>(comment_toggle_linewise_current)')
+          vim.keymap.set('i', '<D-/>', '<C-o><Plug>(comment_toggle_linewise_current)')
+          vim.keymap.set('v', '<D-/>', '<Plug>(comment_toggle_linewise_visual)gv')
+        end
+      end
+    end,
   },
 
   -- {
