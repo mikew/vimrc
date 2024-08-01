@@ -9,6 +9,8 @@ mod.plugins = {
     dependencies = {
       { 'williamboman/mason-lspconfig.nvim' },
       { 'neovim/nvim-lspconfig' },
+      { 'nvimtools/none-ls.nvim' },
+      { 'nvimtools/none-ls-extras.nvim' },
     },
     config = function()
       --  This function gets run when an LSP attaches to a particular buffer.
@@ -150,22 +152,26 @@ mod.plugins = {
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {},
-        --
+        tsserver = {
+          on_attach = function(client)
+            client.server_capabilities.documentFormattingProvider = false
+            client.server_capabilities.documentRangeFormattingProvider = false
+          end,
+        },
 
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
           -- capabilities = {},
-          settings = {
-            Lua = {
-              completion = {
-                callSnippet = 'Replace',
-              },
-              -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
-            },
-          },
+          -- settings = {
+          --   Lua = {
+          --     completion = {
+          --       callSnippet = 'Replace',
+          --     },
+          --     -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+          --     -- diagnostics = { disable = { 'missing-fields' } },
+          --   },
+          -- },
         },
       }
 
@@ -197,6 +203,22 @@ mod.plugins = {
             require('lspconfig')[server_name].setup(server)
           end,
         },
+      })
+
+      local null_ls = require('null-ls')
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.formatting.stylua,
+          null_ls.builtins.diagnostics.codespell,
+          null_ls.builtins.formatting.prettier,
+          -- eslint is not needed via null-ls when using eslint-lsp.
+        },
+      })
+
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        callback = function()
+          vim.lsp.buf.format()
+        end,
       })
     end,
   },
