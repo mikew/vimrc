@@ -33,6 +33,10 @@ if not vim.g.vscode then
   -- Always show tab bar.
   vim.opt.showtabline = 2
 
+  -- Hide inline diagnostics.
+  vim.diagnostic.config({
+    virtual_text = false,
+  })
   -- Hide intro message.
   vim.opt.shortmess:append('I', 'l', 'm', 'r')
 
