@@ -314,6 +314,7 @@ mod.plugins = {
         api.config.mappings.default_on_attach(bufnr)
 
         vim.keymap.set('n', '<CR>', api.node.open.tab, opts('Open: New Tab'))
+        vim.keymap.set('n', '<2-LeftMouse>', api.node.open.tab, opts('Open: New Tab'))
         vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
       end,
 
