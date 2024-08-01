@@ -225,7 +225,9 @@ mod.plugins = {
 
       vim.api.nvim_create_autocmd('BufWritePre', {
         callback = function()
+          local view = vim.fn.winsaveview()
           vim.lsp.buf.format()
+          vim.fn.winrestview(view)
         end,
       })
     end,
