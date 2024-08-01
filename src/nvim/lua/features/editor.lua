@@ -225,7 +225,14 @@ mod.plugins = {
     'lukas-reineke/indent-blankline.nvim',
     main = 'ibl',
     cond = not vim.g.vscode,
-    opts = {},
+    opts = {
+      indent = { char = '┊' },
+      -- whitespace = {
+      --   highlight = highlight,
+      --   remove_blankline_trail = false,
+      -- },
+      scope = { enabled = true, show_exact_scope = true },
+    },
   },
 
   {
