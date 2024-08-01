@@ -108,12 +108,31 @@ if not vim.g.vscode then
 
   -- Keybinds to make split navigation easier.
   -- Use CTRL+<hjkl> to switch between windows
-  --
   -- See `:help wincmd` for a list of all window commands
-  vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-  vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-  vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-  vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+  vim.keymap.set(
+    'n',
+    '<C-h>',
+    '<C-w><C-h>',
+    { desc = 'Move focus to the left window' }
+  )
+  vim.keymap.set(
+    'n',
+    '<C-l>',
+    '<C-w><C-l>',
+    { desc = 'Move focus to the right window' }
+  )
+  vim.keymap.set(
+    'n',
+    '<C-j>',
+    '<C-w><C-j>',
+    { desc = 'Move focus to the lower window' }
+  )
+  vim.keymap.set(
+    'n',
+    '<C-k>',
+    '<C-w><C-k>',
+    { desc = 'Move focus to the upper window' }
+  )
 
   -- Rulers.
   vim.opt.colorcolumn = { 80, 120 }
@@ -123,7 +142,7 @@ if not vim.g.vscode then
     eob = ' ',
   }
 
-  -- resize splits if window got resized
+  -- Resize splits if window got resized
   vim.api.nvim_create_autocmd({ 'VimResized' }, {
     group = vimrc.create_augroup('resize_splits'),
     callback = function()
@@ -194,9 +213,21 @@ mod.plugins = {
       require('Comment').setup(opts)
       if has_gui_running then
         if vim_os == 'macos' then
-          vim.keymap.set('n', '<D-/>', '<Plug>(comment_toggle_linewise_current)')
-          vim.keymap.set('i', '<D-/>', '<C-o><Plug>(comment_toggle_linewise_current)')
-          vim.keymap.set('v', '<D-/>', '<Plug>(comment_toggle_linewise_visual)gv')
+          vim.keymap.set(
+            'n',
+            '<D-/>',
+            '<Plug>(comment_toggle_linewise_current)'
+          )
+          vim.keymap.set(
+            'i',
+            '<D-/>',
+            '<C-o><Plug>(comment_toggle_linewise_current)'
+          )
+          vim.keymap.set(
+            'v',
+            '<D-/>',
+            '<Plug>(comment_toggle_linewise_visual)gv'
+          )
         end
       end
     end,
@@ -332,7 +363,12 @@ mod.plugins = {
         api.config.mappings.default_on_attach(bufnr)
 
         vim.keymap.set('n', '<CR>', api.node.open.tab, opts('Open: New Tab'))
-        vim.keymap.set('n', '<2-LeftMouse>', api.node.open.tab, opts('Open: New Tab'))
+        vim.keymap.set(
+          'n',
+          '<2-LeftMouse>',
+          api.node.open.tab,
+          opts('Open: New Tab')
+        )
         vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
       end,
 
@@ -463,34 +499,114 @@ mod.plugins = {
 
       -- See `:help telescope.builtin`
       local builtin = require('telescope.builtin')
-      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
+      vim.keymap.set(
+        'n',
+        '<leader>sh',
+        builtin.help_tags,
+        { desc = '[S]earch [H]elp' }
+      )
+      vim.keymap.set(
+        'n',
+        '<leader>sk',
+        builtin.keymaps,
+        { desc = '[S]earch [K]eymaps' }
+      )
 
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<C-p>', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('i', '<C-p>', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set(
+        'n',
+        '<leader>sf',
+        builtin.find_files,
+        { desc = '[S]earch [F]iles' }
+      )
+      vim.keymap.set(
+        'n',
+        '<C-p>',
+        builtin.find_files,
+        { desc = '[S]earch [F]iles' }
+      )
+      vim.keymap.set(
+        'i',
+        '<C-p>',
+        builtin.find_files,
+        { desc = '[S]earch [F]iles' }
+      )
       if has_gui_running then
         if vim_os == 'macos' then
-          vim.keymap.set('n', '<D-t>', builtin.find_files, { desc = '[S]earch [F]iles' })
-          vim.keymap.set('i', '<D-t>', builtin.find_files, { desc = '[S]earch [F]iles' })
-          vim.keymap.set('n', '<D-p>', builtin.find_files, { desc = '[S]earch [F]iles' })
-          vim.keymap.set('i', '<D-p>', builtin.find_files, { desc = '[S]earch [F]iles' })
+          vim.keymap.set(
+            'n',
+            '<D-t>',
+            builtin.find_files,
+            { desc = '[S]earch [F]iles' }
+          )
+          vim.keymap.set(
+            'i',
+            '<D-t>',
+            builtin.find_files,
+            { desc = '[S]earch [F]iles' }
+          )
+          vim.keymap.set(
+            'n',
+            '<D-p>',
+            builtin.find_files,
+            { desc = '[S]earch [F]iles' }
+          )
+          vim.keymap.set(
+            'i',
+            '<D-p>',
+            builtin.find_files,
+            { desc = '[S]earch [F]iles' }
+          )
         end
       end
 
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set(
+        'n',
+        '<leader>ss',
+        builtin.builtin,
+        { desc = '[S]earch [S]elect Telescope' }
+      )
+      vim.keymap.set(
+        'n',
+        '<leader>sw',
+        builtin.grep_string,
+        { desc = '[S]earch current [W]ord' }
+      )
 
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set(
+        'n',
+        '<leader>sg',
+        builtin.live_grep,
+        { desc = '[S]earch by [G]rep' }
+      )
       if has_gui_running then
         if vim_os == 'macos' then
-          vim.keymap.set('n', '<D-F>', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-          vim.keymap.set('i', '<D-F>', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+          vim.keymap.set(
+            'n',
+            '<D-F>',
+            builtin.live_grep,
+            { desc = '[S]earch by [G]rep' }
+          )
+          vim.keymap.set(
+            'i',
+            '<D-F>',
+            builtin.live_grep,
+            { desc = '[S]earch by [G]rep' }
+          )
         end
       end
 
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
+      vim.keymap.set(
+        'n',
+        '<leader>sd',
+        builtin.diagnostics,
+        { desc = '[S]earch [D]iagnostics' }
+      )
+      vim.keymap.set(
+        'n',
+        '<leader>sr',
+        builtin.resume,
+        { desc = '[S]earch [R]esume' }
+      )
       vim.keymap.set(
         'n',
         '<leader>s.',
@@ -507,10 +623,12 @@ mod.plugins = {
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown({
-          winblend = 10,
-          previewer = false,
-        }))
+        builtin.current_buffer_fuzzy_find(
+          require('telescope.themes').get_dropdown({
+            winblend = 10,
+            previewer = false,
+          })
+        )
       end, { desc = '[/] Fuzzily search in current buffer' })
 
       -- It's also possible to pass additional configuration options.
