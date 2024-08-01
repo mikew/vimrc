@@ -2,17 +2,8 @@
 set -ex
 
 main() {
-  # nvim
   backup-file ~/.config/nvim
   ln -sf "$PWD/src/nvim" ~/.config/nvim
-
-  # vim
-  backup-file ~/.vimrc
-  backup-file ~/.vim
-  backup-file ~/.gvimrc
-  ln -sf "$PWD/src/nvim" ~/.vim
-  ln -sf "$PWD/src/nvim/init.vim" ~/.vimrc
-  ln -sf "$PWD/src/nvim/ginit.vim" ~/.gvimrc
 
   mkdir -p \
     ~/.cache/vim \
@@ -21,7 +12,7 @@ main() {
     ~/.cache/vim/undo \
     ~/.cache/vim-plug
 
-  vim +PlugSync
+  nvim
 }
 
 # Do this outside the actual backup function so we can ensure the time is
