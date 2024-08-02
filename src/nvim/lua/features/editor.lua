@@ -646,6 +646,75 @@ mod.plugins = {
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
+
+  -- I don't actually want a mini map, just signs in a gutter.
+  -- {
+  --   'echasnovski/mini.map',
+  --   version = '*',
+  --   cond = not vim.g.vscode,
+  --   opts = function()
+  --     local mini_map = require('mini.map')
+  --     return {
+  --       integrations = {
+  --         mini_map.gen_integration.builtin_search(),
+  --         mini_map.gen_integration.gitsigns(),
+  --         mini_map.gen_integration.diagnostic({
+  --           error = 'DiagnosticFloatingError',
+  --           warn = 'DiagnosticFloatingWarn',
+  --           info = 'DiagnosticFloatingInfo',
+  --           hint = 'DiagnosticFloatingHint',
+  --         }),
+  --       },
+  --     }
+  --   end,
+  -- },
+  -- First impressions are I like it. Acts like a scrollbar, a little noisy
+  -- tho.
+  -- {
+  --   'dstein64/nvim-scrollview',
+  --   cond = not vim.g.vscode,
+  --   opts = {
+  --     excluded_filetypes = {
+  --       'NvimTree',
+  --     },
+  --     -- current_only = true,
+  --     signs_on_startup = {
+  --       'conflicts',
+  --       'cursor',
+  --       'diagnostics',
+  --       'search',
+  --     },
+  --   }<D-z>
+  --
+  --   config = function(_, opts)
+  --     require('scrollview').setup(opts)
+  --     require('scrollview.contrib.gitsigns').setup()
+  --   end,
+  -- },
+  -- Also good, but `handle.blend` doesn't seem to work.
+  {
+    'petertriho/nvim-scrollbar',
+    cond = not vim.g.vscode,
+    opts = {
+      handle = {
+        blend = 0,
+      },
+
+      handlers = {
+        cursor = true,
+        diagnostic = true,
+        gitsigns = true, -- Requires gitsigns
+        handle = true,
+        search = false, -- Requires hlslens
+        ale = false, -- Requires ALE
+      },
+    },
+  },
+  -- Ding ding ding ding, we might have a winner.
+  -- {
+  --   'lewis6991/satellite.nvim',
+  --   opts = {},
+  -- },
 }
 
 return mod
