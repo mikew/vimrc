@@ -24,6 +24,10 @@ local symbols = {
     deleted = '-',
     ignored = '◌',
   },
+
+  indent = {
+    line = '┊',
+  },
 }
 
 return symbols

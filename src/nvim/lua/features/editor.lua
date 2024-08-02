@@ -258,11 +258,7 @@ mod.plugins = {
     main = 'ibl',
     cond = not vim.g.vscode,
     opts = {
-      indent = { char = '┊' },
-      -- whitespace = {
-      --   highlight = highlight,
-      --   remove_blankline_trail = false,
-      -- },
+      indent = { char = symbols.indent.line },
       scope = { enabled = true, show_exact_scope = true },
     },
   },
@@ -387,9 +383,15 @@ mod.plugins = {
 
         indent_markers = {
           enable = true,
+          icons = {
+            edge = symbols.indent.line,
+            item = symbols.indent.line,
+          },
         },
 
         icons = {
+          diagnostics_placement = 'before',
+
           web_devicons = {
             file = {
               enable = false,

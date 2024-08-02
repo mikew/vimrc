@@ -3,14 +3,14 @@ local symbols = require('symbols')
 
 local mod = {}
 
-local symbols = {
+local diagnostic_symbols = {
   Hint = symbols.diagnostics.hint,
   Info = symbols.diagnostics.info,
   Warn = symbols.diagnostics.warn,
   Error = symbols.diagnostics.error,
 }
 
-for name, symbol in pairs(symbols) do
+for name, symbol in pairs(diagnostic_symbols) do
   local hl = 'DiagnosticSign' .. name
   vim.fn.sign_define(hl, { text = symbol, numhl = hl, texthl = hl })
 end
