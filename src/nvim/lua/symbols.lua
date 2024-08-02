@@ -1,9 +1,9 @@
 local symbols = {
   diagnostics = {
-    error = '⚠',
-    warn = '⚠',
-    into = 'ℹ',
     hint = 'ℹ',
+    info = 'ℹ',
+    warn = '⚠',
+    error = '⚠',
   },
 
   generic = {
