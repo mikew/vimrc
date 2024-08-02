@@ -417,6 +417,9 @@ mod.plugins = {
       -- disable netrw
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
+
+      local api = require('nvim-tree.api')
+      api.tree.open()
     end,
   },
 
