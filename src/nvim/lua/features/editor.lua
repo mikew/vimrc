@@ -437,6 +437,12 @@ mod.plugins = {
       diagnostics = {
         enable = true,
         show_on_dirs = true,
+        icons = {
+          hint = symbols.diagnostics.hint,
+          info = symbols.diagnostics.info,
+          warning = symbols.diagnostics.warn,
+          error = symbols.diagnostics.error,
+        },
       },
 
       modified = {
