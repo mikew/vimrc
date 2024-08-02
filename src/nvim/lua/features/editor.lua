@@ -1,4 +1,5 @@
 local vimrc = require('vimrc')
+local symbols = require('symbols')
 
 local vim_ui = vimrc.determine_ui()
 local vim_os = vimrc.determine_os()
@@ -386,6 +387,46 @@ mod.plugins = {
 
         indent_markers = {
           enable = true,
+        },
+
+        icons = {
+          web_devicons = {
+            file = {
+              enable = false,
+              color = true,
+            },
+            folder = {
+              enable = false,
+              color = true,
+            },
+          },
+
+          glyphs = {
+            default = '',
+            symlink = symbols.generic.symlink,
+            bookmark = symbols.generic.star,
+            modified = symbols.git.changes,
+            hidden = symbols.generic.hidden,
+            folder = {
+              arrow_closed = '',
+              arrow_open = '',
+              default = symbols.generic.arrow_right_solid,
+              open = symbols.generic.arrow_down_solid,
+              empty = symbols.generic.arrow_right,
+              empty_open = symbols.generic.arrow_down,
+              symlink = symbols.generic.symlink,
+              symlink_open = symbols.generic.symlink,
+            },
+            git = {
+              unstaged = symbols.git.changes,
+              staged = symbols.git.staged,
+              unmerged = symbols.git.untracked,
+              renamed = symbols.git.renamed,
+              untracked = symbols.git.untracked,
+              deleted = symbols.git.deleted,
+              ignored = symbols.git.ignored,
+            },
+          },
         },
       },
 

@@ -1,6 +1,19 @@
 local vimrc = require('vimrc')
+local symbols = require('symbols')
 
 local mod = {}
+
+local symbols = {
+  Error = symbols.diagnostics.error,
+  Info = symbols.diagnostics.info,
+  Hint = symbols.diagnostics.hint,
+  Warn = symbols.diagnostics.warn,
+}
+
+for name, icon in pairs(symbols) do
+  local hl = 'DiagnosticSign' .. name
+  vim.fn.sign_define(hl, { text = icon, numhl = hl, texthl = hl })
+end
 
 mod.plugins = {
   {
