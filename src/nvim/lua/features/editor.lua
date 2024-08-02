@@ -574,6 +574,12 @@ mod.plugins = {
 
       vim.keymap.set(
         'n',
+        '<C-S-F>',
+        builtin.live_grep,
+        { desc = '[S]earch by [G]rep' }
+      )
+      vim.keymap.set(
+        'n',
         '<leader>sg',
         builtin.live_grep,
         { desc = '[S]earch by [G]rep' }
