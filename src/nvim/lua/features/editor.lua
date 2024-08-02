@@ -174,6 +174,9 @@ if not vim.g.vscode then
       vim.fn.mkdir(vim.fn.fnamemodify(file, ':p:h'), 'p')
     end,
   })
+
+  -- Stop gitsigns and diagnostics from clobbering each other.
+  vim.o.signcolumn = 'auto:2'
 end
 
 local mod = {}
