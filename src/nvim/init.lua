@@ -7,6 +7,7 @@ local feature_lsp = require('features.lsp')
 local feature_completion = require('features.completion')
 local feature_sidebar = require('features.sidebar')
 local feature_grep = require('features.grep')
+local feature_scrollbar = require('features.scrollbar')
 
 local all_spec = {}
 vim.list_extend(all_spec, feature_editor.plugins)
@@ -16,6 +17,7 @@ vim.list_extend(all_spec, feature_lsp.plugins)
 vim.list_extend(all_spec, feature_completion.plugins)
 vim.list_extend(all_spec, feature_sidebar.plugins)
 vim.list_extend(all_spec, feature_grep.plugins)
+vim.list_extend(all_spec, feature_scrollbar.plugins)
 
 -- Setup lazy.nvim
 require('lazy').setup({
