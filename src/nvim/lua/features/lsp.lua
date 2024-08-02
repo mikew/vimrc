@@ -252,12 +252,12 @@ mod.plugins = {
 
             vim.api.nvim_create_autocmd('LspDetach', {
               group = vimrc.create_augroup('lsp-detach'),
-              callback = function(event2)
+              callback = function(lsp_detach_event)
                 vim.lsp.buf.clear_references()
                 vim.api.nvim_clear_autocmds({
                   -- group = 'kickstart-lsp-highlight',
                   group = highlight_augroup,
-                  buffer = event2.buf,
+                  buffer = lsp_detach_event.buf,
                 })
               end,
             })

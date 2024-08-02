@@ -754,10 +754,13 @@ mod.plugins = {
       handlers = {
         cursor = true,
         diagnostic = true,
-        gitsigns = true, -- Requires gitsigns
+        -- Requires gitsigns
+        gitsigns = true,
         handle = true,
-        search = false, -- Requires hlslens
-        ale = false, -- Requires ALE
+        -- Requires hlslens
+        search = false,
+        -- Requires ALE
+        ale = false,
       },
     },
   },
