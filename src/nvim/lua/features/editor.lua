@@ -92,7 +92,8 @@ if not vim.g.vscode then
   vim.opt.undofile = true
 
   -- Keep signcolumn on by default
-  vim.opt.signcolumn = 'yes'
+  -- Stop gitsigns and diagnostics from clobbering each other.
+  vim.opt.signcolumn = 'yes:2'
 
   -- Configure how new splits should be opened
   vim.opt.splitright = true
@@ -174,9 +175,6 @@ if not vim.g.vscode then
       vim.fn.mkdir(vim.fn.fnamemodify(file, ':p:h'), 'p')
     end,
   })
-
-  -- Stop gitsigns and diagnostics from clobbering each other.
-  vim.o.signcolumn = 'auto:2'
 end
 
 local mod = {}
