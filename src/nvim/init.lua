@@ -1,4 +1,4 @@
-require('config.lazy-rtp')
+require('lazy-rtp')
 
 local feature_editor = require('features.editor')
 local feature_languages = require('features.languages')
