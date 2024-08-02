@@ -66,6 +66,11 @@ mod.plugins = {
         },
       }
 
+      local disabled_buftypes = {}
+      local disabled_filetypes = {
+        'NvimTree',
+      }
+
       -- Ensure the servers and tools above are installed
       -- To check the current status of installed tools and/or manually install
       -- other tools, you can run
@@ -104,8 +109,12 @@ mod.plugins = {
       null_ls.setup({
         sources = {
           null_ls.builtins.formatting.stylua,
-          null_ls.builtins.diagnostics.codespell,
           null_ls.builtins.formatting.prettier,
+
+          null_ls.builtins.diagnostics.codespell.with({
+            disabled_filetypes = disabled_filetypes,
+          }),
+
           -- eslint is not needed with null-ls when using eslint-lsp.
         },
       })
@@ -118,6 +127,17 @@ mod.plugins = {
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vimrc.create_augroup('lsp-attach'),
         callback = function(event)
+          local buftype = vim.bo.buftype
+          local buf_filetype = vim.bo.buftype
+
+          if
+            vim.tbl_contains(disabled_filetypes, buf_filetype)
+            or vim.tbl_contains(disabled_buftypes, buftype)
+          then
+            print('return early LspAttach')
+            return
+          end
+
           local map = function(keys, func, desc)
             vim.keymap.set(
               'n',
