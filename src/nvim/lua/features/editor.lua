@@ -581,12 +581,6 @@ mod.plugins = {
       if has_gui_running then
         if vim_os == 'macos' then
           vim.keymap.set(
-            'n',
-            '<D-F>',
-            builtin.live_grep,
-            { desc = '[S]earch by [G]rep' }
-          )
-          vim.keymap.set(
             'i',
             '<D-F>',
             builtin.live_grep,
