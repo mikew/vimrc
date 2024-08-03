@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -ex
+
+main() {
+  backup-file ~/.config/nvim
+  ln -sf "$PWD/src/nvim" ~/.config/nvim
+
+  mkdir -p \
+    ~/.cache/vim \
+    ~/.cache/vim/swap \
+    ~/.cache/vim/backup \
+    ~/.cache/vim/undo \
+    ~/.cache/vim-plug
+
+  nvim
+}
+
+# Do this outside the actual backup function so we can ensure the time is
+# consistent between calls.
+backup_extension="backup.$(date '+%F %T')"
+
+backup-file () {
+  if [ -e "$1" ]; then
+    mv "$1" "$1.$backup_extension"
+  fi
+}
+
+main "$@"
