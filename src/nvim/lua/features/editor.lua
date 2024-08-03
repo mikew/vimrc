@@ -67,7 +67,7 @@ if not vim.g.vscode then
 
   -- Make line numbers default
   vim.opt.number = true
-  vim.opt.numberwidth = 3
+  vim.opt.numberwidth = 4
   -- You can also add relative line numbers, to help with jumping.
   -- Experiment for yourself to see if you like it!
   -- vim.opt.relativenumber = true
@@ -317,9 +317,10 @@ mod.plugins = {
   {
     'luukvbaal/statuscol.nvim',
     cond = not vim.g.vscode,
-    config = function()
+    opts = function()
       local builtin = require('statuscol.builtin')
-      require('statuscol').setup({
+
+      return {
         relculright = true,
         setopt = true,
         segments = {
@@ -373,31 +374,14 @@ mod.plugins = {
           'dapui_breakpoints',
           'dapui_scopes',
         },
-      })
+      }
+    end,
+    config = function(_, opts)
+      require('statuscol').setup(opts)
 
       vim.api.nvim_create_autocmd({ 'BufEnter', 'BufNew' }, {
         callback = function()
-          local ft_ignore = {
-            'man',
-            'help',
-            'neo-tree',
-            'starter',
-            'TelescopePrompt',
-            'Trouble',
-            'NvimTree',
-            'nvcheatsheet',
-            'dapui_watches',
-            'dap-repl',
-            'dapui_console',
-            'spectre_panel',
-            'dapui_stacks',
-            'dapui_breakpoints',
-            'dapui_scopes',
-          }
-          if vim.tbl_contains(ft_ignore, vim.bo.filetype) then
-            -- vim.opt_local.statuscolumn = ''
-            -- vim.cmd('setlocal statuscolumn=')
-          else
+          if not vim.tbl_contains(opts.ft_ignore, vim.bo.filetype) then
             --- TODO This should be happening for us anyways.
             --- https://github.com/luukvbaal/statuscol.nvim/issues/78
             vim.opt_local.statuscolumn = '%!v:lua.StatusCol()'
