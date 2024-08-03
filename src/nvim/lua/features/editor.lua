@@ -67,6 +67,7 @@ if not vim.g.vscode then
 
   -- Make line numbers default
   vim.opt.number = true
+  vim.opt.numberwidth = 3
   -- You can also add relative line numbers, to help with jumping.
   -- Experiment for yourself to see if you like it!
   -- vim.opt.relativenumber = true
@@ -310,6 +311,99 @@ mod.plugins = {
     opts = {},
     config = function(_, opts)
       require('illuminate').configure(opts)
+    end,
+  },
+
+  {
+    'luukvbaal/statuscol.nvim',
+    cond = not vim.g.vscode,
+    config = function()
+      local builtin = require('statuscol.builtin')
+      require('statuscol').setup({
+        relculright = true,
+        setopt = true,
+        segments = {
+          -- one space gap
+          -- { text = { ' ' } },
+
+          { text = { builtin.lnumfunc }, click = 'v:lua.ScLa' },
+
+          {
+            sign = {
+              namespace = { 'gitsign' },
+              maxwidth = 1,
+              colwidth = 1,
+              auto = false,
+            },
+            click = 'v:lua.ScSa',
+          },
+
+          { text = { ' ' } },
+
+          {
+            sign = {
+              namespace = { 'diagnostic' },
+              maxwidth = 1,
+              colwidth = 1,
+              auto = false,
+            },
+            click = 'v:lua.ScSa',
+          },
+
+          { text = { ' ' } },
+
+          { text = { builtin.foldfunc }, click = 'v:lua.ScFa' },
+
+          -- { text = { ' ' } },
+        },
+        ft_ignore = {
+          'man',
+          'help',
+          'neo-tree',
+          'starter',
+          'TelescopePrompt',
+          'Trouble',
+          'NvimTree',
+          'nvcheatsheet',
+          'dapui_watches',
+          'dap-repl',
+          'dapui_console',
+          'spectre_panel',
+          'dapui_stacks',
+          'dapui_breakpoints',
+          'dapui_scopes',
+        },
+      })
+
+      vim.api.nvim_create_autocmd({ 'BufEnter', 'BufNew' }, {
+        callback = function()
+          local ft_ignore = {
+            'man',
+            'help',
+            'neo-tree',
+            'starter',
+            'TelescopePrompt',
+            'Trouble',
+            'NvimTree',
+            'nvcheatsheet',
+            'dapui_watches',
+            'dap-repl',
+            'dapui_console',
+            'spectre_panel',
+            'dapui_stacks',
+            'dapui_breakpoints',
+            'dapui_scopes',
+          }
+          if vim.tbl_contains(ft_ignore, vim.bo.filetype) then
+            -- vim.opt_local.statuscolumn = ''
+            -- vim.cmd('setlocal statuscolumn=')
+          else
+            --- TODO This should be happening for us anyways.
+            --- https://github.com/luukvbaal/statuscol.nvim/issues/78
+            vim.opt_local.statuscolumn = '%!v:lua.StatusCol()'
+          end
+        end,
+      })
     end,
   },
 }
