@@ -108,6 +108,7 @@ if not vim.g.vscode then
 
   -- Minimal number of screen lines to keep above and below the cursor.
   vim.opt.scrolloff = 5
+  vim.opt.mousescroll = 'ver:1,hor:1'
 
   -- Keybinds to make split navigation easier.
   -- Use CTRL+<hjkl> to switch between windows
