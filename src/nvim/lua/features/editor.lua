@@ -394,6 +394,13 @@ mod.plugins = {
       })
     end,
   },
+
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    opts = {
+      mode = 'topline',
+    },
+  },
 }
 
 return mod
