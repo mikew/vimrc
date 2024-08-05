@@ -269,45 +269,39 @@ mod.plugins = {
     },
   },
 
+  -- {
+  --   'RRethy/base16-nvim',
+  --   cond = not vim.g.vscode,
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd('colorscheme base16-oceanicnext')
+  --   end,
+  -- },
   {
-    'mhartington/oceanic-next',
+    'echasnovski/mini.base16',
     cond = not vim.g.vscode,
-    -- Make sure to load this before all the other start plugins.
     priority = 1000,
-    dependencies = {
-      { 'othree/yajs.vim' },
-      { 'othree/html5.vim' },
-      { 'HerringtonDarkholme/yats.vim' },
+    opts = {
+      palette = {
+        base00 = '#1B2B34',
+        base01 = '#343D46',
+        base02 = '#4F5B66',
+        base03 = '#65737E',
+        base04 = '#A7ADBA',
+        base05 = '#C0C5CE',
+        base06 = '#CDD3DE',
+        base07 = '#D8DEE9',
+        base08 = '#EC5f67',
+        base09 = '#F99157',
+        base0A = '#FAC863',
+        base0B = '#99C794',
+        base0C = '#5FB3B3',
+        base0D = '#6699CC',
+        base0E = '#C594C5',
+        base0F = '#AB7967',
+      },
     },
-    config = function()
-      vim.opt.termguicolors = true
-      vim.cmd.syntax('enable')
-      vim.cmd.colorscheme('OceanicNext')
-    end,
   },
-  -- {
-  --   'roflolilolmao/oceanic-next.nvim',
-  --   cond = not vim.g.vscode,
-  --   config = function()
-  --     vim.opt.termguicolors = true
-  --     vim.cmd.syntax('enable')
-  --     vim.cmd.colorscheme('OceanicNext')
-  --   end,
-  -- },
-  -- {
-  --   'adrian5/oceanic-next-vim',
-  --   cond = not vim.g.vscode,
-  --   dependencies = {
-  --     { 'othree/yajs.vim' },
-  --     { 'othree/html5.vim' },
-  --     { 'HerringtonDarkholme/yats.vim' },
-  --   },
-  --   config = function()
-  --     vim.opt.termguicolors = true
-  --     vim.cmd.syntax('enable')
-  --     vim.cmd.colorscheme('oceanicnext')
-  --   end,
-  -- },
 
   {
     'RRethy/vim-illuminate',
