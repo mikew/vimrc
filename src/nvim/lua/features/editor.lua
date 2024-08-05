@@ -377,12 +377,12 @@ mod.plugins = {
     config = function(_, opts)
       require('statuscol').setup(opts)
 
-      vim.api.nvim_create_autocmd({ 'BufEnter', 'BufNew' }, {
+      vim.api.nvim_create_autocmd({ 'BufEnter' }, {
         callback = function()
-          if not vim.tbl_contains(opts.ft_ignore, vim.bo.filetype) then
-            --- TODO This should be happening for us anyways.
-            --- https://github.com/luukvbaal/statuscol.nvim/issues/78
-            vim.opt_local.statuscolumn = '%!v:lua.StatusCol()'
+          if vim.tbl_contains(opts.ft_ignore, vim.bo.filetype) then
+            vim.opt_local.statuscolumn = ''
+            vim.opt_local.signcolumn = 'no'
+            vim.opt_local.number = false
           end
         end,
       })
