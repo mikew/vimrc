@@ -1,3 +1,4 @@
+local vimrc = require('vimrc')
 local symbols = require('symbols')
 
 local mod = {}
@@ -32,7 +33,9 @@ mod.plugins = {
 
     config = function(_, opts)
       require('scrollview').setup(opts)
-      require('scrollview.contrib.gitsigns').setup()
+      if vimrc.has_feature('scm') then
+        require('scrollview.contrib.gitsigns').setup()
+      end
     end,
   },
   -- Ding ding ding ding, we might have a winner.

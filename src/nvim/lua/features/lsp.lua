@@ -146,13 +146,12 @@ mod.plugins = {
         group = vimrc.create_augroup('lsp-attach'),
         callback = function(event)
           local buftype = vim.bo.buftype
-          local buf_filetype = vim.bo.buftype
+          local buf_filetype = vim.bo.filetype
 
           if
             vim.tbl_contains(disabled_filetypes, buf_filetype)
             or vim.tbl_contains(disabled_buftypes, buftype)
           then
-            print('return early LspAttach')
             return
           end
 
@@ -165,42 +164,44 @@ mod.plugins = {
             )
           end
 
-          -- Jump to the definition of the word under your cursor.
-          -- This is where a variable was first declared, or where a function is defined, etc.
-          -- To jump back, press <C-t>.
-          map('gd', function(...)
-            require('telescope.builtin').lsp_definitions(...)
-          end, '[G]oto [D]efinition')
+          if vimrc.has_feature('grep') then
+            -- Jump to the definition of the word under your cursor.
+            -- This is where a variable was first declared, or where a function is defined, etc.
+            -- To jump back, press <C-t>.
+            map('gd', function(...)
+              require('telescope.builtin').lsp_definitions(...)
+            end, '[G]oto [D]efinition')
 
-          -- Find references for the word under your cursor.
-          map('gr', function(...)
-            require('telescope.builtin').lsp_references(...)
-          end, '[G]oto [R]eferences')
+            -- Find references for the word under your cursor.
+            map('gr', function(...)
+              require('telescope.builtin').lsp_references(...)
+            end, '[G]oto [R]eferences')
 
-          -- Jump to the implementation of the word under your cursor.
-          -- Useful when your language has ways of declaring types without an actual implementation.
-          map('gI', function(...)
-            require('telescope.builtin').lsp_implementations(...)
-          end, '[G]oto [I]mplementation')
+            -- Jump to the implementation of the word under your cursor.
+            -- Useful when your language has ways of declaring types without an actual implementation.
+            map('gI', function(...)
+              require('telescope.builtin').lsp_implementations(...)
+            end, '[G]oto [I]mplementation')
 
-          -- Jump to the type of the word under your cursor.
-          -- Useful when you're not sure what type a variable is and you want to see
-          -- the definition of its *type*, not where it was *defined*.
-          map('<leader>D', function(...)
-            require('telescope.builtin').lsp_type_definitions(...)
-          end, 'Type [D]efinition')
+            -- Jump to the type of the word under your cursor.
+            -- Useful when you're not sure what type a variable is and you want to see
+            -- the definition of its *type*, not where it was *defined*.
+            map('<leader>D', function(...)
+              require('telescope.builtin').lsp_type_definitions(...)
+            end, 'Type [D]efinition')
 
-          -- Fuzzy find all the symbols in your current document.
-          -- Symbols are things like variables, functions, types, etc.
-          map('<leader>ds', function(...)
-            require('telescope.builtin').lsp_document_symbols(...)
-          end, '[D]ocument [S]ymbols')
+            -- Fuzzy find all the symbols in your current document.
+            -- Symbols are things like variables, functions, types, etc.
+            map('<leader>ds', function(...)
+              require('telescope.builtin').lsp_document_symbols(...)
+            end, '[D]ocument [S]ymbols')
 
-          -- Fuzzy find all the symbols in your current workspace.
-          -- Similar to document symbols, except searches over your entire project.
-          map('<leader>ws', function(...)
-            require('telescope.builtin').lsp_dynamic_workspace_symbols(...)
-          end, '[W]orkspace [S]ymbols')
+            -- Fuzzy find all the symbols in your current workspace.
+            -- Similar to document symbols, except searches over your entire project.
+            map('<leader>ws', function(...)
+              require('telescope.builtin').lsp_dynamic_workspace_symbols(...)
+            end, '[W]orkspace [S]ymbols')
+          end
 
           -- Rename the variable under your cursor.
           -- Most Language Servers support renaming across files, etc.
@@ -283,6 +284,12 @@ mod.plugins = {
         end,
       })
     end,
+  },
+
+  {
+    'folke/lazydev.nvim',
+    ft = 'lua', -- only load on lua files
+    opts = {},
   },
 }
 

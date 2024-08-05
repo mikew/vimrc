@@ -31,6 +31,7 @@ mod.plugins = {
   {
     'nvim-tree/nvim-tree.lua',
     cond = not vim.g.vscode,
+    lazy = false,
     keys = {
       { '<leader>e', ':NvimTreeFindFile<CR>', desc = 'NvimTreeFindFile' },
     },
@@ -158,8 +159,11 @@ mod.plugins = {
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
 
-      local api = require('nvim-tree.api')
-      api.tree.open()
+      vim.api.nvim_create_autocmd('VimEnter', {
+        desc = 'Open Tree automatically',
+        once = true,
+        command = 'NvimTreeFindFile | wincmd p',
+      })
     end,
   },
 }

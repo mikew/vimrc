@@ -213,27 +213,50 @@ mod.plugins = {
     'numToStr/Comment.nvim',
     cond = not vim.g.vscode,
     opts = {},
-    config = function(_, opts)
-      require('Comment').setup(opts)
+    keys = function()
+      local keys = {}
+
       if has_gui_running then
         if vim_os == 'macos' then
-          vim.keymap.set(
-            'n',
-            '<D-/>',
-            '<Plug>(comment_toggle_linewise_current)'
-          )
-          vim.keymap.set(
-            'i',
-            '<D-/>',
-            '<C-o><Plug>(comment_toggle_linewise_current)'
-          )
-          vim.keymap.set(
-            'v',
-            '<D-/>',
-            '<Plug>(comment_toggle_linewise_visual)gv'
-          )
+          keys = vim.tbl_extend('force', keys, {
+            {
+              '<D-/>',
+              '<Plug>(comment_toggle_linewise_current)',
+              mode = 'n',
+            },
+            {
+              '<D-/>',
+              '<C-o><Plug>(comment_toggle_linewise_current)',
+              mode = 'i',
+            },
+            {
+              '<D-/>',
+              '<Plug>(comment_toggle_linewise_visual)gv',
+              mode = 'v',
+            },
+          })
         end
       end
+
+      keys = vim.tbl_extend('force', keys, {
+        {
+          '<C-/>',
+          '<Plug>(comment_toggle_linewise_current)',
+          mode = 'n',
+        },
+        {
+          '<C-/>',
+          '<C-o><Plug>(comment_toggle_linewise_current)',
+          mode = 'i',
+        },
+        {
+          '<C-/>',
+          '<Plug>(comment_toggle_linewise_visual)gv',
+          mode = 'v',
+        },
+      })
+
+      return keys
     end,
   },
 
@@ -249,10 +272,13 @@ mod.plugins = {
     opts = {},
     config = function(_, opts)
       require('nvim-autopairs').setup(opts)
-      -- If you want to automatically add `(` after selecting a function or method
-      local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-      local cmp = require('cmp')
-      cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+
+      if vimrc.has_feature('completion') then
+        -- If you want to automatically add `(` after selecting a function or method
+        local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+        local cmp = require('cmp')
+        cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+      end
     end,
   },
 
@@ -260,6 +286,7 @@ mod.plugins = {
     'lukas-reineke/indent-blankline.nvim',
     main = 'ibl',
     cond = not vim.g.vscode,
+    event = { 'BufRead' },
     opts = {
       indent = { char = symbols.indent.line },
       scope = { enabled = true, show_exact_scope = true },
@@ -267,48 +294,44 @@ mod.plugins = {
   },
 
   {
-    'mhartington/oceanic-next',
+    'RRethy/base16-nvim',
     cond = not vim.g.vscode,
-    -- Make sure to load this before all the other start plugins.
     priority = 1000,
-    dependencies = {
-      { 'othree/yajs.vim' },
-      { 'othree/html5.vim' },
-      { 'HerringtonDarkholme/yats.vim' },
-    },
     config = function()
-      vim.opt.termguicolors = true
-      vim.cmd.syntax('enable')
-      vim.cmd.colorscheme('OceanicNext')
+      vim.cmd('colorscheme base16-oceanicnext')
     end,
   },
   -- {
-  --   'roflolilolmao/oceanic-next.nvim',
+  --   'echasnovski/mini.base16',
   --   cond = not vim.g.vscode,
-  --   config = function()
-  --     vim.opt.termguicolors = true
-  --     vim.cmd.syntax('enable')
-  --     vim.cmd.colorscheme('OceanicNext')
-  --   end,
-  -- },
-  -- {
-  --   'adrian5/oceanic-next-vim',
-  --   cond = not vim.g.vscode,
-  --   dependencies = {
-  --     { 'othree/yajs.vim' },
-  --     { 'othree/html5.vim' },
-  --     { 'HerringtonDarkholme/yats.vim' },
+  --   priority = 1000,
+  --   opts = {
+  --     -- https://github.com/voronianski/oceanic-next-color-scheme?tab=readme-ov-file#color-palette
+  --     palette = {
+  --       base00 = '#1B2B34',
+  --       base01 = '#343D46',
+  --       base02 = '#4F5B66',
+  --       base03 = '#65737E',
+  --       base04 = '#A7ADBA',
+  --       base05 = '#C0C5CE',
+  --       base06 = '#CDD3DE',
+  --       base07 = '#D8DEE9',
+  --       base08 = '#EC5f67',
+  --       base09 = '#F99157',
+  --       base0A = '#FAC863',
+  --       base0B = '#99C794',
+  --       base0C = '#5FB3B3',
+  --       base0D = '#6699CC',
+  --       base0E = '#C594C5',
+  --       base0F = '#AB7967',
+  --     },
   --   },
-  --   config = function()
-  --     vim.opt.termguicolors = true
-  --     vim.cmd.syntax('enable')
-  --     vim.cmd.colorscheme('oceanicnext')
-  --   end,
   -- },
 
   {
     'RRethy/vim-illuminate',
     cond = not vim.g.vscode,
+    event = { 'InsertEnter' },
     opts = {},
     config = function(_, opts)
       require('illuminate').configure(opts)
@@ -380,16 +403,24 @@ mod.plugins = {
     config = function(_, opts)
       require('statuscol').setup(opts)
 
-      vim.api.nvim_create_autocmd({ 'BufEnter', 'BufNew' }, {
+      vim.api.nvim_create_autocmd({ 'BufEnter' }, {
         callback = function()
-          if not vim.tbl_contains(opts.ft_ignore, vim.bo.filetype) then
-            --- TODO This should be happening for us anyways.
-            --- https://github.com/luukvbaal/statuscol.nvim/issues/78
-            vim.opt_local.statuscolumn = '%!v:lua.StatusCol()'
+          if vim.tbl_contains(opts.ft_ignore, vim.bo.filetype) then
+            vim.opt_local.statuscolumn = ''
+            vim.opt_local.signcolumn = 'no'
+            vim.opt_local.number = false
           end
         end,
       })
     end,
+  },
+
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    event = { 'BufRead' },
+    opts = {
+      mode = 'topline',
+    },
   },
 }
 

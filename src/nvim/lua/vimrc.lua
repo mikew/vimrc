@@ -1,4 +1,16 @@
-local mod = {}
+local mod = {
+  features = {},
+}
+
+function mod.register_feature(name)
+  if not vim.list_contains(mod.features, name) then
+    table.insert(mod.features, name)
+  end
+end
+
+function mod.has_feature(name)
+  return vim.list_contains(mod.features, name)
+end
 
 function mod.determine_ui()
   if
