@@ -285,6 +285,12 @@ mod.plugins = {
       })
     end,
   },
+
+  {
+    'folke/lazydev.nvim',
+    ft = 'lua', -- only load on lua files
+    opts = {},
+  },
 }
 
 return mod
