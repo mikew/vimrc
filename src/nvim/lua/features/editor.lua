@@ -31,6 +31,8 @@ vim.keymap.set('v', '<', '<gv')
 vim.keymap.set('v', '>', '>gv')
 
 if not vim.g.vscode then
+  vim.opt.termguicolors = true
+
   -- Always show tab bar.
   vim.opt.showtabline = 2
 
