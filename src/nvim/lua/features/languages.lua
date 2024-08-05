@@ -2,6 +2,11 @@ local mod = {}
 
 mod.plugins = {
   {
+    'RRethy/nvim-treesitter-endwise',
+    cond = not vim.g.vscode,
+  },
+
+  {
     'nvim-treesitter/nvim-treesitter',
     cond = not vim.g.vscode,
     version = false,
@@ -53,6 +58,10 @@ mod.plugins = {
       },
 
       matchup = {
+        enable = true,
+      },
+
+      endwise = {
         enable = true,
       },
     },
