@@ -17,6 +17,8 @@ local feature_grep = require('features.grep')
 vimrc.register_feature('grep')
 local feature_scrollbar = require('features.scrollbar')
 vimrc.register_feature('scrollbar')
+local feature_ai = require('features.ai')
+vimrc.register_feature('ai')
 
 local all_spec = {}
 vim.list_extend(all_spec, feature_editor.plugins)
@@ -27,6 +29,7 @@ vim.list_extend(all_spec, feature_completion.plugins)
 vim.list_extend(all_spec, feature_sidebar.plugins)
 vim.list_extend(all_spec, feature_grep.plugins)
 vim.list_extend(all_spec, feature_scrollbar.plugins)
+vim.list_extend(all_spec, feature_ai.plugins)
 
 -- Setup lazy.nvim
 require('lazy').setup({
