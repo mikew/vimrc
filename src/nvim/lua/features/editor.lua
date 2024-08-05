@@ -430,6 +430,12 @@ mod.plugins = {
     cond = not vim.g.vscode,
     opts = {},
   },
+
+  {
+    'levouh/tint.nvim',
+    cond = not vim.g.vscode,
+    opts = {},
+  },
 }
 
 return mod
