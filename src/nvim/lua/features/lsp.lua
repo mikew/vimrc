@@ -146,13 +146,12 @@ mod.plugins = {
         group = vimrc.create_augroup('lsp-attach'),
         callback = function(event)
           local buftype = vim.bo.buftype
-          local buf_filetype = vim.bo.buftype
+          local buf_filetype = vim.bo.filetype
 
           if
             vim.tbl_contains(disabled_filetypes, buf_filetype)
             or vim.tbl_contains(disabled_buftypes, buftype)
           then
-            print('return early LspAttach')
             return
           end
 
