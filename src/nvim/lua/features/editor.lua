@@ -424,6 +424,12 @@ mod.plugins = {
       mode = 'topline',
     },
   },
+
+  {
+    'andymass/vim-matchup',
+    cond = not vim.g.vscode,
+    opts = {},
+  },
 }
 
 return mod
