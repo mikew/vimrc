@@ -213,27 +213,50 @@ mod.plugins = {
     'numToStr/Comment.nvim',
     cond = not vim.g.vscode,
     opts = {},
-    config = function(_, opts)
-      require('Comment').setup(opts)
+    keys = function()
+      local keys = {}
+
       if has_gui_running then
         if vim_os == 'macos' then
-          vim.keymap.set(
-            'n',
-            '<D-/>',
-            '<Plug>(comment_toggle_linewise_current)'
-          )
-          vim.keymap.set(
-            'i',
-            '<D-/>',
-            '<C-o><Plug>(comment_toggle_linewise_current)'
-          )
-          vim.keymap.set(
-            'v',
-            '<D-/>',
-            '<Plug>(comment_toggle_linewise_visual)gv'
-          )
+          keys = vim.tbl_extend('force', keys, {
+            {
+              '<D-/>',
+              '<Plug>(comment_toggle_linewise_current)',
+              mode = 'n',
+            },
+            {
+              '<D-/>',
+              '<C-o><Plug>(comment_toggle_linewise_current)',
+              mode = 'i',
+            },
+            {
+              '<D-/>',
+              '<Plug>(comment_toggle_linewise_visual)gv',
+              mode = 'v',
+            },
+          })
         end
       end
+
+      keys = vim.tbl_extend('force', keys, {
+        {
+          '<C-/>',
+          '<Plug>(comment_toggle_linewise_current)',
+          mode = 'n',
+        },
+        {
+          '<C-/>',
+          '<C-o><Plug>(comment_toggle_linewise_current)',
+          mode = 'i',
+        },
+        {
+          '<C-/>',
+          '<Plug>(comment_toggle_linewise_visual)gv',
+          mode = 'v',
+        },
+      })
+
+      return keys
     end,
   },
 
@@ -263,6 +286,7 @@ mod.plugins = {
     'lukas-reineke/indent-blankline.nvim',
     main = 'ibl',
     cond = not vim.g.vscode,
+    event = { 'BufRead' },
     opts = {
       indent = { char = symbols.indent.line },
       scope = { enabled = true, show_exact_scope = true },
@@ -306,6 +330,7 @@ mod.plugins = {
   {
     'RRethy/vim-illuminate',
     cond = not vim.g.vscode,
+    event = { 'InsertEnter' },
     opts = {},
     config = function(_, opts)
       require('illuminate').configure(opts)
@@ -391,6 +416,7 @@ mod.plugins = {
 
   {
     'nvim-treesitter/nvim-treesitter-context',
+    event = { 'BufRead' },
     opts = {
       mode = 'topline',
     },
