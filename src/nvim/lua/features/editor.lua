@@ -31,6 +31,8 @@ vim.keymap.set('v', '<', '<gv')
 vim.keymap.set('v', '>', '>gv')
 
 if not vim.g.vscode then
+  vim.opt.termguicolors = true
+
   -- Always show tab bar.
   vim.opt.showtabline = 2
 
@@ -108,7 +110,7 @@ if not vim.g.vscode then
 
   -- Minimal number of screen lines to keep above and below the cursor.
   vim.opt.scrolloff = 5
-  vim.opt.mousescroll = 'ver:1,hor:1'
+  vim.opt.mousescroll = 'ver:2,hor:2'
 
   -- Keybinds to make split navigation easier.
   -- Use CTRL+<hjkl> to switch between windows
@@ -420,6 +422,49 @@ mod.plugins = {
     event = { 'BufRead' },
     opts = {
       mode = 'topline',
+    },
+  },
+
+  {
+    'andymass/vim-matchup',
+    cond = not vim.g.vscode,
+    opts = {},
+  },
+
+  {
+    'levouh/tint.nvim',
+    cond = not vim.g.vscode,
+    opts = {},
+  },
+
+  {
+    'nvim-lualine/lualine.nvim',
+    cond = not vim.g.vscode,
+    opts = {
+      options = {
+        component_separators = { left = '|', right = '|' },
+        section_separators = { left = '', right = '' },
+      },
+
+      sections = {
+        lualine_a = { 'mode' },
+        lualine_b = {
+          'branch',
+          -- {
+          --   'diagnostics',
+          --   symbols = {
+          --     error = symbols.diagnostics.error,
+          --     warn = symbols.diagnostics.warn,
+          --     info = symbols.diagnostics.info,
+          --     hint = symbols.diagnostics.hint,
+          --   },
+          -- },
+        },
+        lualine_c = { 'filename' },
+        lualine_x = { 'filetype' },
+        lualine_y = {},
+        lualine_z = { 'location' },
+      },
     },
   },
 }

@@ -1,3 +1,9 @@
+local vimrc = require('vimrc')
+
+local vim_ui = vimrc.determine_ui()
+local vim_os = vimrc.determine_os()
+local has_gui_running = vimrc.has_gui_running()
+
 local mod = {}
 
 mod.plugins = {

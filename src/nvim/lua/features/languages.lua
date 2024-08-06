@@ -2,6 +2,11 @@ local mod = {}
 
 mod.plugins = {
   {
+    'RRethy/nvim-treesitter-endwise',
+    cond = not vim.g.vscode,
+  },
+
+  {
     'nvim-treesitter/nvim-treesitter',
     cond = not vim.g.vscode,
     version = false,
@@ -50,6 +55,14 @@ mod.plugins = {
         'vimdoc',
         'xml',
         'yaml',
+      },
+
+      matchup = {
+        enable = true,
+      },
+
+      endwise = {
+        enable = true,
       },
     },
     config = function(_, opts)
