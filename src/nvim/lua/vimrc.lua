@@ -13,6 +13,10 @@ function mod.has_feature(name)
 end
 
 function mod.determine_ui()
+  if vim.g.neovide then
+    return 'neovide'
+  end
+
   if
     vim.tbl_contains(vim.v.argv, function(v)
       return string.find(v, 'nvim-qt', 1, true)
