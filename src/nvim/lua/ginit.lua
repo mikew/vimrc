@@ -24,6 +24,7 @@ local font_name = get_value_or_star({
 }, client_lookups)
 
 local font_size = get_value_or_star({
+  ['neovide/linux'] = 10,
   ['*'] = 13,
 }, client_lookups)
 
@@ -34,6 +35,14 @@ local linespace = get_value_or_star({
 if vim_ui == 'nvim-qt' then
   vim.cmd(string.format('GuiFont %s:h%s', font_name, font_size))
   vim.cmd(string.format('GuiLinespace %s', linespace))
+else
+  pcall(function()
+    vim.opt.guifont = string.format('%s:h%s', font_name, font_size)
+  end)
+  pcall(function()
+    vim.opt.guilinespace = linespace
+  end)
+end
 
   if vim_os == 'macos' then
     -- Save.
