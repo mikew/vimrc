@@ -188,6 +188,12 @@ mod.plugins = {
             builtin.live_grep,
             { desc = '[S]earch by [G]rep' }
           )
+          vim.keymap.set(
+            'n',
+            '<D-F>',
+            builtin.live_grep,
+            { desc = '[S]earch by [G]rep' }
+          )
         end
       end
 
