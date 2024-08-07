@@ -35,11 +35,13 @@ mod.plugins = {
       -- When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
       -- So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
       local base_capabilities = vim.lsp.protocol.make_client_capabilities()
-      base_capabilities = vim.tbl_deep_extend(
-        'force',
-        base_capabilities,
-        require('cmp_nvim_lsp').default_capabilities()
-      )
+      if vimrc.has_feature('completion') then
+        base_capabilities = vim.tbl_deep_extend(
+          'force',
+          base_capabilities,
+          require('cmp_nvim_lsp').default_capabilities()
+        )
+      end
 
       -- Enable the following language servers
       -- Feel free to add/remove any LSPs that you want here. They will automatically be installed.
