@@ -13,6 +13,11 @@ function mod.has_feature(name)
 end
 
 function mod.determine_ui()
+  local force_ui = os.getenv('NVIM_FORCE_UI')
+  if force_ui ~= nil then
+    return force_ui
+  end
+
   if vim.g.neovide then
     return 'neovide'
   end
@@ -44,6 +49,11 @@ function mod.create_augroup(name, clear)
 end
 
 function mod.determine_os()
+  local force_os = os.getenv('NVIM_FORCE_OS')
+  if force_os ~= nil then
+    return force_os
+  end
+
   local os = vim.loop.os_uname().sysname
 
   if os == 'Linux' then
