@@ -155,9 +155,15 @@ mod.plugins = {
             return
           end
 
-          local map = function(keys, func, desc)
+          --- @param keys string
+          --- @param func function
+          --- @param desc string
+          --- @param mode? string
+          local map = function(keys, func, desc, mode)
+            mode = mode or 'n'
+
             vim.keymap.set(
-              'n',
+              mode,
               keys,
               func,
               { buffer = event.buf, desc = 'LSP: ' .. desc }
@@ -212,6 +218,8 @@ mod.plugins = {
           -- or a suggestion from your LSP for this to activate.
           map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
           map('<D-.>', vim.lsp.buf.code_action, '[C]ode [A]ction')
+          map('<C-.>', vim.lsp.buf.code_action, '[C]ode [A]ction')
+          map('<C-.>', vim.lsp.buf.code_action, '[C]ode [A]ction', 'i')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
