@@ -276,11 +276,21 @@ mod.plugins = {
         end,
       })
 
+      vim.api.nvim_create_user_command(
+        'SaveWithoutFormatting',
+        'let g:_disable_format_on_write = 1 | w',
+        {}
+      )
+
       vim.api.nvim_create_autocmd('BufWritePre', {
         callback = function()
-          local view = vim.fn.winsaveview()
-          vim.lsp.buf.format()
-          vim.fn.winrestview(view)
+          if not vim.g._vimrc_disable_format_on_write then
+            local view = vim.fn.winsaveview()
+            vim.lsp.buf.format()
+            vim.fn.winrestview(view)
+          end
+
+          vim.g._vimrc_disable_format_on_write = false
         end,
       })
     end,
