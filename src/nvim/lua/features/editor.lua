@@ -194,10 +194,10 @@ mod.plugins = {
 
   'michaeljsmith/vim-indent-object',
 
-  {
-    'equalsraf/neovim-gui-shim',
-    cond = vimrc.determine_ui() == 'nvim-qt',
-  },
+  -- {
+  --   'equalsraf/neovim-gui-shim',
+  --   cond = vimrc.determine_ui() == 'nvim-qt',
+  -- },
 
   -- Detect tabstop and shiftwidth automatically
   {
@@ -215,12 +215,13 @@ mod.plugins = {
     'numToStr/Comment.nvim',
     cond = not vim.g.vscode,
     opts = {},
+    -- lazy = false,
     keys = function()
       local keys = {}
 
       if has_gui_running then
         if vim_os == 'macos' then
-          keys = vim.tbl_extend('force', keys, {
+          keys = vim.list_extend(keys, {
             {
               '<D-/>',
               '<Plug>(comment_toggle_linewise_current)',
@@ -240,7 +241,7 @@ mod.plugins = {
         end
       end
 
-      keys = vim.tbl_extend('force', keys, {
+      keys = vim.list_extend(keys, {
         {
           '<C-/>',
           '<Plug>(comment_toggle_linewise_current)',
@@ -466,6 +467,12 @@ mod.plugins = {
         lualine_z = { 'location' },
       },
     },
+  },
+
+  {
+    'akinsho/toggleterm.nvim',
+    cond = not vim.g.vscode,
+    opts = {},
   },
 }
 
