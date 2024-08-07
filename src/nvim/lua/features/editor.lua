@@ -468,6 +468,12 @@ mod.plugins = {
       },
     },
   },
+
+  {
+    'akinsho/toggleterm.nvim',
+    cond = not vim.g.vscode,
+    opts = {},
+  },
 }
 
 return mod
