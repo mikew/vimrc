@@ -194,10 +194,10 @@ mod.plugins = {
 
   'michaeljsmith/vim-indent-object',
 
-  {
-    'equalsraf/neovim-gui-shim',
-    cond = vimrc.determine_ui() == 'nvim-qt',
-  },
+  -- {
+  --   'equalsraf/neovim-gui-shim',
+  --   cond = vimrc.determine_ui() == 'nvim-qt',
+  -- },
 
   -- Detect tabstop and shiftwidth automatically
   {
