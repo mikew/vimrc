@@ -33,7 +33,7 @@ mod.plugins = {
     cond = not vim.g.vscode,
     lazy = false,
     keys = {
-      { '<leader>e', ':NvimTreeFindFile<CR>', desc = 'NvimTreeFindFile' },
+      { '<leader>e', '<Cmd>NvimTreeFindFile<CR>', desc = 'NvimTreeFindFile' },
     },
     opts = {
       on_attach = function(bufnr)
