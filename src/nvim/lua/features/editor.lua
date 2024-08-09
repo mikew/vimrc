@@ -472,7 +472,11 @@ mod.plugins = {
   {
     'akinsho/toggleterm.nvim',
     cond = not vim.g.vscode,
-    opts = {},
+    opts = {
+      open_mapping = '<C-`>',
+      insert_mappings = true,
+      terminal_mappings = true,
+    },
   },
 }
 
