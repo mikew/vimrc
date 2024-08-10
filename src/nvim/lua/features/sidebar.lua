@@ -1,7 +1,44 @@
 local symbols = require('symbols')
+local drawer = require('drawer')
 
 local mod = {}
 
+local tree_drawer = drawer.create_drawer({
+  bufname_prefix = 'test_',
+  size = 40,
+  position = 'right',
+
+  -- on_will_create_buffer = function(bufname)
+  --   require('nvim-tree.api').tree.open({ current_window = true })
+  --   vim.cmd('file ' .. bufname)
+  -- end,
+
+  on_did_open_buffer = function(bufname)
+    vim.print('on_did_open_buffer', bufname)
+    vim.cmd('buffer NvimTree_1')
+    -- require('nvim-tree.api').tree.open({ current_window = true })
+    -- require('neo-tree.command').execute({
+    --   position = 'current',
+    -- })
+  end,
+})
+
+vim.keymap.set('n', '<leader>e', function()
+  tree_drawer.Toggle()
+end, {
+  desc = 'Toggle Tree Drawer',
+  noremap = true,
+  silent = true,
+})
+
+-- vim.api.nvim_create_autocmd('VimEnter', {
+--   desc = 'Open Tree automatically',
+--   once = true,
+--   callback = function()
+--     tree_drawer.Open()
+--   end,
+-- })
+--
 mod.plugins = {
   -- {
   --   'nvim-neo-tree/neo-tree.nvim',
@@ -32,9 +69,9 @@ mod.plugins = {
     'nvim-tree/nvim-tree.lua',
     cond = not vim.g.vscode,
     lazy = false,
-    keys = {
-      { '<leader>e', '<Cmd>NvimTreeFindFile<CR>', desc = 'NvimTreeFindFile' },
-    },
+    -- keys = {
+    --   { '<leader>e', '<Cmd>NvimTreeFindFile<CR>', desc = 'NvimTreeFindFile' },
+    -- },
     opts = {
       on_attach = function(bufnr)
         local api = require('nvim-tree.api')
@@ -165,6 +202,17 @@ mod.plugins = {
       --   command = 'NvimTreeFindFile | wincmd p',
       -- })
     end,
+  },
+
+  {
+    'nvim-neo-tree/neo-tree.nvim',
+    opts = {},
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      -- 'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+      'MunifTanjim/nui.nvim',
+      -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+    },
   },
 }
 

@@ -1,5 +1,6 @@
 local vimrc = require('vimrc')
 local symbols = require('symbols')
+local drawer = require('drawer')
 
 local vim_ui = vimrc.determine_ui()
 local vim_os = vimrc.determine_os()
@@ -177,6 +178,34 @@ if not vim.g.vscode then
       end
       local file = vim.uv.fs_realpath(event.match) or event.match
       vim.fn.mkdir(vim.fn.fnamemodify(file, ':p:h'), 'p')
+    end,
+  })
+
+  local terminal_drawer = drawer.create_drawer({
+    bufname_prefix = 'quick_terminal_',
+    size = 15,
+    position = 'bottom',
+
+    on_will_create_buffer = function(bufname)
+      vim.print('on_will_create_buffer', bufname)
+      vim.fn.termopen(os.getenv('SHELL'))
+
+      vim.opt_local.number = false
+      vim.opt_local.signcolumn = 'no'
+      vim.opt_local.statuscolumn = ''
+    end,
+  })
+
+  vim.keymap.set('n', '<C-`>', function()
+    terminal_drawer.Toggle()
+    terminal_drawer.focus()
+  end)
+
+  vim.api.nvim_create_autocmd('VimEnter', {
+    desc = 'Open Tree automatically',
+    once = true,
+    callback = function()
+      terminal_drawer.Open()
     end,
   })
 end
@@ -469,15 +498,15 @@ mod.plugins = {
     },
   },
 
-  {
-    'akinsho/toggleterm.nvim',
-    cond = not vim.g.vscode,
-    opts = {
-      open_mapping = '<C-`>',
-      insert_mappings = true,
-      terminal_mappings = true,
-    },
-  },
+  -- {
+  --   'akinsho/toggleterm.nvim',
+  --   cond = not vim.g.vscode,
+  --   opts = {
+  --     open_mapping = '<C-`>',
+  --     insert_mappings = true,
+  --     terminal_mappings = true,
+  --   },
+  -- },
 }
 
 return mod

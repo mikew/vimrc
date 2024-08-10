@@ -1,7 +1,10 @@
 --- @class CreateDrawerOptions
 --- @field bufname_prefix string
 --- @field size integer
+--- @field position 'left' | 'right' | 'top' | 'bottom'
 --- @field on_will_create_buffer? fun(bufname: string): nil
+--- @field on_did_open_buffer? fun(bufname: string): nil
+--- @field on_did_open_split? fun(bufname: string): nil
 
 --- @class DrawerState
 --- @field is_open boolean
@@ -27,6 +30,13 @@ local function create_drawer(opts)
     },
   }
 
+  --- @param callback_name string
+  local function try_callback(callback_name, ...)
+    if instance.opts[callback_name] then
+      instance.opts[callback_name](...)
+    end
+  end
+
   function instance.Open()
     if instance.state.is_open then
       return
@@ -47,7 +57,25 @@ local function create_drawer(opts)
     local winnr = instance.get_winnr()
 
     if winnr == -1 then
-      vim.cmd(instance.state.size .. 'new')
+      local cmd = ''
+      if instance.opts.position == 'left' then
+        cmd = 'topleft vertical '
+      elseif instance.opts.position == 'right' then
+        cmd = 'botright vertical '
+      elseif instance.opts.position == 'top' then
+        cmd = 'topleft '
+      elseif instance.opts.position == 'bottom' then
+        cmd = 'botright '
+      end
+
+      try_callback('on_will_open_split', bufname)
+
+      vim.cmd(cmd .. instance.state.size .. 'new')
+
+      try_callback('on_did_open_split', bufname)
+      -- if instance.opts.on_did_open_split then
+      --   instance.opts.on_did_open_split(bufname)
+      -- end
     else
       vim.cmd(winnr .. 'wincmd w')
     end
@@ -63,14 +91,20 @@ local function create_drawer(opts)
     local bufnr = vim.fn.bufnr(bufname)
 
     if bufnr == -1 then
-      if instance.opts.on_will_create_buffer then
-        instance.opts.on_will_create_buffer(bufname)
-      end
+      try_callback('on_will_create_buffer', bufname)
+      -- if instance.opts.on_will_create_buffer then
+      --   instance.opts.on_will_create_buffer(bufname)
+      -- end
 
       vim.cmd('file ' .. bufname)
     else
       vim.cmd('buffer ' .. bufname)
     end
+
+    try_callback('on_did_open_buffer', bufname)
+    -- if instance.opts.on_did_open_buffer then
+    --   instance.opts.on_did_open_buffer(bufname)
+    -- end
   end
 
   function instance.Close()
@@ -134,11 +168,11 @@ local function create_drawer(opts)
     instance.focus_and_return(function()
       size = vim.fn.winheight(0)
 
-      -- if
-      --   instance.opts.position == 'left' or instance.opts.position == 'right'
-      -- then
-      --   size = vim.fn.winwidth(0)
-      -- end
+      if
+        instance.opts.position == 'left' or instance.opts.position == 'right'
+      then
+        size = vim.fn.winwidth(0)
+      end
     end)
 
     return size
@@ -164,7 +198,17 @@ vim.api.nvim_create_autocmd('TabEnter', {
         vim.cmd('wincmd p')
 
         instance.focus_and_return(function()
-          vim.cmd('resize ' .. instance.state.size)
+          local cmd = ''
+          if
+            instance.opts.position == 'left'
+            or instance.opts.position == 'right'
+          then
+            cmd = 'vertical resize '
+          else
+            cmd = 'resize '
+          end
+
+          vim.cmd(cmd .. instance.state.size)
         end)
       else
         instance.Close()
