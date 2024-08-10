@@ -147,23 +147,23 @@ mod.plugins = {
         dotfiles = true,
       },
 
-      tab = {
-        sync = {
-          open = true,
-          close = true,
-        },
-      },
+      -- tab = {
+      --   sync = {
+      --     open = true,
+      --     close = true,
+      --   },
+      -- },
     },
     init = function()
       -- disable netrw
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
 
-      vim.api.nvim_create_autocmd('VimEnter', {
-        desc = 'Open Tree automatically',
-        once = true,
-        command = 'NvimTreeFindFile | wincmd p',
-      })
+      -- vim.api.nvim_create_autocmd('VimEnter', {
+      --   desc = 'Open Tree automatically',
+      --   once = true,
+      --   command = 'NvimTreeFindFile | wincmd p',
+      -- })
     end,
   },
 }

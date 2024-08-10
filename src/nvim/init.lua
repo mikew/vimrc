@@ -40,6 +40,50 @@ vim.list_extend(all_spec, feature_grep.plugins)
 vim.list_extend(all_spec, feature_scrollbar.plugins)
 vim.list_extend(all_spec, feature_ai.plugins)
 
+-- local drawer_port = require('drawer_port')
+-- local wut_legacy = drawer_port.create({
+--   buf_name_prefix = 'test_',
+--   position = 'bottom',
+--   size = 10,
+--   on_will_create_buffer = function(bufname)
+--     print('on_will_create_buffer', bufname)
+--
+--     -- vim.fn.termopen(os.getenv('SHELL'))
+--     -- require('nvim-tree.api').tree.open({ current_window = true })
+--   end,
+--   on_did_open_split = function()
+--     --   print('on_did_open_split')
+--     require('nvim-tree.api').tree.open({ current_window = true })
+--   end,
+--   -- on_did_open_drawer = function(bufname)
+--   --   print('on_did_open_drawer', bufname)
+--   -- end,
+-- })
+-- vim.g.wut_legacy = wut_legacy
+
+local drawer = require('drawer')
+local tree_drawer = drawer.create_drawer({
+  bufname_prefix = 'test_',
+  size = 10,
+
+  on_will_create_buffer = function(bufname)
+    require('nvim-tree.api').tree.open({ current_window = true })
+    vim.cmd('file ' .. bufname)
+  end,
+})
+vim.g.wut = tree_drawer
+
+local terminal_drawer = drawer.create_drawer({
+  bufname_prefix = 'quick_terminal_',
+  size = 15,
+
+  on_will_create_buffer = function(bufname)
+    vim.print('on_will_create_buffer', bufname)
+    vim.fn.termopen(os.getenv('SHELL'))
+  end,
+})
+vim.g.wut2 = terminal_drawer
+
 -- Setup lazy.nvim
 require('lazy').setup({
   spec = all_spec,
