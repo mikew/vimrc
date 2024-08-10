@@ -37,7 +37,18 @@ local function create_drawer(opts)
     end
   end
 
-  function instance.Open()
+  --- @class DrawerOpenOptions
+  --- @field focus? boolean
+  --- @field mode? 'previous_or_new' | 'new'
+
+  --- @param opts? DrawerOpenOptions
+  function instance.Open(opts)
+    opts = vim.tbl_extend(
+      'force',
+      { focus = false, mode = 'previous_or_new' },
+      opts or {}
+    )
+
     if instance.state.is_open then
       return
     end
@@ -73,9 +84,6 @@ local function create_drawer(opts)
       vim.cmd(cmd .. instance.state.size .. 'new')
 
       try_callback('on_did_open_split', bufname)
-      -- if instance.opts.on_did_open_split then
-      --   instance.opts.on_did_open_split(bufname)
-      -- end
     else
       vim.cmd(winnr .. 'wincmd w')
     end
@@ -83,7 +91,9 @@ local function create_drawer(opts)
     instance.switch_window_to_buffer(bufname)
     instance.state.previous_bufname = bufname
 
-    vim.cmd('wincmd p')
+    if not opts.focus then
+      vim.cmd('wincmd p')
+    end
   end
 
   --- @param bufname string
@@ -92,23 +102,36 @@ local function create_drawer(opts)
 
     if bufnr == -1 then
       try_callback('on_will_create_buffer', bufname)
-      -- if instance.opts.on_will_create_buffer then
-      --   instance.opts.on_will_create_buffer(bufname)
-      -- end
 
       vim.cmd('file ' .. bufname)
     else
       vim.cmd('buffer ' .. bufname)
     end
 
+    vim.opt_local.bufhidden = 'hide'
+    vim.opt_local.buflisted = false
+    vim.opt_local.winfixwidth = true
+    vim.opt_local.winfixheight = true
+    vim.opt_local.equalalways = false
+
     try_callback('on_did_open_buffer', bufname)
-    -- if instance.opts.on_did_open_buffer then
-    --   instance.opts.on_did_open_buffer(bufname)
-    -- end
   end
 
-  function instance.Close()
+  --- @class DrawerCloseOptions
+  --- @field save_size? boolean
+
+  --- @param opts? DrawerCloseOptions
+  function instance.Close(opts)
+    opts = vim.tbl_extend('force', { save_size = true }, opts or {})
     instance.state.is_open = false
+
+    local winnr = instance.get_winnr()
+
+    if winnr ~= -1 then
+      if opts.save_size then
+        instance.state.size = instance.get_size()
+      end
+    end
 
     instance.focus_and_return(function()
       vim.cmd('close')
@@ -117,7 +140,7 @@ local function create_drawer(opts)
 
   function instance.Toggle()
     if instance.state.is_open then
-      instance.Close()
+      instance.Close({ save_size = true })
     else
       instance.Open()
     end
@@ -193,9 +216,8 @@ vim.api.nvim_create_autocmd('TabEnter', {
   callback = function()
     for _, instance in ipairs(instances) do
       if instance.state.is_open then
-        instance.Close()
-        instance.Open()
-        vim.cmd('wincmd p')
+        instance.Close({ save_size = false })
+        instance.Open({ focus = false })
 
         instance.focus_and_return(function()
           local cmd = ''
@@ -211,7 +233,7 @@ vim.api.nvim_create_autocmd('TabEnter', {
           vim.cmd(cmd .. instance.state.size)
         end)
       else
-        instance.Close()
+        instance.Close({ save_size = false })
       end
     end
   end,
