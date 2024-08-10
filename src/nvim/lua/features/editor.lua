@@ -197,8 +197,11 @@ if not vim.g.vscode then
   })
 
   vim.keymap.set('n', '<C-`>', function()
-    terminal_drawer.Toggle()
-    terminal_drawer.focus()
+    terminal_drawer.Toggle({
+      open = {
+        focus = true,
+      },
+    })
   end)
 
   vim.api.nvim_create_autocmd('VimEnter', {

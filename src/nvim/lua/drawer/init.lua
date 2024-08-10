@@ -138,11 +138,16 @@ local function create_drawer(opts)
     end)
   end
 
-  function instance.Toggle()
+  --- @class DrawerToggleOptions
+  --- @field open? DrawerOpenOptions
+
+  --- @param opts? DrawerToggleOptions
+  function instance.Toggle(opts)
+    opts = vim.tbl_extend('force', { open = nil }, opts or {})
     if instance.state.is_open then
       instance.Close({ save_size = true })
     else
-      instance.Open()
+      instance.Open(opts.open)
     end
   end
 
