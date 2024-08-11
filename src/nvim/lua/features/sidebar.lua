@@ -27,6 +27,11 @@ local tree_drawer = drawer.create_drawer({
   end,
 })
 
+-- This is the trick to getting NvimTree working in a drawer.
+-- We let NvimTree completely overwrite the split, which ends up renaming it to
+-- something like `NvimTree_{N}`.
+-- Then, we overwrite how the drawer is found so that any NvimTree windows are
+-- found instead of drawer windows.
 function tree_drawer.is_buffer(bufname)
   return string.find(bufname, 'NvimTree_') ~= nil
 end
@@ -67,38 +72,10 @@ vim.api.nvim_create_autocmd('VimEnter', {
 })
 
 mod.plugins = {
-  -- {
-  --   'nvim-neo-tree/neo-tree.nvim',
-  --   cond = not vim.g.vscode,
-  --   branch = 'v3.x',
-  --   dependencies = {
-  --     'nvim-lua/plenary.nvim',
-  --     'MunifTanjim/nui.nvim',
-  --   },
-  --   cmd = 'Neotree',
-  --   keys = {
-  --     { '<leader>e', ':Neotree reveal<CR>', desc = 'NeoTree reveal' },
-  --   },
-  --   opts = {
-  --     window = {
-  --       position = 'right',
-  --     },
-  --   },
-  --   init = function()
-  --     -- disable netrw
-  --     vim.g.loaded_netrw = 1
-  --     vim.g.loaded_netrwPlugin = 1
-  --   end,
-  -- },
-  -- Prefer this to neo-tree.
-  -- - Persist state across tabs by default.
   {
     'nvim-tree/nvim-tree.lua',
     cond = not vim.g.vscode,
     lazy = false,
-    -- keys = {
-    --   { '<leader>e', '<Cmd>NvimTreeFindFile<CR>', desc = 'NvimTreeFindFile' },
-    -- },
     opts = {
       on_attach = function(bufnr)
         local api = require('nvim-tree.api')
