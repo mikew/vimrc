@@ -8,10 +8,15 @@ local tree_drawer = drawer.create_drawer({
   size = 40,
   position = 'right',
 
-  on_did_open_buffer = function(bufname)
+  on_did_open_buffer = function()
     local nvim_tree_api = require('nvim-tree.api')
     nvim_tree_api.tree.open({ current_window = true })
     nvim_tree_api.tree.reload()
+  end,
+
+  on_did_close = function()
+    local nvim_tree_api = require('nvim-tree.api')
+    nvim_tree_api.tree.close()
   end,
 })
 
@@ -20,18 +25,41 @@ function tree_drawer.is_buffer(bufname)
 end
 
 vim.keymap.set('n', '<leader>e', function()
-  tree_drawer.Toggle()
+  tree_drawer.toggle()
 end, {
   desc = 'Toggle Tree Drawer',
   noremap = true,
   silent = true,
 })
 
+local terminal_drawer = drawer.create_drawer({
+  bufname_prefix = 'quick_terminal_',
+  size = 15,
+  position = 'bottom',
+
+  on_will_create_buffer = function(bufname)
+    vim.fn.termopen(os.getenv('SHELL'))
+
+    vim.opt_local.number = false
+    vim.opt_local.signcolumn = 'no'
+    vim.opt_local.statuscolumn = ''
+  end,
+})
+
+vim.keymap.set('n', '<C-`>', function()
+  terminal_drawer.toggle({
+    open = {
+      focus = true,
+    },
+  })
+end)
+
 vim.api.nvim_create_autocmd('VimEnter', {
   desc = 'Open Tree automatically',
   once = true,
   callback = function()
-    tree_drawer.Open()
+    tree_drawer.open()
+    terminal_drawer.open()
   end,
 })
 
