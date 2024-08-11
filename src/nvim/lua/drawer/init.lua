@@ -21,6 +21,16 @@
 --- @type DrawerInstance[]
 local instances = {}
 
+local function get_windows_in_tab()
+  local tabinfo = vim.fn.gettabinfo(vim.fn.tabpagenr())[1]
+
+  if tabinfo == nil then
+    return {}
+  end
+
+  return tabinfo.windows
+end
+
 --- @param opts CreateDrawerOptions
 local function create_drawer(opts)
   --- @class DrawerInstance
@@ -291,6 +301,37 @@ vim.api.nvim_create_autocmd('TabLeave', {
     for _, instance in ipairs(instances) do
       if instance.state.is_open then
         instance.state.size = instance.get_size()
+      end
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd('WinClosed', {
+  desc = 'drawer.nvim WinClosed',
+  callback = function(event)
+    local closing_window_id = tonumber(event.match)
+    local windows_in_tab = get_windows_in_tab()
+    local windows_in_tab_without_closing = vim.tbl_filter(function(winid)
+      return winid ~= closing_window_id
+    end, windows_in_tab)
+
+    local num_drawers_in_tab = 0
+    for _, winid in ipairs(get_windows_in_tab()) do
+      if winid ~= closing_window_id then
+        for _, instance in ipairs(instances) do
+          if instance.is_buffer(vim.fn.bufname(vim.fn.winbufnr(winid))) then
+            num_drawers_in_tab = num_drawers_in_tab + 1
+            break
+          end
+        end
+      end
+    end
+
+    if num_drawers_in_tab == #windows_in_tab_without_closing then
+      if vim.fn.tabpagenr('$') > 1 then
+        vim.cmd('tabclose')
+      else
+        vim.cmd('qa')
       end
     end
   end,
