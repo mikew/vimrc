@@ -63,7 +63,6 @@ local function create_drawer(opts)
         and vim.fn.bufnr(instance.state.previous_bufname) ~= -1
 
     local bufname = instance.state.previous_bufname
-
     if not previous_buffer_exists then
       instance.state.count = instance.state.count + 1
       bufname = instance.opts.bufname_prefix .. instance.state.count
@@ -169,6 +168,20 @@ local function create_drawer(opts)
     end
   end
 
+  function instance.focus_or_toggle()
+    local winnr = instance.get_winnr()
+
+    if winnr == -1 then
+      instance.open({ focus = true })
+    else
+      if instance.is_foucsed() then
+        instance.close({ save_size = true })
+      else
+        instance.focus()
+      end
+    end
+  end
+
   function instance.get_winnr()
     for _, w in ipairs(vim.fn.range(1, vim.fn.winnr('$'))) do
       if instance.is_buffer(vim.fn.bufname(vim.fn.winbufnr(w))) then
@@ -187,6 +200,16 @@ local function create_drawer(opts)
     end
 
     vim.cmd(winnr .. 'wincmd w')
+  end
+
+  function instance.is_foucsed()
+    local winnr = instance.get_winnr()
+
+    if winnr == -1 then
+      return false
+    end
+
+    return vim.fn.winnr() == winnr
   end
 
   --- @param callback fun()
