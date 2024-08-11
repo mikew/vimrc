@@ -246,7 +246,9 @@ mod.plugins = {
   {
     'numToStr/Comment.nvim',
     cond = not vim.g.vscode,
-    opts = {},
+    opts = {
+      igmore = '^$',
+    },
     -- lazy = false,
     keys = function()
       local keys = {}

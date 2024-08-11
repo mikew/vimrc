@@ -1,3 +1,6 @@
+local empty_buffer = vim.api.nvim_create_buf(false, false)
+vim.print(empty_buffer)
+
 --- @class CreateDrawerOptions
 --- @field bufname_prefix string
 --- @field size integer

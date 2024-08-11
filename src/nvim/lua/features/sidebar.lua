@@ -4,24 +4,20 @@ local drawer = require('drawer')
 local mod = {}
 
 local tree_drawer = drawer.create_drawer({
-  bufname_prefix = 'test_',
+  bufname_prefix = 'tree',
   size = 40,
   position = 'right',
 
-  -- on_will_create_buffer = function(bufname)
-  --   require('nvim-tree.api').tree.open({ current_window = true })
-  --   vim.cmd('file ' .. bufname)
-  -- end,
-
   on_did_open_buffer = function(bufname)
-    vim.print('on_did_open_buffer', bufname)
-    vim.cmd('buffer NvimTree_1')
-    -- require('nvim-tree.api').tree.open({ current_window = true })
-    -- require('neo-tree.command').execute({
-    --   position = 'current',
-    -- })
+    local nvim_tree_api = require('nvim-tree.api')
+    nvim_tree_api.tree.open({ current_window = true })
+    nvim_tree_api.tree.reload()
   end,
 })
+
+function tree_drawer.is_buffer(bufname)
+  return string.find(bufname, 'NvimTree_') ~= nil
+end
 
 vim.keymap.set('n', '<leader>e', function()
   tree_drawer.Toggle()
@@ -31,14 +27,14 @@ end, {
   silent = true,
 })
 
--- vim.api.nvim_create_autocmd('VimEnter', {
---   desc = 'Open Tree automatically',
---   once = true,
---   callback = function()
---     tree_drawer.Open()
---   end,
--- })
---
+vim.api.nvim_create_autocmd('VimEnter', {
+  desc = 'Open Tree automatically',
+  once = true,
+  callback = function()
+    tree_drawer.Open()
+  end,
+})
+
 mod.plugins = {
   -- {
   --   'nvim-neo-tree/neo-tree.nvim',
