@@ -4,7 +4,7 @@ local drawer = require('drawer')
 local mod = {}
 
 local tree_drawer = drawer.create_drawer({
-  bufname_prefix = 'tree',
+  bufname_prefix = 'tree_',
   size = 40,
   position = 'right',
 
@@ -32,7 +32,7 @@ function tree_drawer.is_buffer(bufname)
 end
 
 vim.keymap.set('n', '<leader>e', function()
-  tree_drawer.toggle()
+  tree_drawer.focus_or_toggle()
 end, {
   desc = 'Toggle Tree Drawer',
   noremap = true,
@@ -54,11 +54,7 @@ local terminal_drawer = drawer.create_drawer({
 })
 
 vim.keymap.set('n', '<C-`>', function()
-  terminal_drawer.toggle({
-    open = {
-      focus = true,
-    },
-  })
+  terminal_drawer.focus_or_toggle()
 end)
 
 vim.api.nvim_create_autocmd('VimEnter', {
