@@ -12,6 +12,9 @@ local tree_drawer = drawer.create_drawer({
     local nvim_tree_api = require('nvim-tree.api')
     nvim_tree_api.tree.open({ current_window = true })
     nvim_tree_api.tree.reload()
+
+    -- NvimTree seems to set this back to true.
+    vim.opt_local.winfixheight = false
   end,
 
   on_did_close = function()
@@ -37,7 +40,7 @@ local terminal_drawer = drawer.create_drawer({
   size = 15,
   position = 'bottom',
 
-  on_will_create_buffer = function(bufname)
+  on_will_create_buffer = function()
     vim.fn.termopen(os.getenv('SHELL'))
 
     vim.opt_local.number = false
