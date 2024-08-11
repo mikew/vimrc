@@ -15,6 +15,10 @@ local tree_drawer = drawer.create_drawer({
 
     -- NvimTree seems to set this back to true.
     vim.opt_local.winfixheight = false
+
+    vim.opt_local.number = false
+    vim.opt_local.signcolumn = 'no'
+    vim.opt_local.statuscolumn = ''
   end,
 
   on_did_close = function()
