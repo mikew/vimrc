@@ -82,15 +82,18 @@ mod.plugins = {
           },
         },
         extensions = {
-          ['ui-select'] = {
-            require('telescope.themes').get_dropdown(),
-          },
+          -- Disabling due to the fact that codeactons doesn't work, and
+          -- disabling just codeactons also doesn't work.
+          -- https://github.com/nvim-telescope/telescope-ui-select.nvim/issues/44
+          -- ['ui-select'] = {
+          --   require('telescope.themes').get_dropdown(),
+          -- },
         },
       })
 
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
-      pcall(require('telescope').load_extension, 'ui-select')
+      -- pcall(require('telescope').load_extension, 'ui-select')
       pcall(require('telescope').load_extension, 'undo')
 
       -- See `:help telescope.builtin`
@@ -184,6 +187,12 @@ mod.plugins = {
         if vim_os == 'macos' then
           vim.keymap.set(
             'i',
+            '<D-F>',
+            builtin.live_grep,
+            { desc = '[S]earch by [G]rep' }
+          )
+          vim.keymap.set(
+            'n',
             '<D-F>',
             builtin.live_grep,
             { desc = '[S]earch by [G]rep' }

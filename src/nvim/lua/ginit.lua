@@ -46,9 +46,9 @@ end
 
 if vim_os == 'macos' then
   -- Save.
-  vim.keymap.set('n', '<D-s>', ':w<CR>')
-  vim.keymap.set('i', '<D-s>', '<C-o>:w<CR>')
-  vim.keymap.set('x', '<D-s>', '<Esc>:w<CR>gv')
+  vim.keymap.set('n', '<D-s>', '<Cmd>w<CR>')
+  vim.keymap.set('i', '<D-s>', '<C-o><Cmd>w<CR>')
+  vim.keymap.set('x', '<D-s>', '<Esc><Cmd>w<CR>gv')
 
   -- Select All.
   vim.keymap.set('n', '<D-a>', 'ggVG')
@@ -81,31 +81,35 @@ if vim_os == 'macos' then
   vim.keymap.set('i', '<M-Right>', '<C-o>w')
 
   -- New Tab.
-  vim.keymap.set('n', '<D-n>', ':tabnew<CR>')
+  vim.keymap.set('n', '<D-n>', '<Cmd>tabnew<CR>')
   -- Intentionally leave insert mode due to switching buffers.
-  vim.keymap.set('i', '<D-n>', '<Esc>:tabnew<CR>')
+  vim.keymap.set('i', '<D-n>', '<Esc><Cmd>tabnew<CR>')
 
   -- Tab navigation.
-  vim.keymap.set('n', '<S-D-]>', ':tabnext<CR>')
+  vim.keymap.set('n', '<S-D-]>', '<Cmd>tabnext<CR>')
+  vim.keymap.set('n', '<D-}>', '<Cmd>tabnext<CR>')
   -- Intentionally leave insert mode due to switching buffers.
-  vim.keymap.set('i', '<S-D-]>', '<Esc>:tabnext<CR>')
-  vim.keymap.set('n', '<S-D-[>', ':tabprevious<CR>')
+  vim.keymap.set('i', '<S-D-]>', '<Esc><Cmd>tabnext<CR>')
+  vim.keymap.set('i', '<D-}>', '<Esc><Cmd>tabnext<CR>')
+  vim.keymap.set('n', '<S-D-[>', '<Cmd>tabprevious<CR>')
+  vim.keymap.set('n', '<D-{>', '<Cmd>tabprevious<CR>')
   -- Intentionally leave insert mode due to switching buffers.
-  vim.keymap.set('i', '<S-D-[>', '<Esc>:tabprevious<CR>')
+  vim.keymap.set('i', '<S-D-[>', '<Esc><Cmd>tabprevious<CR>')
+  vim.keymap.set('i', '<D-{>', '<Esc><Cmd>tabprevious<CR>')
 
   -- Close Tab.
-  vim.keymap.set('n', '<D-w>', ':tabclose<CR>')
+  vim.keymap.set('n', '<D-w>', '<Cmd>tabclose<CR>')
   -- Intentionally leave insert mode due to switching buffers.
-  vim.keymap.set('i', '<D-w>', '<Esc>:tabclose<CR>')
+  vim.keymap.set('i', '<D-w>', '<Esc><Cmd>tabclose<CR>')
 
   -- Close Window.
-  vim.keymap.set('n', '<D-W>', ':qa<CR>')
-  vim.keymap.set('i', '<D-W>', '<Esc>:qa<CR>')
+  vim.keymap.set('n', '<D-W>', '<Cmd>qa<CR>')
+  vim.keymap.set('i', '<D-W>', '<Esc><Cmd>qa<CR>')
 
   -- Close all but current.
   -- TODO Doesn't seem to work in nvim-qt, could be macos characters?
-  -- vim.keymap.set('n', '<M-D-w>', ':tabonly<CR>')
-  -- vim.keymap.set('i', '<M-D-w>', '<C-o>:tabonly<CR>')
+  -- vim.keymap.set('n', '<M-D-w>', '<Cmd>tabonly<CR>')
+  -- vim.keymap.set('i', '<M-D-w>', '<C-o><Cmd>tabonly<CR>')
 
   -- Cut.
   vim.keymap.set('x', '<D-x>', '"+x')

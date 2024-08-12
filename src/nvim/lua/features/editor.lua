@@ -1,5 +1,6 @@
 local vimrc = require('vimrc')
 local symbols = require('symbols')
+local drawer = require('drawer')
 
 local vim_ui = vimrc.determine_ui()
 local vim_os = vimrc.determine_os()
@@ -194,11 +195,6 @@ mod.plugins = {
 
   'michaeljsmith/vim-indent-object',
 
-  {
-    'equalsraf/neovim-gui-shim',
-    cond = vimrc.determine_ui() == 'nvim-qt',
-  },
-
   -- Detect tabstop and shiftwidth automatically
   {
     'tpope/vim-sleuth',
@@ -214,13 +210,16 @@ mod.plugins = {
   {
     'numToStr/Comment.nvim',
     cond = not vim.g.vscode,
-    opts = {},
+    opts = {
+      ignore = '^(%s*)$',
+    },
+    -- lazy = false,
     keys = function()
       local keys = {}
 
       if has_gui_running then
         if vim_os == 'macos' then
-          keys = vim.tbl_extend('force', keys, {
+          keys = vim.list_extend(keys, {
             {
               '<D-/>',
               '<Plug>(comment_toggle_linewise_current)',
@@ -240,7 +239,7 @@ mod.plugins = {
         end
       end
 
-      keys = vim.tbl_extend('force', keys, {
+      keys = vim.list_extend(keys, {
         {
           '<C-/>',
           '<Plug>(comment_toggle_linewise_current)',
