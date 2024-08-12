@@ -195,11 +195,6 @@ mod.plugins = {
 
   'michaeljsmith/vim-indent-object',
 
-  -- {
-  --   'equalsraf/neovim-gui-shim',
-  --   cond = vimrc.determine_ui() == 'nvim-qt',
-  -- },
-
   -- Detect tabstop and shiftwidth automatically
   {
     'tpope/vim-sleuth',
@@ -471,16 +466,6 @@ mod.plugins = {
       },
     },
   },
-
-  -- {
-  --   'akinsho/toggleterm.nvim',
-  --   cond = not vim.g.vscode,
-  --   opts = {
-  --     open_mapping = '<C-`>',
-  --     insert_mappings = true,
-  --     terminal_mappings = true,
-  --   },
-  -- },
 }
 
 return mod
