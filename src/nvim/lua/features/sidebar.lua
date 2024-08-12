@@ -32,8 +32,9 @@ local tree_drawer = drawer.create_drawer({
 -- something like `NvimTree_{N}`.
 -- Then, we overwrite how the drawer is found so that any NvimTree windows are
 -- found instead of drawer windows.
+local original_is_buffer = tree_drawer.is_buffer
 function tree_drawer.is_buffer(bufname)
-  return string.find(bufname, 'NvimTree_') ~= nil
+  return string.find(bufname, 'NvimTree_') ~= nil or original_is_buffer(bufname)
 end
 
 vim.keymap.set('n', '<leader>e', function()
