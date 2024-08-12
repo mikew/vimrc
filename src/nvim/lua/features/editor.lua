@@ -211,7 +211,7 @@ mod.plugins = {
     'numToStr/Comment.nvim',
     cond = not vim.g.vscode,
     opts = {
-      igmore = '^$',
+      ignore = '^(%s*)$',
     },
     -- lazy = false,
     keys = function()
