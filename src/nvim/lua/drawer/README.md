@@ -32,15 +32,15 @@ Then this plugin is for you.
 First, you need to create a drawer via `create_drawer`:
 
 ```lua
-local terminal_drawer = drawer.create_drawer({
-  bufname_prefix = 'quick_terminal_',
+local example_drawer = drawer.create_drawer({
+  bufname_prefix = 'example_drawer_',
   size = 15,
   position = 'bottom',
 })
 ```
 
 When opened, this drawer will be at the bottom of the screen, 15 lines tall,
-editing a buffer named `quick_terminal_1`.
+editing a buffer named `example_drawer_1`.
 
 This doesn't do much, you get a nice scratch space, but to get the most out of
 it, you need to use the API and add some key mappings.
@@ -69,6 +69,10 @@ local terminal_drawer = drawer.create_drawer({
     vim.opt_local.number = false
     vim.opt_local.signcolumn = 'no'
     vim.opt_local.statuscolumn = ''
+  end,
+
+  on_did_open_buffer = function()
+    vim.cmd('$')
   end,
 })
 
