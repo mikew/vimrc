@@ -21,6 +21,7 @@
 --- @type DrawerInstance[]
 local instances = {}
 
+--- @return integer[]
 local function get_windows_in_tab()
   local tabinfo = vim.fn.gettabinfo(vim.fn.tabpagenr())[1]
 
@@ -104,7 +105,6 @@ local function create_drawer(opts)
     end
 
     instance.switch_window_to_buffer(bufname)
-    instance.state.previous_bufname = bufname
 
     if not opts.focus then
       vim.cmd('wincmd p')
@@ -136,6 +136,8 @@ local function create_drawer(opts)
       vim.opt_local.winfixwidth = false
       vim.opt_local.winfixheight = true
     end
+
+    instance.state.previous_bufname = bufname
 
     try_callback('on_did_open_buffer', bufname)
   end
@@ -171,6 +173,7 @@ local function create_drawer(opts)
   --- @param opts? DrawerToggleOptions
   function instance.toggle(opts)
     opts = vim.tbl_extend('force', { open = nil }, opts or {})
+
     if instance.state.is_open then
       instance.close({ save_size = true })
     else
