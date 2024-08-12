@@ -62,6 +62,18 @@ vim.keymap.set('n', '<C-`>', function()
   terminal_drawer.focus_or_toggle()
 end)
 
+vim.keymap.set('n', '<leader>tn', function()
+  terminal_drawer.open({ mode = 'new' })
+end)
+
+vim.keymap.set('n', '<leader>tt', function()
+  terminal_drawer.Go(1)
+end)
+
+vim.keymap.set('n', '<leader>tT', function()
+  terminal_drawer.Go(-1)
+end)
+
 vim.api.nvim_create_autocmd('VimEnter', {
   desc = 'Open Tree automatically',
   once = true,
