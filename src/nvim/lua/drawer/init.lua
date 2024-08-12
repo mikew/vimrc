@@ -17,6 +17,7 @@
 --- @field size integer
 --- @field previous_bufname string
 --- @field count integer
+--- @field buffers string[]
 
 --- @type DrawerInstance[]
 local instances = {}
@@ -44,6 +45,7 @@ local function create_drawer(opts)
       size = opts.size,
       previous_bufname = '',
       count = 0,
+      buffers = {},
     },
   }
 
@@ -66,15 +68,21 @@ local function create_drawer(opts)
       opts or {}
     )
 
-    if instance.state.is_open then
-      return
-    end
+    -- if instance.state.is_open and not opts.force then
+    --   return
+    -- end
 
-    local previous_buffer_exists = instance.state.previous_bufname ~= ''
-        and vim.fn.bufnr(instance.state.previous_bufname) ~= -1
+    local bufname = ''
+    if opts.mode == 'previous_or_new' then
+      local previous_buffer_exists = instance.state.previous_bufname ~= ''
+          and vim.fn.bufnr(instance.state.previous_bufname) ~= -1
 
-    local bufname = instance.state.previous_bufname
-    if not previous_buffer_exists then
+      bufname = instance.state.previous_bufname
+      if not previous_buffer_exists then
+        instance.state.count = instance.state.count + 1
+        bufname = instance.opts.bufname_prefix .. instance.state.count
+      end
+    elseif opts.mode == 'new' then
       instance.state.count = instance.state.count + 1
       bufname = instance.opts.bufname_prefix .. instance.state.count
     end
@@ -102,6 +110,10 @@ local function create_drawer(opts)
       try_callback('on_did_open_split', bufname)
     else
       vim.cmd(winnr .. 'wincmd w')
+
+      if opts.mode == 'new' then
+        vim.cmd('enew')
+      end
     end
 
     instance.switch_window_to_buffer(bufname)
@@ -137,6 +149,9 @@ local function create_drawer(opts)
       vim.opt_local.winfixheight = true
     end
 
+    if not vim.list_contains(instance.state.buffers, bufname) then
+      table.insert(instance.state.buffers, bufname)
+    end
     instance.state.previous_bufname = bufname
 
     try_callback('on_did_open_buffer', bufname)
