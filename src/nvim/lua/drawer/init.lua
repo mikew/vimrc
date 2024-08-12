@@ -1,22 +1,36 @@
 --- @class CreateDrawerOptions
+--- Prefix used when creating buffers.
+--- Buffers will be named `{bufname_prefix}1`, `{bufname_prefix}2`, etc.
 --- @field bufname_prefix string
+--- Initial size of the drawer, in lines or columns.
 --- @field size integer
+--- Position of the drawer.
 --- @field position 'left' | 'right' | 'top' | 'bottom'
----
+--- Called before a buffer is created. This is called very rarely.
 --- @field on_will_create_buffer? fun(bufname: string): nil
+--- Called after a buffer is opened.
 --- @field on_did_open_buffer? fun(bufname: string): nil
----
+--- Called before the splt is created.
 --- @field on_will_open_split? fun(bufname: string): nil
+--- Called after a split is created.
 --- @field on_did_open_split? fun(bufname: string): nil
----
+--- Called before the drawer is closed. Note this will is called even if the
+--- drawer is closed.
 --- @field on_will_close? fun(): nil
+--- Called after the drawer is closed. Only called if the drawer was actually
+--- open.
 --- @field on_did_close? fun(): nil
 
 --- @class DrawerState
+--- Whether the drawer assumes it's open or not.
 --- @field is_open boolean
+--- The last known size of the drawer.
 --- @field size integer
+--- The name of the previous buffer that was opened.
 --- @field previous_bufname string
+--- The number of buffers that have been created.
 --- @field count integer
+--- The names of all buffers that have been created.
 --- @field buffers string[]
 
 --- @type DrawerInstance[]
@@ -45,6 +59,17 @@ local function get_windows_in_tab()
   return tabinfo.windows
 end
 
+--- Create a new drawer.
+--- ```lua
+--- local example_drawer = drawer.create_drawer({
+---   bufname_prefix = 'example_drawer_',
+---   size = 15,
+---   position = 'bottom',
+---
+---   on_will_create_buffer = function()
+---   end,
+--- })
+--- ```
 --- @param opts CreateDrawerOptions
 local function create_drawer(opts)
   --- @class DrawerInstance
@@ -72,6 +97,16 @@ local function create_drawer(opts)
   --- @field focus? boolean
   --- @field mode? 'previous_or_new' | 'new'
 
+  --- Open the drawer.
+  --- ```lua
+  --- example_drawer.open()
+  ---
+  --- --- Keep focus in the drawer.
+  --- example_drawer.open({ focus = true })
+  ---
+  --- --- Open a new tab and focus it.
+  --- example_drawer.open({ mode = 'new', focus = true })
+  --- ```
   --- @param opts? DrawerOpenOptions
   function instance.open(opts)
     opts = vim.tbl_extend(
@@ -131,6 +166,7 @@ local function create_drawer(opts)
     end
   end
 
+  --- Switch the current window to a buffer and prepare it as a drawer.
   --- @param bufname string
   function instance.switch_window_to_buffer(bufname)
     local bufnr = vim.fn.bufnr(bufname)
@@ -165,6 +201,14 @@ local function create_drawer(opts)
     try_callback('on_did_open_buffer', bufname)
   end
 
+  --- Navigate to the next or previous buffer.
+  --- ```lua
+  --- --- Go to the next buffer.
+  --- example_drawer.go(1)
+  ---
+  --- --- Go to the previous buffer.
+  --- example_drawer.go(-1)
+  --- ```
   --- @param distance integer
   function instance.go(distance)
     local winnr = instance.get_winnr()
@@ -195,6 +239,13 @@ local function create_drawer(opts)
   --- @class DrawerCloseOptions
   --- @field save_size? boolean
 
+  --- Close the drawer. By default, the size of the drawer is saved.
+  --- ```lua
+  --- example_drawer.close()
+  ---
+  --- --- Don't save the size of the drawer.
+  --- example_drawer.close({ save_size = false })
+  --- ```
   --- @param opts? DrawerCloseOptions
   function instance.close(opts)
     opts = vim.tbl_extend('force', { save_size = true }, opts or {})
@@ -220,6 +271,13 @@ local function create_drawer(opts)
   --- @class DrawerToggleOptions
   --- @field open? DrawerOpenOptions
 
+  --- Toggle the drawer. Also lets you pass options to open the drawer.
+  --- ```lua
+  --- example_drawer.toggle()
+  ---
+  --- --- Focus the drawer when opening it.
+  --- example_drawer.toggle({ open = { focus = true } })
+  --- ```
   --- @param opts? DrawerToggleOptions
   function instance.toggle(opts)
     opts = vim.tbl_extend('force', { open = nil }, opts or {})
@@ -231,6 +289,8 @@ local function create_drawer(opts)
     end
   end
 
+  --- Focus the drawer if it's open, otherwise toggle it, and give it focus
+  --- when it is opened.
   function instance.focus_or_toggle()
     local winnr = instance.get_winnr()
 
@@ -245,6 +305,8 @@ local function create_drawer(opts)
     end
   end
 
+  --- Get the window number of the drawer. Returns `-1` if the drawer is not
+  --- open.
   function instance.get_winnr()
     for _, w in ipairs(vim.fn.range(1, vim.fn.winnr('$'))) do
       if instance.is_buffer(vim.fn.bufname(vim.fn.winbufnr(w))) then
@@ -255,6 +317,7 @@ local function create_drawer(opts)
     return -1
   end
 
+  --- Focus the drawer.
   function instance.focus()
     local winnr = instance.get_winnr()
 
@@ -265,6 +328,7 @@ local function create_drawer(opts)
     vim.cmd(winnr .. 'wincmd w')
   end
 
+  --- Check if the drawer is focused.
   function instance.is_foucsed()
     local winnr = instance.get_winnr()
 
@@ -275,6 +339,8 @@ local function create_drawer(opts)
     return vim.fn.winnr() == winnr
   end
 
+  --- Helper function to focus the drawer, run a callback, and return focus to
+  --- the previous window.
   --- @param callback fun()
   function instance.focus_and_return(callback)
     local winnr = instance.get_winnr()
@@ -288,6 +354,7 @@ local function create_drawer(opts)
     vim.cmd('wincmd p')
   end
 
+  --- Get the size of the drawer in lines or columns.
   function instance.get_size()
     local winnr = instance.get_winnr()
 
@@ -310,6 +377,8 @@ local function create_drawer(opts)
     return size
   end
 
+  --- Check if a buffer belongs to the drawer. You can override this function
+  --- to work with other plugins.
   --- @param bufname string
   function instance.is_buffer(bufname)
     return string.find(bufname, instance.opts.bufname_prefix) ~= nil
