@@ -22,6 +22,19 @@
 --- @type DrawerInstance[]
 local instances = {}
 
+--- @param t table
+--- @param value any
+local function index_of(t, value)
+  for i, v in ipairs(t) do
+    vim.print(i)
+    if v == value then
+      return i
+    end
+  end
+
+  return -1
+end
+
 --- @return integer[]
 local function get_windows_in_tab()
   local tabinfo = vim.fn.gettabinfo(vim.fn.tabpagenr())[1]
@@ -155,6 +168,33 @@ local function create_drawer(opts)
     instance.state.previous_bufname = bufname
 
     try_callback('on_did_open_buffer', bufname)
+  end
+
+  --- @param distance integer
+  function instance.Go(distance)
+    local winnr = instance.get_winnr()
+
+    if winnr == -1 then
+      return
+    end
+
+    local index = index_of(
+      instance.state.buffers,
+      -- TODO Should probably use winnr instead of relyng on the
+      -- previous_bufname, that would be less brittle.
+      instance.state.previous_bufname
+    )
+    if index == -1 then
+      return
+    end
+
+    index = index - 1
+    local next_index = index + distance
+    local next_bufname =
+        instance.state.buffers[(next_index % #instance.state.buffers) + 1]
+
+    instance.focus()
+    instance.switch_window_to_buffer(next_bufname)
   end
 
   --- @class DrawerCloseOptions
