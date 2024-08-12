@@ -57,6 +57,10 @@ local terminal_drawer = drawer.create_drawer({
     vim.opt_local.signcolumn = 'no'
     vim.opt_local.statuscolumn = ''
   end,
+
+  on_did_open_buffer = function()
+    vim.cmd('$')
+  end,
 })
 
 vim.keymap.set('n', '<C-`>', function()
