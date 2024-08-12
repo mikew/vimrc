@@ -26,7 +26,6 @@ local instances = {}
 --- @param value any
 local function index_of(t, value)
   for i, v in ipairs(t) do
-    vim.print(i)
     if v == value then
       return i
     end
@@ -80,10 +79,6 @@ local function create_drawer(opts)
       { focus = false, mode = 'previous_or_new' },
       opts or {}
     )
-
-    -- if instance.state.is_open and not opts.force then
-    --   return
-    -- end
 
     local bufname = ''
     if opts.mode == 'previous_or_new' then
@@ -171,7 +166,7 @@ local function create_drawer(opts)
   end
 
   --- @param distance integer
-  function instance.Go(distance)
+  function instance.go(distance)
     local winnr = instance.get_winnr()
 
     if winnr == -1 then

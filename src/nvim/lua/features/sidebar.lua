@@ -68,11 +68,11 @@ vim.keymap.set('n', '<leader>tn', function()
 end)
 
 vim.keymap.set('n', '<leader>tt', function()
-  terminal_drawer.Go(1)
+  terminal_drawer.go(1)
 end)
 
 vim.keymap.set('n', '<leader>tT', function()
-  terminal_drawer.Go(-1)
+  terminal_drawer.go(-1)
 end)
 
 vim.api.nvim_create_autocmd('VimEnter', {
