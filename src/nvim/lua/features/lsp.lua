@@ -163,8 +163,8 @@ mod.plugins = {
           local buf_filetype = vim.bo.filetype
 
           if
-              vim.tbl_contains(disabled_filetypes, buf_filetype)
-              or vim.tbl_contains(disabled_buftypes, buftype)
+            vim.tbl_contains(disabled_filetypes, buf_filetype)
+            or vim.tbl_contains(disabled_buftypes, buftype)
           then
             return
           end
@@ -247,13 +247,13 @@ mod.plugins = {
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if
-              client
-              and client.supports_method(
-                vim.lsp.protocol.Methods.textDocument_documentHighlight
-              )
+            client
+            and client.supports_method(
+              vim.lsp.protocol.Methods.textDocument_documentHighlight
+            )
           then
             local highlight_augroup =
-                vimrc.create_augroup('lsp-highlight', false)
+              vimrc.create_augroup('lsp-highlight', false)
 
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
@@ -285,10 +285,10 @@ mod.plugins = {
           --
           -- This may be unwanted, since they displace some of your code
           if
-              client
-              and client.supports_method(
-                vim.lsp.protocol.Methods.textDocument_inlayHint
-              )
+            client
+            and client.supports_method(
+              vim.lsp.protocol.Methods.textDocument_inlayHint
+            )
           then
             map('<leader>th', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({
