@@ -84,6 +84,18 @@ mod.plugins = {
           --   },
           -- },
         },
+
+        eslint = {
+          filetypes = {
+            'javascript',
+            'javascriptreact',
+            'javascript.jsx',
+            'typescript',
+            'typescriptreact',
+            'typescript.tsx',
+            'graphql',
+          },
+        },
       }
 
       local disabled_buftypes = {}
