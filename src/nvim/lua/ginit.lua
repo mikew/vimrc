@@ -20,7 +20,7 @@ local function get_value_or_star(table, keys)
 end
 
 local font_name = get_value_or_star({
-  ['*'] = 'Iosevka Custom Slab',
+  ['*'] = 'Iosevka Custom Slab Terminal',
 }, client_lookups)
 
 local font_size = get_value_or_star({
