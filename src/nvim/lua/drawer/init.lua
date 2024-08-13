@@ -159,7 +159,7 @@ local function create_drawer(opts)
       vim.cmd(winnr .. 'wincmd w')
 
       if opts.mode == 'new' then
-        vim.cmd('enew | setlocal nobuflisted | setlocal nobuffile')
+        vim.cmd('enew | setlocal nobuflisted | setlocal noswapfile')
       end
     end
 
