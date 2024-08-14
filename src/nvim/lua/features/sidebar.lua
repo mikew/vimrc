@@ -4,7 +4,7 @@ local mod = {}
 
 mod.plugins = {
   {
-    dir = '/home/mike/.config/nvim/nvim-drawer',
+    dir = vim.fn.expand('~/.config/nvim/nvim-drawer'),
     opts = {},
     config = function(_, opts)
 
