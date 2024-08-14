@@ -1,7 +1,15 @@
 local symbols = require('symbols')
-local drawer = require('drawer')
 
 local mod = {}
+
+mod.plugins = {
+  {
+    dir = '/home/mike/.config/nvim/nvim-drawer',
+    opts = {},
+    config = function(_, opts)
+
+local drawer = require('nvim-drawer')
+      drawer.setup(opts)
 
 local tree_drawer = drawer.create_drawer({
   bufname_prefix = 'tree_',
@@ -88,7 +96,8 @@ vim.api.nvim_create_autocmd('VimEnter', {
   end,
 })
 
-mod.plugins = {
+    end
+  },
   {
     'nvim-tree/nvim-tree.lua',
     cond = not vim.g.vscode,

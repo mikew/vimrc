@@ -393,6 +393,10 @@ local function create_drawer(opts)
   return instance
 end
 
+return {
+  create_drawer = create_drawer,
+	setup = function(opts)
+
 vim.api.nvim_create_autocmd('TabEnter', {
   desc = 'nvim-drawer: Restore drawers',
   callback = function()
@@ -481,6 +485,5 @@ vim.api.nvim_create_autocmd('WinClosed', {
   end,
 })
 
-return {
-  create_drawer = create_drawer,
+	end
 }

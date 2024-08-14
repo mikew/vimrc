@@ -14,6 +14,9 @@ Then this plugin is for you.
 {
     'mikew/nvim-drawer',
     opts = {},
+    config = function(_, opts)
+        -- See usage and examples below.
+    end
 }
 ```
 
@@ -32,6 +35,8 @@ Then this plugin is for you.
 First, you need to create a drawer via `create_drawer`:
 
 ```lua
+local drawer = require('nvim-drawer')
+
 local example_drawer = drawer.create_drawer({
   bufname_prefix = 'example_drawer_',
   size = 15,
@@ -58,6 +63,8 @@ Your drawer has methods like:
 ### Terminal
 
 ```lua
+local drawer = require('nvim-drawer')
+
 local terminal_drawer = drawer.create_drawer({
   bufname_prefix = 'quick_terminal_',
   size = 15,
@@ -104,6 +111,8 @@ vim.api.nvim_create_autocmd('VimEnter', {
 ### nvim-tree
 
 ```lua
+local drawer = require('nvim-drawer')
+
 local tree_drawer = drawer.create_drawer({
   bufname_prefix = 'tree_',
   size = 40,
@@ -133,8 +142,9 @@ local tree_drawer = drawer.create_drawer({
 -- something like `NvimTree_{N}`.
 -- Then, we overwrite how the drawer is found so that any NvimTree windows are
 -- found instead of drawer windows.
+local original_is_buffer = tree_drawer.is_buffer
 function tree_drawer.is_buffer(bufname)
-  return string.find(bufname, 'NvimTree_') ~= nil
+  return string.find(bufname, 'NvimTree_') ~= nil or original_is_buffer(bufname)
 end
 
 vim.keymap.set('n', '<leader>e', function()
