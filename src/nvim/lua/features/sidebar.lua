@@ -7,96 +7,95 @@ mod.plugins = {
     dir = vim.fn.expand('~/.config/nvim/nvim-drawer'),
     opts = {},
     config = function(_, opts)
-
-local drawer = require('nvim-drawer')
+      local drawer = require('nvim-drawer')
       drawer.setup(opts)
 
-local tree_drawer = drawer.create_drawer({
-  bufname_prefix = 'tree_',
-  size = 40,
-  position = 'right',
+      local tree_drawer = drawer.create_drawer({
+        bufname_prefix = 'tree_',
+        size = 40,
+        position = 'right',
 
-  on_did_open_buffer = function()
-    local nvim_tree_api = require('nvim-tree.api')
-    nvim_tree_api.tree.open({ current_window = true })
-    nvim_tree_api.tree.reload()
+        on_did_open_buffer = function()
+          local nvim_tree_api = require('nvim-tree.api')
+          nvim_tree_api.tree.open({ current_window = true })
+          nvim_tree_api.tree.reload()
 
-    -- NvimTree seems to set this back to true.
-    vim.opt_local.winfixheight = false
+          -- NvimTree seems to set this back to true.
+          vim.opt_local.winfixheight = false
 
-    vim.opt_local.number = false
-    vim.opt_local.signcolumn = 'no'
-    vim.opt_local.statuscolumn = ''
-  end,
+          vim.opt_local.number = false
+          vim.opt_local.signcolumn = 'no'
+          vim.opt_local.statuscolumn = ''
+        end,
 
-  on_did_close = function()
-    local nvim_tree_api = require('nvim-tree.api')
-    nvim_tree_api.tree.close()
-  end,
-})
+        on_did_close = function()
+          local nvim_tree_api = require('nvim-tree.api')
+          nvim_tree_api.tree.close()
+        end,
+      })
 
--- This is the trick to getting NvimTree working in a drawer.
--- We let NvimTree completely overwrite the split, which ends up renaming it to
--- something like `NvimTree_{N}`.
--- Then, we overwrite how the drawer is found so that any NvimTree windows are
--- found instead of drawer windows.
-local original_is_buffer = tree_drawer.is_buffer
-function tree_drawer.is_buffer(bufname)
-  return string.find(bufname, 'NvimTree_') ~= nil or original_is_buffer(bufname)
-end
+      -- This is the trick to getting NvimTree working in a drawer.
+      -- We let NvimTree completely overwrite the split, which ends up renaming it to
+      -- something like `NvimTree_{N}`.
+      -- Then, we overwrite how the drawer is found so that any NvimTree windows are
+      -- found instead of drawer windows.
+      local original_is_buffer = tree_drawer.is_buffer
+      function tree_drawer.is_buffer(bufname)
+        return string.find(bufname, 'NvimTree_') ~= nil
+          or original_is_buffer(bufname)
+      end
 
-vim.keymap.set('n', '<leader>e', function()
-  tree_drawer.focus_or_toggle()
-end, {
-  desc = 'Toggle Tree Drawer',
-  noremap = true,
-  silent = true,
-})
+      vim.keymap.set('n', '<leader>e', function()
+        tree_drawer.focus_or_toggle()
+      end, {
+        desc = 'Toggle Tree Drawer',
+        noremap = true,
+        silent = true,
+      })
 
-local terminal_drawer = drawer.create_drawer({
-  bufname_prefix = 'quick_terminal_',
-  size = 15,
-  position = 'bottom',
+      local terminal_drawer = drawer.create_drawer({
+        bufname_prefix = 'quick_terminal_',
+        size = 15,
+        position = 'bottom',
 
-  on_will_create_buffer = function()
-    vim.fn.termopen(os.getenv('SHELL'))
+        on_will_create_buffer = function()
+          vim.fn.termopen(os.getenv('SHELL'))
 
-    vim.opt_local.number = false
-    vim.opt_local.signcolumn = 'no'
-    vim.opt_local.statuscolumn = ''
-  end,
+          vim.opt_local.number = false
+          vim.opt_local.signcolumn = 'no'
+          vim.opt_local.statuscolumn = ''
+        end,
 
-  on_did_open_buffer = function()
-    vim.cmd('$')
-  end,
-})
+        on_did_open_buffer = function()
+          vim.cmd('$')
+        end,
+      })
 
-vim.keymap.set('n', '<C-`>', function()
-  terminal_drawer.focus_or_toggle()
-end)
+      vim.keymap.set('n', '<C-`>', function()
+        terminal_drawer.focus_or_toggle()
+      end)
 
-vim.keymap.set('n', '<leader>tn', function()
-  terminal_drawer.open({ mode = 'new' })
-end)
+      vim.keymap.set('n', '<leader>tn', function()
+        terminal_drawer.open({ mode = 'new' })
+      end)
 
-vim.keymap.set('n', '<leader>tt', function()
-  terminal_drawer.go(1)
-end)
+      vim.keymap.set('n', '<leader>tt', function()
+        terminal_drawer.go(1)
+      end)
 
-vim.keymap.set('n', '<leader>tT', function()
-  terminal_drawer.go(-1)
-end)
+      vim.keymap.set('n', '<leader>tT', function()
+        terminal_drawer.go(-1)
+      end)
 
-vim.api.nvim_create_autocmd('VimEnter', {
-  desc = 'Open Tree automatically',
-  once = true,
-  callback = function()
-    tree_drawer.open()
-    terminal_drawer.open()
-  end,
-})
-
-    end
+      vim.api.nvim_create_autocmd('VimEnter', {
+        desc = 'Open Tree automatically',
+        once = true,
+        callback = function()
+          tree_drawer.open()
+          terminal_drawer.open()
+        end,
+      })
+    end,
   },
   {
     'nvim-tree/nvim-tree.lua',
