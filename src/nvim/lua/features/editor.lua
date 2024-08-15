@@ -282,14 +282,22 @@ mod.plugins = {
     end,
   },
 
+  -- {
+  --   'lukas-reineke/indent-blankline.nvim',
+  --   main = 'ibl',
+  --   cond = not vim.g.vscode,
+  --   event = { 'BufRead' },
+  --   opts = {
+  --     indent = { char = symbols.indent.line },
+  --     scope = { enabled = true, show_exact_scope = true },
+  --   },
+  -- },
   {
-    'lukas-reineke/indent-blankline.nvim',
-    main = 'ibl',
+    'nvimdev/indentmini.nvim',
     cond = not vim.g.vscode,
     event = { 'BufRead' },
     opts = {
-      indent = { char = symbols.indent.line },
-      scope = { enabled = true, show_exact_scope = true },
+      char = symbols.indent.line,
     },
   },
 
