@@ -3,10 +3,84 @@
 local Layout = require('nui.layout')
 local Popup = require('nui.popup')
 
-local telescope = require('telescope')
 local TSLayout = require('telescope.pickers.layout')
 
 local mod = {}
+
+local border = {
+  results = {
+    top_left = '┌',
+    top = '─',
+    top_right = '┬',
+    right = '│',
+    bottom_right = '',
+    bottom = '',
+    bottom_left = '',
+    left = '│',
+  },
+  results_patch = {
+    minimal = {
+      top_left = '┌',
+      top_right = '┐',
+    },
+    horizontal = {
+      top_left = '┌',
+      top_right = '┬',
+    },
+    vertical = {
+      top_left = '├',
+      top_right = '┤',
+    },
+  },
+  prompt = {
+    top_left = '├',
+    top = '─',
+    top_right = '┤',
+    right = '│',
+    bottom_right = '┘',
+    bottom = '─',
+    bottom_left = '└',
+    left = '│',
+  },
+  prompt_patch = {
+    minimal = {
+      bottom_right = '┘',
+    },
+    horizontal = {
+      bottom_right = '┴',
+    },
+    vertical = {
+      bottom_right = '┘',
+    },
+  },
+  preview = {
+    top_left = '┌',
+    top = '─',
+    top_right = '┐',
+    right = '│',
+    bottom_right = '┘',
+    bottom = '─',
+    bottom_left = '└',
+    left = '│',
+  },
+  preview_patch = {
+    minimal = {},
+    horizontal = {
+      bottom = '─',
+      bottom_left = '',
+      bottom_right = '┘',
+      left = '',
+      top_left = '',
+    },
+    vertical = {
+      bottom = '',
+      bottom_left = '',
+      bottom_right = '',
+      left = '│',
+      top_left = '┌',
+    },
+  },
+}
 
 local function make_popup(options)
   local popup = Popup(options)
@@ -36,81 +110,6 @@ function mod.get_fused(opts)
         },
       },
       create_layout = function(picker)
-        local border = {
-          results = {
-            top_left = '┌',
-            top = '─',
-            top_right = '┬',
-            right = '│',
-            bottom_right = '',
-            bottom = '',
-            bottom_left = '',
-            left = '│',
-          },
-          results_patch = {
-            minimal = {
-              top_left = '┌',
-              top_right = '┐',
-            },
-            horizontal = {
-              top_left = '┌',
-              top_right = '┬',
-            },
-            vertical = {
-              top_left = '├',
-              top_right = '┤',
-            },
-          },
-          prompt = {
-            top_left = '├',
-            top = '─',
-            top_right = '┤',
-            right = '│',
-            bottom_right = '┘',
-            bottom = '─',
-            bottom_left = '└',
-            left = '│',
-          },
-          prompt_patch = {
-            minimal = {
-              bottom_right = '┘',
-            },
-            horizontal = {
-              bottom_right = '┴',
-            },
-            vertical = {
-              bottom_right = '┘',
-            },
-          },
-          preview = {
-            top_left = '┌',
-            top = '─',
-            top_right = '┐',
-            right = '│',
-            bottom_right = '┘',
-            bottom = '─',
-            bottom_left = '└',
-            left = '│',
-          },
-          preview_patch = {
-            minimal = {},
-            horizontal = {
-              bottom = '─',
-              bottom_left = '',
-              bottom_right = '┘',
-              left = '',
-              top_left = '',
-            },
-            vertical = {
-              bottom = '',
-              bottom_left = '',
-              bottom_right = '',
-              left = '│',
-              top_left = '┌',
-            },
-          },
-        }
-
         local results = make_popup({
           focusable = false,
           border = {
