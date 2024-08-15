@@ -299,6 +299,15 @@ mod.plugins = {
     opts = {
       char = symbols.indent.line,
     },
+    config = function(_, opts)
+      vim.api.nvim_set_hl(0, 'IndentLine', {
+        link = 'IndentBlankLineChar',
+      })
+      vim.api.nvim_set_hl(0, 'IndentLineCurrent', {
+        link = 'IndentBlankLineContextChar',
+      })
+      require('indentmini').setup(opts)
+    end,
   },
 
   {
