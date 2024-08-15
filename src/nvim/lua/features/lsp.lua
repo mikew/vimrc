@@ -30,7 +30,12 @@ mod.plugins = {
       },
       { 'nvimtools/none-ls-extras.nvim' },
     },
-    config = function()
+    opts = {
+      ui = {
+        border = 'rounded',
+      },
+    },
+    config = function(_, opts)
       -- By default, Neovim doesn't support everything that is in the LSP specification.
       -- When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
       -- So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
@@ -109,7 +114,7 @@ mod.plugins = {
       --     :Mason
       --
       -- You can press `g?` for help in this menu.
-      require('mason').setup()
+      require('mason').setup(opts)
 
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
