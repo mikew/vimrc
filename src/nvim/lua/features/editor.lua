@@ -30,6 +30,9 @@ vim.opt.foldlevelstart = 100
 vim.keymap.set('v', '<', '<gv')
 vim.keymap.set('v', '>', '>gv')
 
+-- New line.
+vim.keymap.set('i', '<D-CR>', '<C-o>o')
+
 if not vim.g.vscode then
   vim.opt.termguicolors = true
 
@@ -110,7 +113,7 @@ if not vim.g.vscode then
 
   -- Minimal number of screen lines to keep above and below the cursor.
   vim.opt.scrolloff = 5
-  vim.opt.mousescroll = 'ver:2,hor:2'
+  vim.opt.mousescroll = 'ver:5,hor:5'
 
   -- Keybinds to make split navigation easier.
   -- Use CTRL+<hjkl> to switch between windows
@@ -282,15 +285,32 @@ mod.plugins = {
     end,
   },
 
+  -- {
+  --   'lukas-reineke/indent-blankline.nvim',
+  --   main = 'ibl',
+  --   cond = not vim.g.vscode,
+  --   event = { 'BufRead' },
+  --   opts = {
+  --     indent = { char = symbols.indent.line },
+  --     scope = { enabled = true, show_exact_scope = true },
+  --   },
+  -- },
   {
-    'lukas-reineke/indent-blankline.nvim',
-    main = 'ibl',
+    'nvimdev/indentmini.nvim',
     cond = not vim.g.vscode,
     event = { 'BufRead' },
     opts = {
-      indent = { char = symbols.indent.line },
-      scope = { enabled = true, show_exact_scope = true },
+      char = symbols.indent.line,
     },
+    config = function(_, opts)
+      vim.api.nvim_set_hl(0, 'IndentLine', {
+        link = 'IndentBlankLineChar',
+      })
+      vim.api.nvim_set_hl(0, 'IndentLineCurrent', {
+        link = 'IndentBlankLineContextChar',
+      })
+      require('indentmini').setup(opts)
+    end,
   },
 
   {

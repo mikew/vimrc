@@ -5,6 +5,7 @@ local mod = {}
 mod.plugins = {
   {
     dir = vim.fn.expand('~/.config/nvim/nvim-drawer'),
+    cond = not vim.g.vscode,
     opts = {},
     config = function(_, opts)
       local drawer = require('nvim-drawer')
@@ -125,6 +126,11 @@ mod.plugins = {
           opts('Open: New Tab')
         )
         vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
+
+        vim.api.nvim_set_hl(0, 'NvimTreeIndentMarker', {
+          link = 'IndentBlankLineChar',
+          force = true,
+        })
       end,
 
       disable_netrw = true,
