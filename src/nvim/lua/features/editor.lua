@@ -30,6 +30,9 @@ vim.opt.foldlevelstart = 100
 vim.keymap.set('v', '<', '<gv')
 vim.keymap.set('v', '>', '>gv')
 
+-- New line.
+vim.keymap.set('i', '<D-CR>', '<C-o>o')
+
 if not vim.g.vscode then
   vim.opt.termguicolors = true
 
@@ -110,7 +113,7 @@ if not vim.g.vscode then
 
   -- Minimal number of screen lines to keep above and below the cursor.
   vim.opt.scrolloff = 5
-  vim.opt.mousescroll = 'ver:2,hor:2'
+  vim.opt.mousescroll = 'ver:5,hor:5'
 
   -- Keybinds to make split navigation easier.
   -- Use CTRL+<hjkl> to switch between windows
