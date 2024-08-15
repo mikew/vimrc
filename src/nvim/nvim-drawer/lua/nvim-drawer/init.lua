@@ -1,3 +1,6 @@
+--- @class NvimDrawerModule
+local mod = {}
+
 --- @class CreateDrawerOptions
 --- Prefix used when creating buffers.
 --- Buffers will be named `{bufname_prefix}1`, `{bufname_prefix}2`, etc.
@@ -71,7 +74,7 @@ end
 --- })
 --- ```
 --- @param opts CreateDrawerOptions
-local function create_drawer(opts)
+function mod.create_drawer(opts)
   --- @class DrawerInstance
   local instance = {
     opts = opts,
@@ -393,94 +396,94 @@ local function create_drawer(opts)
   return instance
 end
 
-vim.api.nvim_create_autocmd('TabEnter', {
-  desc = 'nvim-drawer: Restore drawers',
-  callback = function()
-    for _, instance in ipairs(instances) do
-      if instance.state.is_open then
-        instance.close({ save_size = false })
-        instance.open({ focus = false })
+function mod.setup(_)
+  vim.api.nvim_create_autocmd('TabEnter', {
+    desc = 'nvim-drawer: Restore drawers',
+    callback = function()
+      for _, instance in ipairs(instances) do
+        if instance.state.is_open then
+          instance.close({ save_size = false })
+          instance.open({ focus = false })
 
-        instance.focus_and_return(function()
-          local cmd = ''
-          if
-            instance.opts.position == 'left'
-            or instance.opts.position == 'right'
-          then
-            cmd = 'vertical resize '
-          else
-            cmd = 'resize '
-          end
+          instance.focus_and_return(function()
+            local cmd = ''
+            if
+              instance.opts.position == 'left'
+              or instance.opts.position == 'right'
+            then
+              cmd = 'vertical resize '
+            else
+              cmd = 'resize '
+            end
 
-          vim.cmd(cmd .. instance.state.size)
-        end)
-      else
-        instance.close({ save_size = false })
+            vim.cmd(cmd .. instance.state.size)
+          end)
+        else
+          instance.close({ save_size = false })
+        end
       end
-    end
-  end,
-})
+    end,
+  })
 
-vim.api.nvim_create_autocmd('TabLeave', {
-  desc = 'nvim-drawer: Save drawer sizes',
-  callback = function()
-    for _, instance in ipairs(instances) do
-      if instance.state.is_open then
-        instance.state.size = instance.get_size()
+  vim.api.nvim_create_autocmd('TabLeave', {
+    desc = 'nvim-drawer: Save drawer sizes',
+    callback = function()
+      for _, instance in ipairs(instances) do
+        if instance.state.is_open then
+          instance.state.size = instance.get_size()
+        end
       end
-    end
-  end,
-})
+    end,
+  })
 
-vim.api.nvim_create_autocmd('WinClosed', {
-  desc = 'nvim-drawer: Close tab when all non-drawers are closed',
-  callback = function(event)
-    --- @type integer
-    --- @diagnostic disable-next-line: assign-type-mismatch
-    local closing_window_id = tonumber(event.match)
+  vim.api.nvim_create_autocmd('WinClosed', {
+    desc = 'nvim-drawer: Close tab when all non-drawers are closed',
+    callback = function(event)
+      --- @type integer
+      --- @diagnostic disable-next-line: assign-type-mismatch
+      local closing_window_id = tonumber(event.match)
 
-    local closing_window_buffer =
-      vim.fn.bufname(vim.fn.winbufnr(closing_window_id))
-    --- @type DrawerInstance | nil
-    local closing_window_instance = nil
+      local closing_window_buffer =
+        vim.fn.bufname(vim.fn.winbufnr(closing_window_id))
+      --- @type DrawerInstance | nil
+      local closing_window_instance = nil
 
-    for _, instance in ipairs(instances) do
-      if instance.is_buffer(closing_window_buffer) then
-        closing_window_instance = instance
-        break
+      for _, instance in ipairs(instances) do
+        if instance.is_buffer(closing_window_buffer) then
+          closing_window_instance = instance
+          break
+        end
       end
-    end
 
-    if closing_window_instance == nil then
-      local windows_in_tab_without_closing = vim.tbl_filter(function(winid)
-        return winid ~= closing_window_id
-      end, get_windows_in_tab())
+      if closing_window_instance == nil then
+        local windows_in_tab_without_closing = vim.tbl_filter(function(winid)
+          return winid ~= closing_window_id
+        end, get_windows_in_tab())
 
-      local num_drawers_in_tab = 0
-      for _, winid in ipairs(get_windows_in_tab()) do
-        if winid ~= closing_window_id then
-          for _, instance in ipairs(instances) do
-            if instance.is_buffer(vim.fn.bufname(vim.fn.winbufnr(winid))) then
-              num_drawers_in_tab = num_drawers_in_tab + 1
-              break
+        local num_drawers_in_tab = 0
+        for _, winid in ipairs(get_windows_in_tab()) do
+          if winid ~= closing_window_id then
+            for _, instance in ipairs(instances) do
+              if instance.is_buffer(vim.fn.bufname(vim.fn.winbufnr(winid))) then
+                num_drawers_in_tab = num_drawers_in_tab + 1
+                break
+              end
             end
           end
         end
-      end
 
-      if num_drawers_in_tab == #windows_in_tab_without_closing then
-        if vim.fn.tabpagenr('$') > 1 then
-          vim.cmd('tabclose')
-        else
-          vim.cmd('qa')
+        if num_drawers_in_tab == #windows_in_tab_without_closing then
+          if vim.fn.tabpagenr('$') > 1 then
+            vim.cmd('tabclose')
+          else
+            vim.cmd('qa')
+          end
         end
+      else
+        closing_window_instance.close({ save_size = false })
       end
-    else
-      closing_window_instance.close({ save_size = false })
-    end
-  end,
-})
+    end,
+  })
+end
 
-return {
-  create_drawer = create_drawer,
-}
+return mod

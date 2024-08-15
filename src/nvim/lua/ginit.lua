@@ -24,8 +24,8 @@ local font_name = get_value_or_star({
 }, client_lookups)
 
 local font_size = get_value_or_star({
-  ['neovide/linux'] = 10,
-  ['*'] = 13,
+  ['macos'] = 13,
+  ['*'] = 10,
 }, client_lookups)
 
 local linespace = get_value_or_star({

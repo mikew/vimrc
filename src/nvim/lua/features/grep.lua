@@ -12,7 +12,6 @@ mod.plugins = {
     'nvim-telescope/telescope.nvim',
     cond = not vim.g.vscode,
     event = 'VimEnter',
-    branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
 
@@ -36,7 +35,39 @@ mod.plugins = {
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
       -- { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      { 'MunifTanjim/nui.nvim' },
     },
+    opts = function()
+      return require('telescope_theme_fused').get_fused({
+        --  All the info you're looking for is in `:help telescope.setup()`
+        pickers = {
+          colorscheme = {
+            enable_preview = true,
+          },
+        },
+        defaults = {
+          mappings = {
+            i = {
+              -- ['<c-enter>'] = 'to_fuzzy_refine',
+              ['<CR>'] = 'select_tab',
+              ['<C-CR>'] = 'select_default',
+            },
+            n = {
+              ['<CR>'] = 'select_tab',
+              ['<C-CR>'] = 'select_default',
+            },
+          },
+        },
+        -- extensions = {
+        --   -- Disabling due to the fact that codeactons doesn't work, and
+        --   -- disabling just codeactons also doesn't work.
+        --   -- https://github.com/nvim-telescope/telescope-ui-select.nvim/issues/44
+        --   -- ['ui-select'] = {
+        --   --   require('telescope.themes').get_dropdown(),
+        --   -- },
+        -- },
+      })
+    end,
     config = function(_, opts)
       -- Telescope is a fuzzy finder that comes with a lot of different things that
       -- it can fuzzy find! It's more than just a "file finder", it can search
@@ -59,37 +90,7 @@ mod.plugins = {
 
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
-      require('telescope').setup({
-        -- You can put your default mappings / updates / etc. in here
-        --  All the info you're looking for is in `:help telescope.setup()`
-        --
-        pickers = {
-          colorscheme = {
-            enable_preview = true,
-          },
-        },
-        defaults = {
-          mappings = {
-            i = {
-              -- ['<c-enter>'] = 'to_fuzzy_refine',
-              ['<CR>'] = 'select_tab',
-              ['<C-CR>'] = 'select_default',
-            },
-            n = {
-              ['<CR>'] = 'select_tab',
-              ['<C-CR>'] = 'select_default',
-            },
-          },
-        },
-        extensions = {
-          -- Disabling due to the fact that codeactons doesn't work, and
-          -- disabling just codeactons also doesn't work.
-          -- https://github.com/nvim-telescope/telescope-ui-select.nvim/issues/44
-          -- ['ui-select'] = {
-          --   require('telescope.themes').get_dropdown(),
-          -- },
-        },
-      })
+      require('telescope').setup(opts)
 
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')

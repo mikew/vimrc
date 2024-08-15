@@ -1,6 +1,5 @@
 local vimrc = require('vimrc')
 local symbols = require('symbols')
-local drawer = require('drawer')
 
 local vim_ui = vimrc.determine_ui()
 local vim_os = vimrc.determine_os()

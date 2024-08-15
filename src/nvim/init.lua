@@ -48,4 +48,7 @@ require('lazy').setup({
   install = { colorscheme = { 'oceanicnext' } },
   -- automatically check for plugin updates
   -- checker = { enabled = true },
+  ui = {
+    border = 'rounded',
+  },
 })
