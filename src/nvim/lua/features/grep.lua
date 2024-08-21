@@ -49,12 +49,14 @@ mod.plugins = {
           mappings = {
             i = {
               -- ['<c-enter>'] = 'to_fuzzy_refine',
-              ['<CR>'] = 'select_tab',
-              ['<C-CR>'] = 'select_default',
+              ['<CR>'] = 'select_tab_drop',
+              ['<C-CR>'] = 'select_drop',
+              ['<S-CR>'] = 'select_vertical',
             },
             n = {
-              ['<CR>'] = 'select_tab',
-              ['<C-CR>'] = 'select_default',
+              ['<CR>'] = 'select_tab_drop',
+              ['<C-CR>'] = 'select_drop',
+              ['<S-CR>'] = 'select_vertical',
             },
           },
         },

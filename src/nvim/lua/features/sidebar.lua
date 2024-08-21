@@ -118,12 +118,19 @@ mod.plugins = {
 
         api.config.mappings.default_on_attach(bufnr)
 
-        vim.keymap.set('n', '<CR>', api.node.open.tab, opts('Open: New Tab'))
+        vim.keymap.set('n', '<CR>', api.node.open.tab_drop, opts('Open: Tab'))
         vim.keymap.set(
           'n',
           '<2-LeftMouse>',
-          api.node.open.tab,
-          opts('Open: New Tab')
+          api.node.open.tab_drop,
+          opts('Open: Tab')
+        )
+        vim.keymap.set('n', '<C-CR>', api.node.open.drop, opts('Open'))
+        vim.keymap.set(
+          'n',
+          '<S-CR>',
+          api.node.open.vertical,
+          opts('Open: Vertical Split')
         )
         vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
 
