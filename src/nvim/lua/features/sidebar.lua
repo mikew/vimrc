@@ -108,9 +108,15 @@ mod.plugins = {
         local api = require('nvim-tree.api')
         local open_file = require('nvim-tree.actions.node.open-file')
 
+        local untouched_modes = {
+          'preview',
+          'preview_no_picker',
+          'vsplit',
+          'split',
+        }
         local original_fn = open_file.fn
         function open_file.fn(mode, filename)
-          if mode == 'preview' or mode == 'preview_no_picker' then
+          if vim.list_contains(untouched_modes, mode) then
             original_fn(mode, filename)
             return
           end
@@ -134,10 +140,10 @@ mod.plugins = {
         vim.keymap.set(
           'n',
           '<2-LeftMouse>',
-          api.node.open.tab_drop,
+          api.node.open.edit,
           opts('Open: Tab')
         )
-        vim.keymap.set('n', '<C-CR>', api.node.open.edit, opts('Open'))
+        -- vim.keymap.set('n', '<C-CR>', api.node.open.edit, opts('Open'))
         vim.keymap.set(
           'n',
           '<S-CR>',
