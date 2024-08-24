@@ -95,12 +95,12 @@ mod.plugins = {
             i = {
               -- ['<c-enter>'] = 'to_fuzzy_refine',
               ['<CR>'] = wut,
-              ['<C-CR>'] = 'select_drop',
+              ['<C-CR>'] = 'select_default',
               ['<S-CR>'] = 'select_vertical',
             },
             n = {
               ['<CR>'] = wut,
-              ['<C-CR>'] = 'select_drop',
+              ['<C-CR>'] = 'select_default',
               ['<S-CR>'] = 'select_vertical',
             },
           },
