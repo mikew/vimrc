@@ -396,9 +396,14 @@ function mod.create_drawer(opts)
   return instance
 end
 
+local drawer_augroup = vim.api.nvim_create_augroup('nvim-drawer', {
+  clear = true,
+})
+
 function mod.setup(_)
   vim.api.nvim_create_autocmd('TabEnter', {
     desc = 'nvim-drawer: Restore drawers',
+    group = drawer_augroup,
     callback = function()
       for _, instance in ipairs(instances) do
         if instance.state.is_open then
@@ -427,6 +432,7 @@ function mod.setup(_)
 
   vim.api.nvim_create_autocmd('TabLeave', {
     desc = 'nvim-drawer: Save drawer sizes',
+    group = drawer_augroup,
     callback = function()
       for _, instance in ipairs(instances) do
         if instance.state.is_open then
@@ -438,6 +444,7 @@ function mod.setup(_)
 
   vim.api.nvim_create_autocmd('WinClosed', {
     desc = 'nvim-drawer: Close tab when all non-drawers are closed',
+    group = drawer_augroup,
     callback = function(event)
       --- @type integer
       --- @diagnostic disable-next-line: assign-type-mismatch
