@@ -1,3 +1,4 @@
+local vimrc = require('vimrc')
 local symbols = require('symbols')
 
 local mod = {}
@@ -105,6 +106,17 @@ mod.plugins = {
     opts = {
       on_attach = function(bufnr)
         local api = require('nvim-tree.api')
+        local open_file = require('nvim-tree.actions.node.open-file')
+
+        local original_fn = open_file.fn
+        function open_file.fn(mode, filename)
+          if mode == 'preview' or mode == 'preview_no_picker' then
+            original_fn(mode, filename)
+            return
+          end
+
+          vimrc.go_to_file_or_open(filename)
+        end
 
         local function opts(desc)
           return {
@@ -118,14 +130,14 @@ mod.plugins = {
 
         api.config.mappings.default_on_attach(bufnr)
 
-        vim.keymap.set('n', '<CR>', api.node.open.tab_drop, opts('Open: Tab'))
+        vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open: Tab'))
         vim.keymap.set(
           'n',
           '<2-LeftMouse>',
           api.node.open.tab_drop,
           opts('Open: Tab')
         )
-        vim.keymap.set('n', '<C-CR>', api.node.open.drop, opts('Open'))
+        vim.keymap.set('n', '<C-CR>', api.node.open.edit, opts('Open'))
         vim.keymap.set(
           'n',
           '<S-CR>',

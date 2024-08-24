@@ -38,6 +38,51 @@ mod.plugins = {
       { 'MunifTanjim/nui.nvim' },
     },
     opts = function()
+      -- Adapted from https://github.com/nvim-telescope/telescope.nvim/blob/5972437de807c3bc101565175da66a1aa4f8707a/lua/telescope/actions/set.lua#L127
+      local function wut(prompt_bufnr)
+        local action_state = require('telescope.actions.state')
+
+        local entry = action_state.get_selected_entry()
+        if not entry then
+          return
+        end
+
+        local filename, row, col
+
+        if entry.path or entry.filename then
+          filename = entry.path or entry.filename
+
+          row = entry.row or entry.lnum
+          col = entry.col
+        elseif not entry.bufnr then
+          local value = entry.value
+          if not value then
+            return
+          end
+
+          if type(value) == 'table' then
+            value = entry.display
+          end
+
+          local sections = vim.split(value, ':')
+
+          filename = sections[1]
+          row = tonumber(sections[2])
+          col = tonumber(sections[3])
+        end
+
+        local entry_bufnr = entry.bufnr
+
+        require('telescope.pickers').on_close_prompt(prompt_bufnr)
+        -- local picker = action_state.get_current_picker(prompt_bufnr)
+        -- pcall(vim.api.nvim_set_current_win, picker.original_win_id)
+
+        vimrc.go_to_file_or_open(filename)
+        if row and col then
+          vim.api.nvim_win_set_cursor(0, { row, col })
+        end
+      end
+
       return require('telescope_theme_fused').get_fused({
         --  All the info you're looking for is in `:help telescope.setup()`
         pickers = {
@@ -49,12 +94,12 @@ mod.plugins = {
           mappings = {
             i = {
               -- ['<c-enter>'] = 'to_fuzzy_refine',
-              ['<CR>'] = 'select_tab_drop',
+              ['<CR>'] = wut,
               ['<C-CR>'] = 'select_drop',
               ['<S-CR>'] = 'select_vertical',
             },
             n = {
-              ['<CR>'] = 'select_tab_drop',
+              ['<CR>'] = wut,
               ['<C-CR>'] = 'select_drop',
               ['<S-CR>'] = 'select_vertical',
             },
