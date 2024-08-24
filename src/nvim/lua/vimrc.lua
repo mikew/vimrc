@@ -65,4 +65,50 @@ function mod.determine_os()
   end
 end
 
+--- @class GetWindowInfoResult
+--- @field winnr integer
+--- @field winid integer
+--- @field bufnr integer
+--- @field tabpagenr integer
+--- @field bufname string
+
+--- @param path string
+function mod.get_window_info_for_file(path)
+  local path_with_cwd = vim.fn.fnamemodify(path, ':p')
+
+  for _, winid in ipairs(vim.api.nvim_list_wins()) do
+    local bufnr = vim.fn.winbufnr(winid)
+    local bufname = vim.fn.bufname(bufnr)
+
+    if bufname == path or bufname == path_with_cwd then
+      local tabpagenr, winnr = unpack(vim.fn.win_id2tabwin(winid))
+      --- @type GetWindowInfoResult
+      local result = {
+        winnr = winnr,
+        tabpagenr = tabpagenr,
+        winid = winid,
+        bufnr = bufnr,
+        bufname = bufname,
+      }
+
+      return result
+    end
+  end
+
+  return nil
+end
+
+--- @param path string
+function mod.go_to_file_or_open(path)
+  local window_id = mod.get_window_info_for_file(path)
+
+  if window_id then
+    -- TODO Maybe just use `nvim_set_current_win`.
+    vim.cmd(window_id.tabpagenr .. 'tabnext')
+    vim.cmd(window_id.winnr .. 'wincmd w')
+  else
+    vim.cmd('tabedit ' .. path)
+  end
+end
+
 return mod
