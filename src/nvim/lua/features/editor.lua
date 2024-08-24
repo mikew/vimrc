@@ -151,6 +151,9 @@ if not vim.g.vscode then
     eob = ' ',
   }
 
+  -- Only one statusline at the bottom of the window.
+  vim.opt.laststatus = 3
+
   -- Resize splits if window got resized
   vim.api.nvim_create_autocmd({ 'VimResized' }, {
     group = vimrc.create_augroup('resize_splits'),

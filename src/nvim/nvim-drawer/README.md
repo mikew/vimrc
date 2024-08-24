@@ -12,11 +12,14 @@ Then this plugin is for you.
 
 ```lua
 {
-    'mikew/nvim-drawer',
-    opts = {},
-    config = function(_, opts)
-        -- See usage and examples below.
-    end
+  'mikew/nvim-drawer',
+  opts = {},
+  config = function(_, opts)
+    local drawer = require('nvim-drawer')
+    drawer.setup(opts)
+
+    -- See usage and examples below.
+  end
 }
 ```
 
@@ -158,88 +161,78 @@ end)
 
 #### bufname_prefix
 
-
 ```lua
 string
 ```
 
- Prefix used when creating buffers.
- Buffers will be named `{bufname_prefix}1`, `{bufname_prefix}2`, etc.
+Prefix used when creating buffers.
+Buffers will be named `{bufname_prefix}1`, `{bufname_prefix}2`, etc.
 
 #### on_did_close
-
 
 ```lua
 (fun():nil)?
 ```
 
- Called after the drawer is closed. Only called if the drawer was actually
- open.
+Called after the drawer is closed. Only called if the drawer was actually
+open.
 
 #### on_did_open_buffer
-
 
 ```lua
 (fun(bufname: string):nil)?
 ```
 
- Called after a buffer is opened.
+Called after a buffer is opened.
 
 #### on_did_open_split
-
 
 ```lua
 fun(bufname: string):nil
 ```
 
- Called after a split is created.
+Called after a split is created.
 
 #### on_will_close
-
 
 ```lua
 fun():nil
 ```
 
- Called before the drawer is closed. Note this will is called even if the
- drawer is closed.
+Called before the drawer is closed. Note this will is called even if the
+drawer is closed.
 
 #### on_will_create_buffer
-
 
 ```lua
 (fun(bufname: string):nil)?
 ```
 
- Called before a buffer is created. This is called very rarely.
+Called before a buffer is created. This is called very rarely.
 
 #### on_will_open_split
-
 
 ```lua
 fun(bufname: string):nil
 ```
 
- Called before the splt is created.
+Called before the splt is created.
 
 #### position
-
 
 ```lua
 'bottom'|'left'|'right'|'top'
 ```
 
- Position of the drawer.
+Position of the drawer.
 
 #### size
-
 
 ```lua
 integer
 ```
 
- Initial size of the drawer, in lines or columns.
-
+Initial size of the drawer, in lines or columns.
 
 ---
 
@@ -247,11 +240,9 @@ integer
 
 #### save_size
 
-
 ```lua
 boolean?
 ```
-
 
 ---
 
@@ -259,148 +250,139 @@ boolean?
 
 #### close
 
-
 ```lua
 function DrawerInstance.close(opts?: DrawerCloseOptions)
 ```
 
- Close the drawer. By default, the size of the drawer is saved.
- ```lua
- example_drawer.close()
+Close the drawer. By default, the size of the drawer is saved.
 
- --- Don't save the size of the drawer.
- example_drawer.close({ save_size = false })
- ```
+```lua
+example_drawer.close()
+
+--- Don't save the size of the drawer.
+example_drawer.close({ save_size = false })
+```
 
 #### focus
-
 
 ```lua
 function DrawerInstance.focus()
 ```
 
- Focus the drawer.
+Focus the drawer.
 
 #### focus_and_return
-
 
 ```lua
 function DrawerInstance.focus_and_return(callback: fun())
 ```
 
- Helper function to focus the drawer, run a callback, and return focus to
- the previous window.
+Helper function to focus the drawer, run a callback, and return focus to
+the previous window.
 
 #### focus_or_toggle
-
 
 ```lua
 function DrawerInstance.focus_or_toggle()
 ```
 
- Focus the drawer if it's open, otherwise toggle it, and give it focus
- when it is opened.
+Focus the drawer if it's open, otherwise toggle it, and give it focus
+when it is opened.
 
 #### get_size
-
 
 ```lua
 function DrawerInstance.get_size()
   -> integer
 ```
 
- Get the size of the drawer in lines or columns.
+Get the size of the drawer in lines or columns.
 
 #### get_winnr
-
 
 ```lua
 function DrawerInstance.get_winnr()
   -> integer
 ```
 
- Get the window number of the drawer. Returns `-1` if the drawer is not
- open.
+Get the window number of the drawer. Returns `-1` if the drawer is not
+open.
 
 #### go
-
 
 ```lua
 function DrawerInstance.go(distance: integer)
 ```
 
- Navigate to the next or previous buffer.
- ```lua
- --- Go to the next buffer.
- example_drawer.go(1)
+Navigate to the next or previous buffer.
 
- --- Go to the previous buffer.
- example_drawer.go(-1)
- ```
+```lua
+--- Go to the next buffer.
+example_drawer.go(1)
+
+--- Go to the previous buffer.
+example_drawer.go(-1)
+```
 
 #### is_buffer
-
 
 ```lua
 function DrawerInstance.is_buffer(bufname: string)
   -> boolean
 ```
 
- Check if a buffer belongs to the drawer. You can override this function
- to work with other plugins.
+Check if a buffer belongs to the drawer. You can override this function
+to work with other plugins.
 
 #### is_foucsed
-
 
 ```lua
 function DrawerInstance.is_foucsed()
   -> boolean
 ```
 
- Check if the drawer is focused.
+Check if the drawer is focused.
 
 #### open
-
 
 ```lua
 function DrawerInstance.open(opts?: DrawerOpenOptions)
 ```
 
- Open the drawer.
- ```lua
- example_drawer.open()
+Open the drawer.
 
- --- Keep focus in the drawer.
- example_drawer.open({ focus = true })
+```lua
+example_drawer.open()
 
- --- Open a new tab and focus it.
- example_drawer.open({ mode = 'new', focus = true })
- ```
+--- Keep focus in the drawer.
+example_drawer.open({ focus = true })
+
+--- Open a new tab and focus it.
+example_drawer.open({ mode = 'new', focus = true })
+```
 
 #### switch_window_to_buffer
-
 
 ```lua
 function DrawerInstance.switch_window_to_buffer(bufname: string)
 ```
 
- Switch the current window to a buffer and prepare it as a drawer.
+Switch the current window to a buffer and prepare it as a drawer.
 
 #### toggle
-
 
 ```lua
 function DrawerInstance.toggle(opts?: DrawerToggleOptions)
 ```
 
- Toggle the drawer. Also lets you pass options to open the drawer.
- ```lua
- example_drawer.toggle()
+Toggle the drawer. Also lets you pass options to open the drawer.
 
- --- Focus the drawer when opening it.
- example_drawer.toggle({ open = { focus = true } })
- ```
+```lua
+example_drawer.toggle()
 
+--- Focus the drawer when opening it.
+example_drawer.toggle({ open = { focus = true } })
+```
 
 ---
 
@@ -408,18 +390,15 @@ function DrawerInstance.toggle(opts?: DrawerToggleOptions)
 
 #### focus
 
-
 ```lua
 boolean?
 ```
 
 #### mode
 
-
 ```lua
 ('new'|'previous_or_new')?
 ```
-
 
 ---
 
@@ -427,49 +406,43 @@ boolean?
 
 #### buffers
 
-
 ```lua
 string[]
 ```
 
- The names of all buffers that have been created.
+The names of all buffers that have been created.
 
 #### count
-
 
 ```lua
 integer
 ```
 
- The number of buffers that have been created.
+The number of buffers that have been created.
 
 #### is_open
-
 
 ```lua
 boolean
 ```
 
- Whether the drawer assumes it's open or not.
+Whether the drawer assumes it's open or not.
 
 #### previous_bufname
-
 
 ```lua
 string
 ```
 
- The name of the previous buffer that was opened.
+The name of the previous buffer that was opened.
 
 #### size
-
 
 ```lua
 integer
 ```
 
- The last known size of the drawer.
-
+The last known size of the drawer.
 
 ---
 
@@ -477,16 +450,13 @@ integer
 
 #### open
 
-
 ```lua
 DrawerOpenOptions?
 ```
 
-
 ---
 
 ### LuaLS
-
 
 ---
 
@@ -494,26 +464,25 @@ DrawerOpenOptions?
 
 #### create_drawer
 
-
 ```lua
 function NvimDrawerModule.create_drawer(opts: CreateDrawerOptions)
   -> DrawerInstance
 ```
 
- Create a new drawer.
- ```lua
- local example_drawer = drawer.create_drawer({
-   bufname_prefix = 'example_drawer_',
-   size = 15,
-   position = 'bottom',
+Create a new drawer.
 
-   on_will_create_buffer = function()
-   end,
- })
- ```
+```lua
+local example_drawer = drawer.create_drawer({
+  bufname_prefix = 'example_drawer_',
+  size = 15,
+  position = 'bottom',
+
+  on_will_create_buffer = function()
+  end,
+})
+```
 
 #### setup
-
 
 ```lua
 function NvimDrawerModule.setup(_: any)

@@ -1,3 +1,4 @@
+local vimrc = require('vimrc')
 local symbols = require('symbols')
 
 local mod = {}
@@ -105,6 +106,23 @@ mod.plugins = {
     opts = {
       on_attach = function(bufnr)
         local api = require('nvim-tree.api')
+        local open_file = require('nvim-tree.actions.node.open-file')
+
+        local untouched_modes = {
+          'preview',
+          'preview_no_picker',
+          'vsplit',
+          'split',
+        }
+        local original_fn = open_file.fn
+        function open_file.fn(mode, filename)
+          if vim.list_contains(untouched_modes, mode) then
+            original_fn(mode, filename)
+            return
+          end
+
+          vimrc.go_to_file_or_open(filename)
+        end
 
         local function opts(desc)
           return {
@@ -118,12 +136,19 @@ mod.plugins = {
 
         api.config.mappings.default_on_attach(bufnr)
 
-        vim.keymap.set('n', '<CR>', api.node.open.tab, opts('Open: New Tab'))
+        vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open: Tab'))
         vim.keymap.set(
           'n',
           '<2-LeftMouse>',
-          api.node.open.tab,
-          opts('Open: New Tab')
+          api.node.open.edit,
+          opts('Open: Tab')
+        )
+        -- vim.keymap.set('n', '<C-CR>', api.node.open.edit, opts('Open'))
+        vim.keymap.set(
+          'n',
+          '<S-CR>',
+          api.node.open.vertical,
+          opts('Open: Vertical Split')
         )
         vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
 
