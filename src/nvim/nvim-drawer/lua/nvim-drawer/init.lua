@@ -456,18 +456,17 @@ function mod.setup(_)
       end
 
       if closing_window_instance == nil then
+        local windows_in_tab = get_windows_in_tab()
         local windows_in_tab_without_closing = vim.tbl_filter(function(winid)
           return winid ~= closing_window_id
-        end, get_windows_in_tab())
+        end, windows_in_tab)
 
         local num_drawers_in_tab = 0
-        for _, winid in ipairs(get_windows_in_tab()) do
-          if winid ~= closing_window_id then
-            for _, instance in ipairs(instances) do
-              if instance.is_buffer(vim.fn.bufname(vim.fn.winbufnr(winid))) then
-                num_drawers_in_tab = num_drawers_in_tab + 1
-                break
-              end
+        for _, winid in ipairs(windows_in_tab_without_closing) do
+          for _, instance in ipairs(instances) do
+            if instance.is_buffer(vim.fn.bufname(vim.fn.winbufnr(winid))) then
+              num_drawers_in_tab = num_drawers_in_tab + 1
+              break
             end
           end
         end
