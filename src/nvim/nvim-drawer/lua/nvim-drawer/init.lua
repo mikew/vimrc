@@ -451,6 +451,7 @@ function mod.setup(_)
   })
 
   vim.api.nvim_create_autocmd('BufWipeout', {
+    desc = 'nvim-drawer: Cleanup when buffer is wiped out',
     group = drawer_augroup,
     callback = function(event)
       local bufname = event.file
