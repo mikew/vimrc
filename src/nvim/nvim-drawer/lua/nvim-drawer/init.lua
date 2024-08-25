@@ -11,6 +11,10 @@ local mod = {}
 --- @field position 'left' | 'right' | 'top' | 'bottom'
 --- Called before a buffer is created. This is called very rarely.
 --- @field on_will_create_buffer? fun(bufname: string): nil
+--- Called after a buffer is created. This is called very rarely.
+--- @field on_did_create_buffer? fun(bufname: string): nil
+--- Called before a buffer is opened.
+--- @field on_will_open_buffer? fun(bufname: string): nil
 --- Called after a buffer is opened.
 --- @field on_did_open_buffer? fun(bufname: string): nil
 --- Called before the splt is created.
@@ -178,10 +182,14 @@ function mod.create_drawer(opts)
   function instance.switch_window_to_buffer(bufname)
     local bufnr = vim.fn.bufnr(bufname)
 
+    try_callback('on_will_open_buffer', bufname)
+
     if bufnr == -1 then
       try_callback('on_will_create_buffer', bufname)
 
       vim.cmd('file ' .. bufname)
+
+      try_callback('on_did_create_buffer', bufname)
     else
       vim.cmd('buffer ' .. bufname)
     end
