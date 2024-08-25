@@ -442,6 +442,21 @@ function mod.setup(_)
     end,
   })
 
+  vim.api.nvim_create_autocmd('BufWipeout', {
+    group = drawer_augroup,
+    callback = function(event)
+      -- local bufname = vim.fn.bufname(event.buf)
+      local bufname = event.file
+      for _, instance in ipairs(instances) do
+        if instance.is_buffer(bufname) then
+          instance.state.buffers = vim.tbl_filter(function(b)
+            return b ~= bufname
+          end, instance.state.buffers)
+        end
+      end
+    end,
+  })
+
   vim.api.nvim_create_autocmd('WinClosed', {
     desc = 'nvim-drawer: Close tab when all non-drawers are closed',
     group = drawer_augroup,
