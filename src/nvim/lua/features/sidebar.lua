@@ -5,7 +5,8 @@ local mod = {}
 
 mod.plugins = {
   {
-    dir = vim.fn.expand('~/.config/nvim/nvim-drawer'),
+    'mikew/nvim-drawer',
+    -- dir = vim.fn.expand('~/Work/nvim-drawer'),
     cond = not vim.g.vscode,
     opts = {},
     config = function(_, opts)
