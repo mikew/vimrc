@@ -453,13 +453,28 @@ function mod.setup(_)
   vim.api.nvim_create_autocmd('BufWipeout', {
     group = drawer_augroup,
     callback = function(event)
-      -- local bufname = vim.fn.bufname(event.buf)
       local bufname = event.file
       for _, instance in ipairs(instances) do
         if instance.is_buffer(bufname) then
-          instance.state.buffers = vim.tbl_filter(function(b)
+          local new_buffers = vim.tbl_filter(function(b)
             return b ~= bufname
           end, instance.state.buffers)
+
+          instance.state.is_open = false
+          instance.state.previous_bufname = new_buffers[#new_buffers] or ''
+          instance.state.buffers = new_buffers
+
+          -- TODO Not sure if this is useful. Technically, the drawer will be
+          -- "closed", like, it's not open any more.
+          -- But not sure if BufWipeout will happen anyways via whatever people
+          -- do with their drawers, and if .close() is properly called, then
+          -- these callbacks would be doubled-up.
+          -- if instance.opts.on_will_close then
+          --   instance.opts.on_will_close()
+          -- end
+          -- if instance.opts.on_did_close then
+          --   instance.opts.on_did_close()
+          -- end
         end
       end
     end,
