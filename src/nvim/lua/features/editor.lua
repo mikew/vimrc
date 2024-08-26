@@ -440,6 +440,7 @@ mod.plugins = {
 
   {
     'nvim-treesitter/nvim-treesitter-context',
+    cond = not vim.g.vscode,
     event = { 'BufRead' },
     opts = {
       mode = 'topline',

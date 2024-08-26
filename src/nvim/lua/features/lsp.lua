@@ -326,6 +326,7 @@ mod.plugins = {
 
   {
     'folke/lazydev.nvim',
+    cond = not vim.g.vscode,
     ft = 'lua', -- only load on lua files
     opts = {},
   },
