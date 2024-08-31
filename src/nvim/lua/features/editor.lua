@@ -35,6 +35,7 @@ vim.keymap.set('i', '<D-CR>', '<C-o>o')
 
 if not vim.g.vscode then
   vim.opt.termguicolors = true
+  vim.opt.cmdheight = 0
 
   -- Always show tab bar.
   vim.opt.showtabline = 2
