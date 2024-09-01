@@ -24,7 +24,7 @@ mod.plugins = {
           border = 'rounded',
           anchor = 'CE',
           width = 40,
-          height = 0.8,
+          height = '80%',
         },
 
         on_vim_enter = function(event)
@@ -73,7 +73,7 @@ mod.plugins = {
           anchor = 'SC',
           margin = 2,
           border = 'rounded',
-          width = 0.8,
+          width = '100%',
           height = 15,
         },
 
@@ -88,6 +88,7 @@ mod.plugins = {
           -- <leader>tn: open a new terminal.
           -- <leader>tt: go to the next terminal.
           -- <leader>tT: go to the previous terminal.
+          -- <leader>tz: zoom the terminal.
           vim.keymap.set('n', '<C-`>', function()
             event.instance.focus_or_toggle()
           end)
@@ -114,10 +115,10 @@ mod.plugins = {
         end,
 
         -- Remove some UI elements.
-        on_did_open_window = function()
-          vim.opt.number = false
-          vim.opt.signcolumn = 'no'
-          vim.opt.statuscolumn = ''
+        on_did_open_buffer = function()
+          vim.opt_local.number = false
+          vim.opt_local.signcolumn = 'no'
+          vim.opt_local.statuscolumn = ''
         end,
 
         -- Scroll to the end when changing tabs.
@@ -127,28 +128,28 @@ mod.plugins = {
       })
 
       drawer.create_drawer({
-        size = 40,
         position = 'float',
+        -- Technically unused when using `position = 'float'`.
+        size = 40,
 
         win_config = {
           margin = 2,
           border = 'rounded',
           width = 80,
-          height = 0.5,
+          height = '50%',
         },
 
         on_vim_enter = function(event)
-          -- event.instance.open({
-          --   focus = false,
-          -- })
-
           vim.keymap.set('n', '<leader>nn', function()
             event.instance.focus_or_toggle()
+          end)
+          vim.keymap.set('n', '<leader>nz', function()
+            event.instance.toggle_zoom()
           end)
         end,
 
         on_did_create_buffer = function()
-          vim.cmd('edit notes.md')
+          vim.cmd('edit NOTES.md')
         end,
       })
     end,
