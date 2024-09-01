@@ -14,7 +14,6 @@ mod.plugins = {
       drawer.setup(opts)
 
       drawer.create_drawer({
-        bufname_prefix = 'tree_',
         size = 40,
         position = 'float',
         nvim_tree_hack = true,
@@ -65,7 +64,6 @@ mod.plugins = {
       })
 
       drawer.create_drawer({
-        bufname_prefix = 'quick_terminal_',
         size = 15,
         position = 'float',
 
@@ -215,7 +213,6 @@ mod.plugins = {
 
       hijack_netrw = false,
       -- disable_netrw = true,
-
 
       renderer = {
         add_trailing = true,
