@@ -5,96 +5,149 @@ local mod = {}
 
 mod.plugins = {
   {
-    dir = vim.fn.expand('~/.config/nvim/nvim-drawer'),
+    'mikew/nvim-drawer',
+    -- dir = vim.fn.expand('~/Work/nvim-drawer'),
     cond = not vim.g.vscode,
     opts = {},
     config = function(_, opts)
       local drawer = require('nvim-drawer')
       drawer.setup(opts)
 
-      local tree_drawer = drawer.create_drawer({
-        bufname_prefix = 'tree_',
+      drawer.create_drawer({
         size = 40,
-        position = 'right',
+        position = 'float',
+        nvim_tree_hack = true,
 
-        on_did_open_buffer = function()
+        win_config = {
+          margin = 2,
+          border = 'rounded',
+          anchor = 'CE',
+          width = 40,
+          height = '80%',
+        },
+
+        on_vim_enter = function(event)
+          --- Open the drawer on startup.
+          -- event.instance.open({
+          --   focus = false,
+          -- })
+
+          --- Example mapping to toggle.
+          vim.keymap.set('n', '<leader>e', function()
+            event.instance.focus_or_toggle()
+          end)
+        end,
+
+        --- Ideally, we would just call this here and be done with it, but
+        --- mappings in nvim-tree don't seem to apply when re-using a buffer in
+        --- a new tab / window.
+        on_did_create_buffer = function()
           local nvim_tree_api = require('nvim-tree.api')
           nvim_tree_api.tree.open({ current_window = true })
-          nvim_tree_api.tree.reload()
+        end,
 
-          -- NvimTree seems to set this back to true.
-          vim.opt_local.winfixheight = false
+        --- This gets the tree to sync when changing tabs.
+        on_did_open = function()
+          local nvim_tree_api = require('nvim-tree.api')
+          nvim_tree_api.tree.reload()
 
           vim.opt_local.number = false
           vim.opt_local.signcolumn = 'no'
           vim.opt_local.statuscolumn = ''
         end,
 
+        --- Cleans up some things when closing the drawer.
         on_did_close = function()
           local nvim_tree_api = require('nvim-tree.api')
           nvim_tree_api.tree.close()
         end,
       })
 
-      -- This is the trick to getting NvimTree working in a drawer.
-      -- We let NvimTree completely overwrite the split, which ends up renaming it to
-      -- something like `NvimTree_{N}`.
-      -- Then, we overwrite how the drawer is found so that any NvimTree windows are
-      -- found instead of drawer windows.
-      local original_is_buffer = tree_drawer.is_buffer
-      function tree_drawer.is_buffer(bufname)
-        return string.find(bufname, 'NvimTree_') ~= nil
-          or original_is_buffer(bufname)
-      end
-
-      vim.keymap.set('n', '<leader>e', function()
-        tree_drawer.focus_or_toggle()
-      end, {
-        desc = 'Toggle Tree Drawer',
-        noremap = true,
-        silent = true,
-      })
-
-      local terminal_drawer = drawer.create_drawer({
-        bufname_prefix = 'quick_terminal_',
+      drawer.create_drawer({
         size = 15,
-        position = 'bottom',
+        position = 'float',
 
-        on_will_create_buffer = function()
+        win_config = {
+          anchor = 'SC',
+          margin = 2,
+          border = 'rounded',
+          width = '100%',
+          height = 15,
+        },
+
+        on_vim_enter = function(event)
+          -- Open the drawer on startup.
+          -- event.instance.open({
+          --   focus = false,
+          -- })
+
+          -- Example keymaps:
+          -- C-`: focus the drawer.
+          -- <leader>tn: open a new terminal.
+          -- <leader>tt: go to the next terminal.
+          -- <leader>tT: go to the previous terminal.
+          -- <leader>tz: zoom the terminal.
+          vim.keymap.set('n', '<C-`>', function()
+            event.instance.focus_or_toggle()
+          end)
+          vim.keymap.set('t', '<C-`>', function()
+            event.instance.focus_or_toggle()
+          end)
+          vim.keymap.set('n', '<leader>tn', function()
+            event.instance.open({ mode = 'new' })
+          end)
+          vim.keymap.set('n', '<leader>tt', function()
+            event.instance.go(1)
+          end)
+          vim.keymap.set('n', '<leader>tT', function()
+            event.instance.go(-1)
+          end)
+          vim.keymap.set('n', '<leader>tz', function()
+            event.instance.toggle_zoom()
+          end)
+        end,
+
+        -- When a new buffer is created, switch it to a terminal.
+        on_did_create_buffer = function()
           vim.fn.termopen(os.getenv('SHELL'))
+        end,
 
+        -- Remove some UI elements.
+        on_did_open_buffer = function()
           vim.opt_local.number = false
           vim.opt_local.signcolumn = 'no'
           vim.opt_local.statuscolumn = ''
         end,
 
-        on_did_open_buffer = function()
+        -- Scroll to the end when changing tabs.
+        on_did_open = function()
           vim.cmd('$')
         end,
       })
 
-      vim.keymap.set('n', '<C-`>', function()
-        terminal_drawer.focus_or_toggle()
-      end)
+      drawer.create_drawer({
+        position = 'float',
+        -- Technically unused when using `position = 'float'`.
+        size = 40,
 
-      vim.keymap.set('n', '<leader>tn', function()
-        terminal_drawer.open({ mode = 'new' })
-      end)
+        win_config = {
+          margin = 2,
+          border = 'rounded',
+          width = 80,
+          height = '50%',
+        },
 
-      vim.keymap.set('n', '<leader>tt', function()
-        terminal_drawer.go(1)
-      end)
+        on_vim_enter = function(event)
+          vim.keymap.set('n', '<leader>nn', function()
+            event.instance.focus_or_toggle()
+          end)
+          vim.keymap.set('n', '<leader>nz', function()
+            event.instance.toggle_zoom()
+          end)
+        end,
 
-      vim.keymap.set('n', '<leader>tT', function()
-        terminal_drawer.go(-1)
-      end)
-
-      vim.api.nvim_create_autocmd('VimEnter', {
-        desc = 'Open Tree automatically',
-        once = true,
-        callback = function()
-          tree_drawer.open()
-          terminal_drawer.open()
+        on_did_create_buffer = function()
+          vim.cmd('edit NOTES.md')
         end,
       })
     end,
@@ -158,14 +211,8 @@ mod.plugins = {
         })
       end,
 
-      disable_netrw = true,
-
-      view = {
-        width = 40,
-        side = 'right',
-        -- TODO Play with this, see what it actually does.
-        preserve_window_proportions = true,
-      },
+      hijack_netrw = false,
+      -- disable_netrw = true,
 
       renderer = {
         add_trailing = true,
