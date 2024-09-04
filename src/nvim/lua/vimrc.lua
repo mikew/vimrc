@@ -38,7 +38,7 @@ function mod.has_gui_running()
 end
 
 function mod.better_tabdo(callback)
-  local current_tab = vim.fn.tabpagenr()
+  local current_tab = vim.api.nvim_tabpage_get_number(0)
   callback()
   vim.cmd('tabnext ' .. current_tab)
 end
@@ -66,10 +66,9 @@ function mod.determine_os()
 end
 
 --- @class GetWindowInfoResult
---- @field winnr integer
 --- @field winid integer
 --- @field bufnr integer
---- @field tabpagenr integer
+--- @field tabpage integer
 --- @field bufname string
 
 --- @param path string
@@ -77,15 +76,16 @@ function mod.get_window_info_for_file(path)
   local path_with_cwd = vim.fn.fnamemodify(path, ':p')
 
   for _, winid in ipairs(vim.api.nvim_list_wins()) do
-    local bufnr = vim.fn.winbufnr(winid)
+    local bufnr = vim.api.nvim_win_get_buf(winid)
+    -- Intentionally use `bufname` instead of `nvim_buf_get_name` because
+    -- because the latter always returns a full path.
     local bufname = vim.fn.bufname(bufnr)
 
     if bufname == path or bufname == path_with_cwd then
-      local tabpagenr, winnr = unpack(vim.fn.win_id2tabwin(winid))
+      local tabpage = vim.api.nvim_win_get_tabpage(winid)
       --- @type GetWindowInfoResult
       local result = {
-        winnr = winnr,
-        tabpagenr = tabpagenr,
+        tabpage = tabpage,
         winid = winid,
         bufnr = bufnr,
         bufname = bufname,
@@ -103,10 +103,15 @@ function mod.go_to_file_or_open(path)
   local window_id = mod.get_window_info_for_file(path)
 
   if window_id then
+    vim.api.nvim_set_current_win(window_id.winid)
     -- TODO Maybe just use `nvim_set_current_win`.
-    vim.cmd(window_id.tabpagenr .. 'tabnext')
-    vim.cmd(window_id.winnr .. 'wincmd w')
+    -- vim.cmd(window_id.tabpagenr .. 'tabnext')
+    -- vim.cmd(window_id.winnr .. 'wincmd w')
   else
+    -- vim.cmd('tabnew')
+    -- vim.defer_fn(function()
+    --   vim.cmd('edit ' .. path)
+    -- end, 10)
     vim.cmd('tabedit ' .. path)
   end
 end

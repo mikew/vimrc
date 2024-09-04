@@ -75,6 +75,11 @@ mod.plugins = {
           height = 15,
         },
 
+        -- Automatically claim any opened terminals.
+        does_own_buffer = function(context)
+          return context.bufname:match('term://') ~= nil
+        end,
+
         on_vim_enter = function(event)
           -- Open the drawer on startup.
           -- event.instance.open({
@@ -131,11 +136,17 @@ mod.plugins = {
         size = 40,
 
         win_config = {
+          anchor = 'NC',
           margin = 2,
           border = 'rounded',
-          width = 80,
-          height = '50%',
+          width = '100%',
+          height = 10,
         },
+
+        -- Automatically claim any opened NOTES.md file.
+        does_own_buffer = function(context)
+          return context.bufname:match('NOTES.md') ~= nil
+        end,
 
         on_vim_enter = function(event)
           vim.keymap.set('n', '<leader>nn', function()
