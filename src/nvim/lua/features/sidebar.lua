@@ -82,9 +82,9 @@ mod.plugins = {
 
         on_vim_enter = function(event)
           -- Open the drawer on startup.
-          event.instance.open({
-            focus = false,
-          })
+          -- event.instance.open({
+          --   focus = false,
+          -- })
 
           -- Example keymaps:
           -- C-`: focus the drawer.
