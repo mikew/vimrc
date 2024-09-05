@@ -5,70 +5,72 @@ local Popup = require('nui.popup')
 
 local TSLayout = require('telescope.pickers.layout')
 
+local symbols = require('symbols')
+
 local mod = {}
 
 local border = {
   results = {
-    top_left = '┌',
-    top = '─',
-    top_right = '┬',
-    right = '│',
+    top_left = symbols.border.symbols.top_left,
+    top = symbols.border.symbols.top,
+    top_right = symbols.border.symbols.top_joiner,
+    right = symbols.border.symbols.right,
     bottom_right = '',
     bottom = '',
     bottom_left = '',
-    left = '│',
+    left = symbols.border.symbols.left,
   },
   results_patch = {
     minimal = {
-      top_left = '┌',
-      top_right = '┐',
+      top_left = symbols.border.symbols.top_left,
+      top_right = symbols.border.symbols.top_right,
     },
     horizontal = {
-      top_left = '┌',
-      top_right = '┬',
+      top_left = symbols.border.symbols.top_left,
+      top_right = symbols.border.symbols.top_joiner,
     },
     vertical = {
-      top_left = '├',
-      top_right = '┤',
+      top_left = symbols.border.symbols.left_joiner,
+      top_right = symbols.border.symbols.right_joiner,
     },
   },
   prompt = {
-    top_left = '├',
-    top = '─',
-    top_right = '┤',
-    right = '│',
-    bottom_right = '┘',
-    bottom = '─',
-    bottom_left = '└',
-    left = '│',
+    top_left = symbols.border.symbols.left_joiner,
+    top = symbols.border.symbols.top,
+    top_right = symbols.border.symbols.right_joiner,
+    right = symbols.border.symbols.right,
+    bottom_right = symbols.border.symbols.bottom_right,
+    bottom = symbols.border.symbols.bottom,
+    bottom_left = symbols.border.symbols.bottom_left,
+    left = symbols.border.symbols.left,
   },
   prompt_patch = {
     minimal = {
-      bottom_right = '┘',
+      bottom_right = symbols.border.symbols.bottom_right,
     },
     horizontal = {
-      bottom_right = '┴',
+      bottom_right = symbols.border.symbols.bottom_joiner,
     },
     vertical = {
-      bottom_right = '┘',
+      bottom_right = symbols.border.symbols.bottom_right,
     },
   },
   preview = {
-    top_left = '┌',
-    top = '─',
-    top_right = '┐',
-    right = '│',
-    bottom_right = '┘',
-    bottom = '─',
-    bottom_left = '└',
-    left = '│',
+    top_left = symbols.border.symbols.top_left,
+    top = symbols.border.symbols.top,
+    top_right = symbols.border.symbols.top_right,
+    right = symbols.border.symbols.right,
+    bottom_right = symbols.border.symbols.bottom_right,
+    bottom = symbols.border.symbols.bottom,
+    bottom_left = symbols.border.symbols.bottom_left,
+    left = symbols.border.symbols.left,
   },
   preview_patch = {
     minimal = {},
     horizontal = {
-      bottom = '─',
+      bottom = symbols.border.symbols.bottom,
       bottom_left = '',
-      bottom_right = '┘',
+      bottom_right = symbols.border.symbols.bottom_right,
       left = '',
       top_left = '',
     },
@@ -76,8 +78,8 @@ local border = {
       bottom = '',
       bottom_left = '',
       bottom_right = '',
-      left = '│',
-      top_left = '┌',
+      left = symbols.border.symbols.left,
+      top_left = symbols.border.symbols.top_left,
     },
   },
 }

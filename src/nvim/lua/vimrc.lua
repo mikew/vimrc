@@ -104,14 +104,7 @@ function mod.go_to_file_or_open(path)
 
   if window_id then
     vim.api.nvim_set_current_win(window_id.winid)
-    -- TODO Maybe just use `nvim_set_current_win`.
-    -- vim.cmd(window_id.tabpagenr .. 'tabnext')
-    -- vim.cmd(window_id.winnr .. 'wincmd w')
   else
-    -- vim.cmd('tabnew')
-    -- vim.defer_fn(function()
-    --   vim.cmd('edit ' .. path)
-    -- end, 10)
     vim.cmd('tabedit ' .. path)
   end
 end

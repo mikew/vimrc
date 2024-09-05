@@ -32,7 +32,7 @@ mod.plugins = {
     },
     opts = {
       ui = {
-        border = 'rounded',
+        border = symbols.border.nvim_style,
       },
     },
     config = function(_, opts)

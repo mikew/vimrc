@@ -1,6 +1,7 @@
 require('lazy-rtp')
 
 local vimrc = require('vimrc')
+local symbols = require('symbols')
 
 local feature_editor = require('features.editor')
 vimrc.register_feature('editor')
@@ -49,6 +50,6 @@ require('lazy').setup({
   -- automatically check for plugin updates
   -- checker = { enabled = true },
   ui = {
-    border = 'rounded',
+    border = symbols.border.nvim_style,
   },
 })

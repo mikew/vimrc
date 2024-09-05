@@ -20,7 +20,7 @@ mod.plugins = {
 
         win_config = {
           margin = 2,
-          border = 'rounded',
+          border = symbols.border.nvim_style,
           anchor = 'CE',
           width = 40,
           height = '80%',
@@ -70,7 +70,7 @@ mod.plugins = {
         win_config = {
           anchor = 'SC',
           margin = 2,
-          border = 'rounded',
+          border = symbols.border.nvim_style,
           width = '100%',
           height = 15,
         },
@@ -138,7 +138,7 @@ mod.plugins = {
         win_config = {
           anchor = 'NC',
           margin = 2,
-          border = 'rounded',
+          border = symbols.border.nvim_style,
           width = '100%',
           height = 10,
         },
@@ -215,11 +215,6 @@ mod.plugins = {
           opts('Open: Vertical Split')
         )
         vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
-
-        vim.api.nvim_set_hl(0, 'NvimTreeIndentMarker', {
-          link = 'IndentBlankLineChar',
-          force = true,
-        })
       end,
 
       hijack_netrw = false,
@@ -233,6 +228,7 @@ mod.plugins = {
           icons = {
             edge = symbols.indent.line,
             item = symbols.indent.line,
+            corner = symbols.border.symbols.bottom_left,
           },
         },
 
@@ -308,6 +304,15 @@ mod.plugins = {
       vim.g.loaded_netrwPlugin = 1
     end,
   },
+  config = function(_, opts)
+    local nvim_tree = require('nvim-tree')
+    nvim_tree.setup(opts)
+
+    vim.api.nvim_set_hl(0, 'NvimTreeIndentMarker', {
+      link = 'IndentBlankLineChar',
+      force = true,
+    })
+  end,
 }
 
 return mod
