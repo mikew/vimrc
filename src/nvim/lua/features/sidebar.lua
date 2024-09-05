@@ -20,7 +20,7 @@ mod.plugins = {
 
         win_config = {
           margin = 2,
-          border = 'rounded',
+          border = symbols.border.nvim_style,
           anchor = 'CE',
           width = 40,
           height = '80%',
@@ -70,7 +70,7 @@ mod.plugins = {
         win_config = {
           anchor = 'SC',
           margin = 2,
-          border = 'rounded',
+          border = symbols.border.nvim_style,
           width = '100%',
           height = 15,
         },
@@ -138,7 +138,7 @@ mod.plugins = {
         win_config = {
           anchor = 'NC',
           margin = 2,
-          border = 'rounded',
+          border = symbols.border.nvim_style,
           width = '100%',
           height = 10,
         },
@@ -233,6 +233,7 @@ mod.plugins = {
           icons = {
             edge = symbols.indent.line,
             item = symbols.indent.line,
+            corner = symbols.border.symbols.bottom_left,
           },
         },
 
