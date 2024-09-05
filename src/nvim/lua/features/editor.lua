@@ -323,6 +323,15 @@ mod.plugins = {
     priority = 1000,
     config = function()
       vim.cmd('colorscheme base16-oceanicnext')
+
+      vim.api.nvim_set_hl(0, 'FloatBorder', {
+        link = 'IndentBlankLineChar',
+        force = true,
+      })
+      vim.api.nvim_set_hl(0, 'WinSeparator', {
+        link = 'IndentBlankLineChar',
+        force = true,
+      })
     end,
   },
   -- {

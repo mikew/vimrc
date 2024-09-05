@@ -215,11 +215,6 @@ mod.plugins = {
           opts('Open: Vertical Split')
         )
         vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
-
-        vim.api.nvim_set_hl(0, 'NvimTreeIndentMarker', {
-          link = 'IndentBlankLineChar',
-          force = true,
-        })
       end,
 
       hijack_netrw = false,
@@ -309,6 +304,15 @@ mod.plugins = {
       vim.g.loaded_netrwPlugin = 1
     end,
   },
+  config = function(_, opts)
+    local nvim_tree = require('nvim-tree')
+    nvim_tree.setup(opts)
+
+    vim.api.nvim_set_hl(0, 'NvimTreeIndentMarker', {
+      link = 'IndentBlankLineChar',
+      force = true,
+    })
+  end,
 }
 
 return mod
