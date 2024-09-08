@@ -122,7 +122,7 @@ function mod.go_to_file_or_open(path)
     local is_modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
 
     local is_first_window_empty = bufname == ''
-      and buftype == ''
+      and (buftype == '' or buftype == 'nofile')
       and not is_modified
 
     if is_first_window_empty then
