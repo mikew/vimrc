@@ -495,6 +495,7 @@ mod.plugins = {
           -- },
         },
         lualine_c = { 'filename' },
+
         lualine_x = { 'filetype' },
         lualine_y = {},
         lualine_z = { 'location' },
