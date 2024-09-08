@@ -357,11 +357,34 @@ mod.setup = vimrc.make_setup(function()
     {
       'nvim-pack/nvim-spectre',
       cond = not vim.g.vscode,
-      opts = {},
+      opts = {
+        mapping = {
+          ['enter_file'] = {
+            map = '<cr>',
+            cmd = "<cmd>lua require('features.sidebar').spectre_select_entry()<CR>",
+            desc = 'open file',
+          },
+        },
+      },
     },
   }
 
   return feature
 end)
+
+function mod.spectre_select_entry()
+  local spectre_actions = require('spectre.actions')
+
+  local spectre_entry = spectre_actions.get_current_entry()
+
+  if spectre_entry == nil then
+    return
+  end
+
+  vimrc.go_to_file_or_open(
+    spectre_entry.filename,
+    { spectre_entry.lnum, spectre_entry.col - 1 }
+  )
+end
 
 return mod
