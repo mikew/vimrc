@@ -3,47 +3,27 @@ require('lazy-rtp')
 local vimrc = require('vimrc')
 local symbols = require('symbols')
 
-local feature_editor = require('features.editor')
-vimrc.register_feature('editor')
+require('features.editor').setup(vimrc.context)
 
-local feature_languages = require('features.languages')
-vimrc.register_feature('languages')
+require('features.languages').setup(vimrc.context)
 
-local feature_scm = require('features.scm')
-vimrc.register_feature('scm')
+require('features.scm').setup(vimrc.context)
 
-local feature_lsp = require('features.lsp')
-vimrc.register_feature('lsp')
+require('features.lsp').setup(vimrc.context)
 
-local feature_completion = require('features.completion')
-vimrc.register_feature('completion')
+require('features.completion').setup(vimrc.context)
 
-local feature_sidebar = require('features.sidebar')
-vimrc.register_feature('sidebar')
+require('features.sidebar').setup(vimrc.context)
 
-local feature_grep = require('features.grep')
-vimrc.register_feature('grep')
+require('features.grep').setup(vimrc.context)
 
-local feature_scrollbar = require('features.scrollbar')
-vimrc.register_feature('scrollbar')
+require('features.scrollbar').setup(vimrc.context)
 
-local feature_ai = require('features.ai')
-vimrc.register_feature('ai')
-
-local all_spec = {}
-vim.list_extend(all_spec, feature_editor.plugins)
-vim.list_extend(all_spec, feature_languages.plugins)
-vim.list_extend(all_spec, feature_scm.plugins)
-vim.list_extend(all_spec, feature_lsp.plugins)
-vim.list_extend(all_spec, feature_completion.plugins)
-vim.list_extend(all_spec, feature_sidebar.plugins)
-vim.list_extend(all_spec, feature_grep.plugins)
-vim.list_extend(all_spec, feature_scrollbar.plugins)
-vim.list_extend(all_spec, feature_ai.plugins)
+require('features.ai').setup(vimrc.context)
 
 -- Setup lazy.nvim
 require('lazy').setup({
-  spec = all_spec,
+  spec = vimrc.context.plugins,
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { 'oceanicnext' } },
