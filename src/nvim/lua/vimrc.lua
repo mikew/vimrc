@@ -100,10 +100,10 @@ end
 
 --- @param path string
 function mod.go_to_file_or_open(path)
-  local window_id = mod.get_window_info_for_file(path)
+  local window_info = mod.get_window_info_for_file(path)
 
-  if window_id then
-    vim.api.nvim_set_current_win(window_id.winid)
+  if window_info then
+    vim.api.nvim_set_current_win(window_info.winid)
   else
     local first_window = vim.api.nvim_tabpage_list_wins(0)[1] or -1
 
