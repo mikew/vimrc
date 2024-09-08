@@ -9,8 +9,9 @@ local has_gui_running = vimrc.has_gui_running()
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be
 --  used)
-vim.g.mapleader = '\\'
-vim.g.maplocalleader = '\\'
+vim.keymap.set('n', ' ', '<Nop>', { silent = true, remap = false })
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the
 -- search term
