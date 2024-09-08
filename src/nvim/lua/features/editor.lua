@@ -9,6 +9,7 @@ local has_gui_running = vimrc.has_gui_running()
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be
 --  used)
+--  Space as leader needs to be nooped before it will work.
 vim.keymap.set('n', ' ', '<Nop>', { silent = true, remap = false })
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
