@@ -167,6 +167,34 @@ mod.setup = vimrc.make_setup(function(context)
             vim.cmd('edit NOTES.md')
           end,
         })
+
+        drawer.create_drawer({
+          position = 'below',
+          size = 30,
+
+          does_own_window = function(context)
+            return context.bufname:match('spectre') ~= nil
+          end,
+
+          on_vim_enter = function(event)
+            event.instance.state._did_open_once = false
+
+            vim.keymap.set('n', '<leader>S', function()
+              if event.instance.state._did_open_once then
+                event.instance.focus_or_toggle()
+              else
+                require('spectre').toggle()
+              end
+            end)
+          end,
+
+          -- Remove some UI elements.
+          on_did_open_buffer = function()
+            vim.opt_local.number = false
+            vim.opt_local.signcolumn = 'no'
+            vim.opt_local.statuscolumn = ''
+          end,
+        })
       end,
     },
 
@@ -321,6 +349,12 @@ mod.setup = vimrc.make_setup(function(context)
           force = true,
         })
       end,
+    },
+
+    {
+      'nvim-pack/nvim-spectre',
+      cond = not vim.g.vscode,
+      opts = {},
     },
   }
 
