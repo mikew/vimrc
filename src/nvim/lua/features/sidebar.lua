@@ -3,7 +3,7 @@ local symbols = require('symbols')
 
 local mod = {}
 
-mod.setup = vimrc.make_setup(function(context)
+mod.setup = vimrc.make_setup(function()
   --- @type VimrcFeature
   local feature = {
     name = 'sidebar',
@@ -22,7 +22,7 @@ mod.setup = vimrc.make_setup(function(context)
         drawer.create_drawer({
           size = 40,
           position = 'float',
-          nvim_tree_hack = true,
+          should_reuse_previous_bufnr = false,
 
           win_config = {
             margin = 2,
@@ -177,14 +177,16 @@ mod.setup = vimrc.make_setup(function(context)
           end,
 
           on_vim_enter = function(event)
-            event.instance.state._did_open_once = false
-
             vim.keymap.set('n', '<leader>S', function()
-              if event.instance.state._did_open_once then
-                event.instance.focus_or_toggle()
-              else
+              -- If the drawer has never been opened, call spectre. Once its
+              -- window opens, it will be claimed by the drawer, and we can use
+              -- the drawer API afterwards.
+              if
+                #vim.tbl_keys(event.instance.state.windows_and_buffers) == 0
+              then
                 require('spectre').toggle()
-                event.instance.state._did_open_once = true
+              else
+                event.instance.focus_or_toggle()
               end
             end)
           end,
