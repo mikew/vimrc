@@ -1,6 +1,25 @@
 local mod = {
+  --- @type string[]
   features = {},
 }
+
+--- @class VimrcFeature
+--- @field name string
+--- @field plugins? LazyPluginSpec[]
+
+--- @param fn fun(context: VimrcContext): VimrcFeature
+function mod.make_setup(fn)
+  return function(context)
+    local feature = fn(context)
+    table.insert(context.features, feature.name)
+
+    if feature.plugins then
+      for _, plugin in ipairs(feature.plugins) do
+        table.insert(context.plugins, plugin)
+      end
+    end
+  end
+end
 
 function mod.register_feature(name)
   if not vim.list_contains(mod.features, name) then
@@ -136,5 +155,17 @@ function mod.go_to_file_or_open(path)
     end
   end
 end
+
+--- @class VimrcContext
+mod.context = {
+  os = mod.determine_os(),
+  ui = mod.determine_ui(),
+  has_gui_running = mod.has_gui_running(),
+
+  --- @type string[]
+  features = {},
+  --- @type LasyPluginSpec[]
+  plugins = {},
+}
 
 return mod
