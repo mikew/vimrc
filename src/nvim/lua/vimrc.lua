@@ -107,19 +107,19 @@ function mod.go_to_file_or_open(path)
   else
     local first_window = vim.api.nvim_tabpage_list_wins(0)[1] or -1
 
-    --- @param path string
-    local function tabedit(path)
+    local function tabedit()
       vim.cmd('tabedit ' .. path)
     end
 
     if first_window == -1 then
-      tabedit(path)
+      tabedit()
     end
 
     local bufnr = vim.api.nvim_win_get_buf(first_window)
     local bufname = vim.api.nvim_buf_get_name(bufnr)
-    local buftype = vim.api.nvim_buf_get_option(bufnr, 'buftype')
-    local is_modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
+    local buftype = vim.api.nvim_get_option_value('buftype', { buf = bufnr })
+    local is_modified =
+      vim.api.nvim_get_option_value('modified', { buf = bufnr })
 
     local is_first_window_empty = bufname == ''
       and (buftype == '' or buftype == 'nofile')
@@ -132,7 +132,7 @@ function mod.go_to_file_or_open(path)
 
       vim.api.nvim_set_current_win(first_window)
     else
-      tabedit(path)
+      tabedit()
     end
   end
 end
