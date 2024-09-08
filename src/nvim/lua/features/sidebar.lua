@@ -184,6 +184,7 @@ mod.setup = vimrc.make_setup(function(context)
                 event.instance.focus_or_toggle()
               else
                 require('spectre').toggle()
+                event.instance.state._did_open_once = true
               end
             end)
           end,
