@@ -1,5 +1,3 @@
-require('lazy-rtp')
-
 local vimrc = require('vimrc')
 local symbols = require('symbols')
 
@@ -22,6 +20,7 @@ require('features.scrollbar').setup(vimrc.context)
 require('features.ai').setup(vimrc.context)
 
 -- Setup lazy.nvim
+require('lazy-rtp')
 require('lazy').setup({
   spec = vimrc.context.plugins,
   -- Configure any other settings here. See the documentation for more details.

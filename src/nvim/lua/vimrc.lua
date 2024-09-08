@@ -1,14 +1,13 @@
-local mod = {
-  --- @type string[]
-  features = {},
-}
+local mod = {}
 
 --- @class VimrcFeature
 --- @field name string
---- @field plugins? LazyPluginSpec[]
+--- @field plugins? LazySpec[]
 
 --- @param fn fun(context: VimrcContext): VimrcFeature
+--- @return fun(context: VimrcContext): VimrcFeature
 function mod.make_setup(fn)
+  --- @param context VimrcContext
   return function(context)
     local feature = fn(context)
     table.insert(context.features, feature.name)
@@ -18,17 +17,9 @@ function mod.make_setup(fn)
         table.insert(context.plugins, plugin)
       end
     end
-  end
-end
 
-function mod.register_feature(name)
-  if not vim.list_contains(mod.features, name) then
-    table.insert(mod.features, name)
+    return feature
   end
-end
-
-function mod.has_feature(name)
-  return vim.list_contains(mod.features, name)
 end
 
 function mod.determine_ui()
@@ -56,6 +47,7 @@ function mod.has_gui_running()
   return mod.determine_ui() ~= 'term'
 end
 
+--- @param callback fun()
 function mod.better_tabdo(callback)
   local current_tab = vim.api.nvim_tabpage_get_number(0)
   callback()
@@ -164,8 +156,13 @@ mod.context = {
 
   --- @type string[]
   features = {},
-  --- @type LasyPluginSpec[]
+  --- @type LazySpec[]
   plugins = {},
 }
+
+--- @param name string
+function mod.has_feature(name)
+  return vim.list_contains(mod.context.features, name)
+end
 
 return mod
