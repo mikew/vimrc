@@ -1,7 +1,4 @@
-local mod = {
-  --- @type string[]
-  features = {},
-}
+local mod = {}
 
 --- @class VimrcFeature
 --- @field name string
@@ -25,10 +22,6 @@ function mod.register_feature(name)
   if not vim.list_contains(mod.features, name) then
     table.insert(mod.features, name)
   end
-end
-
-function mod.has_feature(name)
-  return vim.list_contains(mod.features, name)
 end
 
 function mod.determine_ui()
@@ -167,5 +160,10 @@ mod.context = {
   --- @type LasyPluginSpec[]
   plugins = {},
 }
+
+--- @param name string
+function mod.has_feature(name)
+  return vim.list_contains(mod.context.features, name)
+end
 
 return mod
