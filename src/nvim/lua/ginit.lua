@@ -1,12 +1,9 @@
 local vimrc = require('vimrc')
 
-local vim_ui = vimrc.determine_ui()
-local vim_os = vimrc.determine_os()
-
 local client_lookups = {
-  vim_ui .. '/' .. vim_os,
-  vim_ui,
-  vim_os,
+  vimrc.context.ui .. '/' .. vimrc.context.os,
+  vimrc.context.ui,
+  vimrc.context.os,
 }
 
 local function get_value_or_star(table, keys)
@@ -44,7 +41,7 @@ else
   end)
 end
 
-if vim_os == 'macos' then
+if vimrc.context.os == 'macos' then
   -- Save.
   vim.keymap.set('n', '<D-s>', '<Cmd>w<CR>')
   vim.keymap.set('i', '<D-s>', '<C-o><Cmd>w<CR>')
@@ -130,7 +127,7 @@ if vim_os == 'macos' then
   vim.keymap.set('i', '<D-]>', '<C-o>>>')
   vim.keymap.set('v', '<D-[>', '<gv')
   vim.keymap.set('v', '<D-]>', '>gv')
-elseif vim_os == 'linux' then
+elseif vimrc.context.os == 'linux' then
   -- Save.
   vim.keymap.set('n', '<C-s>', '<Cmd>w<CR>')
   vim.keymap.set('i', '<C-s>', '<C-o><Cmd>w<CR>')
