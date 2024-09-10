@@ -210,10 +210,10 @@ elseif vim_os == 'linux' then
   vim.keymap.set('c', '<C-v>', '<C-r>+')
 
   -- Indent / outdent.
-  vim.keymap.set('n', '<C-[>', '<<')
-  vim.keymap.set('n', '<C-]>', '>>')
-  vim.keymap.set('i', '<C-[>', '<C-o><<')
-  vim.keymap.set('i', '<C-]>', '<C-o>>>')
-  vim.keymap.set('v', '<C-[>', '<gv')
-  vim.keymap.set('v', '<C-]>', '>gv')
+  -- vim.keymap.set('n', '<C-[>', '<<')
+  -- vim.keymap.set('n', '<C-]>', '>>')
+  -- vim.keymap.set('i', '<C-[>', '<C-o><<')
+  -- vim.keymap.set('i', '<C-]>', '<C-o>>>')
+  -- vim.keymap.set('v', '<C-[>', '<gv')
+  -- vim.keymap.set('v', '<C-]>', '>gv')
 end
