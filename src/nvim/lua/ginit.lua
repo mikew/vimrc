@@ -204,10 +204,10 @@ elseif vim_os == 'linux' then
   vim.keymap.set('x', '<C-c>', '"+y')
 
   -- Paste.
-  vim.keymap.set('n', '<C-S-V>', '"+P')
+  vim.keymap.set('n', '<C-S-V>', '"+p')
   -- vim.keymap.set('i', '<D-v>', '<C-r>+')
-  vim.keymap.set('i', '<C-v>', '<C-o>"+P')
-  vim.keymap.set('c', '<C-v>', '<C-r>+')
+  vim.keymap.set('i', '<C-S-V>', '<C-o>"+p')
+  vim.keymap.set('c', '<C-S-V>', '<C-r>+')
 
   -- Indent / outdent.
   -- vim.keymap.set('n', '<C-[>', '<<')
