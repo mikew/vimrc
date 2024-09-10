@@ -29,9 +29,9 @@ local linespace = get_value_or_star({
   ['*'] = 1,
 }, client_lookups)
 
-if vim_ui == 'nvim-qt' then
-  vim.cmd(string.format('GuiFont %s:h%s', font_name, font_size))
-  vim.cmd(string.format('GuiLinespace %s', linespace))
+if vimrc.context.ui == 'nvim-qt' then
+  pcall(vim.cmd, string.format('GuiFont! %s:h%s', font_name, font_size))
+  pcall(vim.cmd, string.format('guilinespace %s', linespace))
 else
   pcall(function()
     vim.opt.guifont = string.format('%s:h%s', font_name, font_size)
