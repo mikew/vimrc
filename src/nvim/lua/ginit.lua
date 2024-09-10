@@ -194,8 +194,8 @@ elseif vim_os == 'linux' then
 
   -- Close all but current.
   -- TODO Doesn't seem to work in nvim-qt, could be macos characters?
-  -- vim.keymap.set('n', '<M-D-w>', '<Cmd>tabonly<CR>')
-  -- vim.keymap.set('i', '<M-D-w>', '<C-o><Cmd>tabonly<CR>')
+  vim.keymap.set('n', '<M-C-W>', '<Cmd>tabonly<CR>')
+  vim.keymap.set('i', '<M-C-W>', '<C-o><Cmd>tabonly<CR>')
 
   -- Cut.
   vim.keymap.set('x', '<C-x>', '"+x')
