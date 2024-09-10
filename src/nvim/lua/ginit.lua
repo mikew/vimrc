@@ -118,9 +118,9 @@ if vim_os == 'macos' then
   vim.keymap.set('x', '<D-c>', '"+y')
 
   -- Paste.
-  vim.keymap.set('n', '<D-v>', '"+P')
+  vim.keymap.set('n', '<D-v>', '"+p')
   -- vim.keymap.set('i', '<D-v>', '<C-r>+')
-  vim.keymap.set('i', '<D-v>', '<C-o>"+P')
+  vim.keymap.set('i', '<D-v>', '<C-o>"+p')
   vim.keymap.set('c', '<D-v>', '<C-r>+')
 
   -- Indent / outdent.
