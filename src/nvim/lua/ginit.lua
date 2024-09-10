@@ -1,12 +1,9 @@
 local vimrc = require('vimrc')
 
-local vim_ui = vimrc.determine_ui()
-local vim_os = vimrc.determine_os()
-
 local client_lookups = {
-  vim_ui .. '/' .. vim_os,
-  vim_ui,
-  vim_os,
+  vimrc.context.ui .. '/' .. vimrc.context.os,
+  vimrc.context.ui,
+  vimrc.context.os,
 }
 
 local function get_value_or_star(table, keys)
@@ -32,9 +29,9 @@ local linespace = get_value_or_star({
   ['*'] = 1,
 }, client_lookups)
 
-if vim_ui == 'nvim-qt' then
-  vim.cmd(string.format('GuiFont %s:h%s', font_name, font_size))
-  vim.cmd(string.format('GuiLinespace %s', linespace))
+if vimrc.context.ui == 'nvim-qt' then
+  pcall(vim.cmd, string.format('GuiFont! %s:h%s', font_name, font_size))
+  pcall(vim.cmd, string.format('GuiLinespace %s', linespace))
 else
   pcall(function()
     vim.opt.guifont = string.format('%s:h%s', font_name, font_size)
@@ -44,7 +41,7 @@ else
   end)
 end
 
-if vim_os == 'macos' then
+if vimrc.context.os == 'macos' then
   -- Save.
   vim.keymap.set('n', '<D-s>', '<Cmd>w<CR>')
   vim.keymap.set('i', '<D-s>', '<C-o><Cmd>w<CR>')
@@ -118,9 +115,9 @@ if vim_os == 'macos' then
   vim.keymap.set('x', '<D-c>', '"+y')
 
   -- Paste.
-  vim.keymap.set('n', '<D-v>', '"+P')
+  vim.keymap.set('n', '<D-v>', '"+p')
   -- vim.keymap.set('i', '<D-v>', '<C-r>+')
-  vim.keymap.set('i', '<D-v>', '<C-o>"+P')
+  vim.keymap.set('i', '<D-v>', '<C-o>"+p')
   vim.keymap.set('c', '<D-v>', '<C-r>+')
 
   -- Indent / outdent.
@@ -130,7 +127,7 @@ if vim_os == 'macos' then
   vim.keymap.set('i', '<D-]>', '<C-o>>>')
   vim.keymap.set('v', '<D-[>', '<gv')
   vim.keymap.set('v', '<D-]>', '>gv')
-elseif vim_os == 'linux' then
+elseif vimrc.context.os == 'linux' then
   -- Save.
   vim.keymap.set('n', '<C-s>', '<Cmd>w<CR>')
   vim.keymap.set('i', '<C-s>', '<C-o><Cmd>w<CR>')
@@ -194,8 +191,8 @@ elseif vim_os == 'linux' then
 
   -- Close all but current.
   -- TODO Doesn't seem to work in nvim-qt, could be macos characters?
-  -- vim.keymap.set('n', '<M-D-w>', '<Cmd>tabonly<CR>')
-  -- vim.keymap.set('i', '<M-D-w>', '<C-o><Cmd>tabonly<CR>')
+  vim.keymap.set('n', '<M-C-W>', '<Cmd>tabonly<CR>')
+  vim.keymap.set('i', '<M-C-W>', '<C-o><Cmd>tabonly<CR>')
 
   -- Cut.
   vim.keymap.set('x', '<C-x>', '"+x')
@@ -204,16 +201,16 @@ elseif vim_os == 'linux' then
   vim.keymap.set('x', '<C-c>', '"+y')
 
   -- Paste.
-  vim.keymap.set('n', '<C-S-V>', '"+P')
+  vim.keymap.set('n', '<C-S-V>', '"+p')
   -- vim.keymap.set('i', '<D-v>', '<C-r>+')
-  vim.keymap.set('i', '<C-v>', '<C-o>"+P')
-  vim.keymap.set('c', '<C-v>', '<C-r>+')
+  vim.keymap.set('i', '<C-S-V>', '<C-o>"+p')
+  vim.keymap.set('c', '<C-S-V>', '<C-r>+')
 
   -- Indent / outdent.
-  vim.keymap.set('n', '<C-[>', '<<')
-  vim.keymap.set('n', '<C-]>', '>>')
-  vim.keymap.set('i', '<C-[>', '<C-o><<')
-  vim.keymap.set('i', '<C-]>', '<C-o>>>')
-  vim.keymap.set('v', '<C-[>', '<gv')
-  vim.keymap.set('v', '<C-]>', '>gv')
+  -- vim.keymap.set('n', '<C-[>', '<<')
+  -- vim.keymap.set('n', '<C-]>', '>>')
+  -- vim.keymap.set('i', '<C-[>', '<C-o><<')
+  -- vim.keymap.set('i', '<C-]>', '<C-o>>>')
+  -- vim.keymap.set('v', '<C-[>', '<gv')
+  -- vim.keymap.set('v', '<C-]>', '>gv')
 end
