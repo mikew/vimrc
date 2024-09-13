@@ -467,7 +467,6 @@ mod.setup = vimrc.make_setup(function(context)
       opts = {},
     },
 
-
     {
       'nvim-lualine/lualine.nvim',
       cond = not vim.g.vscode,
