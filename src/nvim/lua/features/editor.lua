@@ -468,12 +468,6 @@ mod.setup = vimrc.make_setup(function(context)
     },
 
     {
-      'levouh/tint.nvim',
-      cond = not vim.g.vscode,
-      opts = {},
-    },
-
-    {
       'nvim-lualine/lualine.nvim',
       cond = not vim.g.vscode,
       opts = {
