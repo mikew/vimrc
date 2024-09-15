@@ -14,7 +14,9 @@ mod.setup = vimrc.make_setup(function()
       'mikew/nvim-drawer',
       -- dir = vim.fn.expand('~/Work/nvim-drawer'),
       cond = not vim.g.vscode,
-      opts = {},
+      opts = {
+        position_order = { 'left', 'right', 'above', 'below', 'float' },
+      },
       config = function(_, opts)
         local drawer = require('nvim-drawer')
         drawer.setup(opts)
