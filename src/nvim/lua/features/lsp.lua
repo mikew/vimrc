@@ -118,6 +118,18 @@ mod.setup = vimrc.make_setup(function(context)
               'graphql',
             },
           },
+
+          graphql = {
+            filetypes = {
+              'javascript',
+              'javascriptreact',
+              'javascript.jsx',
+              'typescript',
+              'typescriptreact',
+              'typescript.tsx',
+              'graphql',
+            },
+          },
         }
 
         local disabled_buftypes = {}
