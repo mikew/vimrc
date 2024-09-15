@@ -11,7 +11,7 @@ require('features.lsp').setup(vimrc.context)
 
 require('features.completion').setup(vimrc.context)
 
-require('features.sidebar').setup(vimrc.context)
+require('features.drawer').setup(vimrc.context)
 
 require('features.grep').setup(vimrc.context)
 
