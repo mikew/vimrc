@@ -81,6 +81,13 @@ mod.setup = vimrc.make_setup(function(context)
             end,
           },
 
+          vtsls = {
+            on_attach = function(client)
+              client.server_capabilities.documentFormattingProvider = false
+              client.server_capabilities.documentRangeFormattingProvider = false
+            end,
+          },
+
           lua_ls = {
             on_attach = function(client)
               client.server_capabilities.document_formatting = false
@@ -101,6 +108,18 @@ mod.setup = vimrc.make_setup(function(context)
           },
 
           eslint = {
+            filetypes = {
+              'javascript',
+              'javascriptreact',
+              'javascript.jsx',
+              'typescript',
+              'typescriptreact',
+              'typescript.tsx',
+              'graphql',
+            },
+          },
+
+          graphql = {
             filetypes = {
               'javascript',
               'javascriptreact',
