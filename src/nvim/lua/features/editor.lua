@@ -203,7 +203,7 @@ mod.setup = vimrc.make_setup(function(context)
       opts = {},
     },
 
-    'michaeljsmith/vim-indent-object',
+    { 'michaeljsmith/vim-indent-object' },
 
     -- Detect tabstop and shiftwidth automatically
     {
