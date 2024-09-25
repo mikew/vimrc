@@ -74,7 +74,7 @@ mod.setup = vimrc.make_setup(function()
 
         drawer.create_drawer({
           size = 15,
-          position = 'float',
+          position = 'below',
 
           win_config = {
             anchor = 'SC',
