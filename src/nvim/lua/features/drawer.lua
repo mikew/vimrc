@@ -25,6 +25,7 @@ mod.setup = vimrc.make_setup(function()
           size = 40,
           position = 'float',
           should_reuse_previous_bufnr = false,
+          should_close_on_bufwipeout = false,
 
           win_config = {
             margin = 2,
