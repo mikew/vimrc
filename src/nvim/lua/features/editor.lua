@@ -196,6 +196,11 @@ mod.setup = vimrc.make_setup(function(context)
 
   feature.plugins = {
     {
+      'equalsraf/neovim-gui-shim',
+      cond = context.ui == 'nvim-qt',
+    },
+
+    {
       'kylechui/nvim-surround',
       -- Use for stability; omit to use `main` branch for the latest features
       version = '*',
