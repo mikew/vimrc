@@ -32,6 +32,10 @@ function mod.determine_ui()
     return 'neovide'
   end
 
+  if vim.g.fvim_loaded then
+    return 'fvim'
+  end
+
   if
     vim.tbl_contains(vim.v.argv, function(v)
       return string.find(v, 'nvim-qt', 1, true)
