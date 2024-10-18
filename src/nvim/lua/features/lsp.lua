@@ -343,7 +343,9 @@ mod.setup = vimrc.make_setup(function(context)
           callback = function()
             if not vim.g._vimrc_disable_format_on_write then
               local view = vim.fn.winsaveview()
-              vim.lsp.buf.format()
+              vim.lsp.buf.format({
+                timeout_ms = 10000,
+              })
               vim.fn.winrestview(view)
             end
 
