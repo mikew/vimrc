@@ -514,6 +514,81 @@ mod.setup = vimrc.make_setup(function(context)
         },
       },
     },
+
+    {
+      'nanozuki/tabby.nvim',
+      opts = function()
+        local buf_name = require('tabby.feature.buf_name')
+        local tabline = require('tabby.tabline')
+
+        ---@param line TabbyLine
+        ---@param tab TabbyTab
+        ---@param opt TabbyTablinePresetOption
+        ---@return TabbyNode
+        local function preset_tab(line, tab, opt)
+          local cur_win = vim.api.nvim_tabpage_get_win(tab.id)
+          local bufnr = vim.api.nvim_win_get_buf(cur_win)
+          local hl = tab.is_current() and opt.theme.current_tab or opt.theme.tab
+          local status_icon = opt.nerdfont and { '', '󰆣' }
+            or { '▪', '' }
+          local is_changed = vim.api.nvim_get_option_value('modified', {
+            buf = bufnr,
+          })
+
+          return {
+            -- line.sep(left_sep(opt), hl, opt.theme.fill),
+            tab.in_jump_mode() and tab.jump_key()
+              or {
+                tab.is_current() and status_icon[1] or status_icon[2],
+                -- tab.number(),
+                -- margin = ' ',
+              },
+            is_changed and '*' or '',
+            tab.name(),
+            tab.close_btn(opt.nerdfont and '' or '⨯'),
+            -- line.sep(right_sep(opt), hl, opt.theme.fill),
+            hl = hl,
+            margin = ' ',
+          }
+        end
+
+        local opts = {
+          line = function(line)
+            return {
+              line.tabs().foreach(function(tab)
+                return preset_tab(line, tab, tabline.cfg.opt)
+              end),
+              hl = tabline.cfg.opt.theme.fill,
+            }
+          end,
+          option = {
+            nerdfont = false,
+            theme = {
+              fill = 'TabLineFill',
+              -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
+              head = 'TabLine',
+              current_tab = 'TabLineSel',
+              tab = 'TabLine',
+              win = 'TabLine',
+              tail = 'TabLine',
+            },
+            lualine_theme = nil, -- lualine theme name
+            tab_name = {
+              name_fallback = function(tabid)
+                local cur_win = vim.api.nvim_tabpage_get_win(tabid)
+
+                return buf_name.get(cur_win)
+              end,
+            },
+            buf_name = {
+              mode = 'relative',
+            },
+          },
+        }
+
+        return opts
+      end,
+    },
   }
 
   return feature
