@@ -539,7 +539,7 @@ mod.setup = vimrc.make_setup(function(context)
             -- line.sep(left_sep(opt), hl, opt.theme.fill),
             tab.in_jump_mode() and tab.jump_key()
               or {
-                tab.is_current() and status_icon[1] or status_icon[2],
+                -- tab.is_current() and status_icon[1] or status_icon[2],
                 -- tab.number(),
                 -- margin = ' ',
               },
