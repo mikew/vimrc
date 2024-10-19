@@ -543,7 +543,7 @@ mod.setup = vimrc.make_setup(function(context)
                 -- tab.number(),
                 -- margin = ' ',
               },
-            is_changed and '*' or '',
+            is_changed and '+' or '',
             tab.name(),
             tab.close_btn(opt.nerdfont and '' or '⨯'),
             -- line.sep(right_sep(opt), hl, opt.theme.fill),
