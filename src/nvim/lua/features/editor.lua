@@ -539,11 +539,11 @@ mod.setup = vimrc.make_setup(function(context)
             -- line.sep(left_sep(opt), hl, opt.theme.fill),
             tab.in_jump_mode() and tab.jump_key()
               or {
-                tab.is_current() and status_icon[1] or status_icon[2],
+                -- tab.is_current() and status_icon[1] or status_icon[2],
                 -- tab.number(),
                 -- margin = ' ',
               },
-            is_changed and '*' or '',
+            is_changed and '+' or '',
             tab.name(),
             tab.close_btn(opt.nerdfont and '' or '⨯'),
             -- line.sep(right_sep(opt), hl, opt.theme.fill),
@@ -575,9 +575,46 @@ mod.setup = vimrc.make_setup(function(context)
             lualine_theme = nil, -- lualine theme name
             tab_name = {
               name_fallback = function(tabid)
-                local cur_win = vim.api.nvim_tabpage_get_win(tabid)
+                local to_check = { vim.api.nvim_tabpage_get_win(tabid) }
+                vim.list_extend(to_check, vim.api.nvim_tabpage_list_wins(tabid))
 
-                return buf_name.get(cur_win)
+                --- @param wininfo { bufnr: integer, winid: integer, bufname: string, buftype: string }
+                local function should_skip(wininfo)
+                  if
+                    vim.tbl_contains(
+                      { 'nofile', 'quickfix', 'help' },
+                      wininfo.bufname
+                    )
+                  then
+                    return true
+                  end
+
+                  if vim.list_contains(context.features, 'drawer') then
+                    local drawer = require('nvim-drawer')
+
+                    if drawer.find_instance_for_winid(wininfo.winid) then
+                      return true
+                    end
+                  end
+                end
+
+                for _, winid in ipairs(to_check) do
+                  local bufnr = vim.api.nvim_win_get_buf(winid)
+                  local wininfo = {
+                    bufnr = bufnr,
+                    winid = winid,
+                    bufname = buf_name.get(winid),
+                    buftype = vim.api.nvim_get_option_value('buftype', {
+                      buf = bufnr,
+                    }),
+                  }
+
+                  if not should_skip(wininfo) then
+                    return wininfo.bufname
+                  end
+                end
+
+                return '[No Name]'
               end,
             },
             buf_name = {

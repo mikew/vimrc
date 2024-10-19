@@ -6,7 +6,7 @@ local mod = {}
 mod.setup = vimrc.make_setup(function()
   --- @type VimrcFeature
   local feature = {
-    name = 'sidebar',
+    name = 'drawer',
   }
 
   feature.plugins = {
@@ -364,7 +364,7 @@ mod.setup = vimrc.make_setup(function()
         mapping = {
           ['enter_file'] = {
             map = '<cr>',
-            cmd = "<cmd>lua require('features.sidebar').spectre_select_entry()<CR>",
+            cmd = "<cmd>lua require('features.drawer').spectre_select_entry()<CR>",
             desc = 'open file',
           },
         },
