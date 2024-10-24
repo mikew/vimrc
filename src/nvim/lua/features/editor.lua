@@ -529,27 +529,39 @@ mod.setup = vimrc.make_setup(function(context)
           local cur_win = vim.api.nvim_tabpage_get_win(tab.id)
           local bufnr = vim.api.nvim_win_get_buf(cur_win)
           local hl = tab.is_current() and opt.theme.current_tab or opt.theme.tab
-          local status_icon = opt.nerdfont and { '', '󰆣' }
-            or { '▪', '' }
           local is_changed = vim.api.nvim_get_option_value('modified', {
             buf = bufnr,
           })
 
-          return {
+          --- @type TabbyElement
+          local node = {
             -- line.sep(left_sep(opt), hl, opt.theme.fill),
-            tab.in_jump_mode() and tab.jump_key()
-              or {
-                -- tab.is_current() and status_icon[1] or status_icon[2],
-                -- tab.number(),
-                -- margin = ' ',
-              },
-            is_changed and '+' or '',
-            tab.name(),
+            ' ',
             tab.close_btn(opt.nerdfont and '' or '⨯'),
-            -- line.sep(right_sep(opt), hl, opt.theme.fill),
+          }
+
+          if tab.in_jump_mode() then
+            node = vim.list_extend(node, {
+              tab.jump_key(),
+            })
+          end
+
+          if is_changed then
+            node = vim.list_extend(node, {
+              '+',
+            })
+          end
+
+          node = vim.list_extend(node, {
+            tab.name(),
+          })
+
+          node = vim.tbl_extend('force', node, {
             hl = hl,
             margin = ' ',
-          }
+          })
+
+          return node
         end
 
         local opts = {
