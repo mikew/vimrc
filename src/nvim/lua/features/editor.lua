@@ -521,11 +521,11 @@ mod.setup = vimrc.make_setup(function(context)
         local buf_name = require('tabby.feature.buf_name')
         local tabline = require('tabby.tabline')
 
-        ---@param line TabbyLine
-        ---@param tab TabbyTab
-        ---@param opt TabbyTablinePresetOption
-        ---@return TabbyNode
-        local function preset_tab(line, tab, opt)
+        --- @param line TabbyLine
+        --- @param tab TabbyTab
+        --- @param opt TabbyTablinePresetOption
+        --- @return TabbyNode
+        local function preset_tab(line, tab, opt, num_tabs)
           local cur_win = vim.api.nvim_tabpage_get_win(tab.id)
           local bufnr = vim.api.nvim_win_get_buf(cur_win)
           local hl = tab.is_current() and opt.theme.current_tab or opt.theme.tab
@@ -534,21 +534,30 @@ mod.setup = vimrc.make_setup(function(context)
           })
 
           --- @type TabbyElement
-          local node = {
-            -- line.sep(left_sep(opt), hl, opt.theme.fill),
-            ' ',
-            tab.close_btn(opt.nerdfont and '' or '⨯'),
-          }
+          local node = {}
+
+          if num_tabs > 1 then
+            -- `close_btn` only draws itself when there's more than one tab,
+            -- but it leaves an empty space when there's only one. This gives
+            -- us more control.
+            node = vim.list_extend(node, {
+              ' ',
+              tab.close_btn(opt.nerdfont and '' or '⨯'),
+              ' ',
+            })
+          end
 
           if tab.in_jump_mode() then
             node = vim.list_extend(node, {
               tab.jump_key(),
+              ' ',
             })
           end
 
           if is_changed then
             node = vim.list_extend(node, {
               '+',
+              ' ',
             })
           end
 
@@ -556,9 +565,10 @@ mod.setup = vimrc.make_setup(function(context)
             tab.name(),
           })
 
+          --- @type TabbyElement
           node = vim.tbl_extend('force', node, {
             hl = hl,
-            margin = ' ',
+            margin = '',
           })
 
           return node
@@ -567,8 +577,8 @@ mod.setup = vimrc.make_setup(function(context)
         local opts = {
           line = function(line)
             return {
-              line.tabs().foreach(function(tab)
-                return preset_tab(line, tab, tabline.cfg.opt)
+              line.tabs().foreach(function(tab, index, length)
+                return preset_tab(line, tab, tabline.cfg.opt, length)
               end),
               hl = tabline.cfg.opt.theme.fill,
             }
@@ -576,13 +586,10 @@ mod.setup = vimrc.make_setup(function(context)
           option = {
             nerdfont = false,
             theme = {
-              fill = 'TabLineFill',
               -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
-              head = 'TabLine',
+              fill = 'TabLineFill',
               current_tab = 'TabLineSel',
               tab = 'TabLine',
-              win = 'TabLine',
-              tail = 'TabLine',
             },
             lualine_theme = nil, -- lualine theme name
             tab_name = {
