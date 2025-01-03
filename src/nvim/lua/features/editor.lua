@@ -567,6 +567,30 @@ mod.setup = vimrc.make_setup(function(context)
         },
       },
     },
+
+    {
+      'nvzone/menu',
+      lazy = true,
+      dependencies = {
+        { 'nvzone/volt', lazy = true },
+      },
+      init = function()
+        -- Keyboard users
+        vim.keymap.set('n', '<C-t>', function()
+          local options = vim.bo.ft == 'NvimTree' and 'nvimtree' or 'default'
+          require('menu').open(options, { border = symbols.border.nvim_style })
+        end, {})
+
+        -- mouse users + nvimtree users!
+        vim.keymap.set('n', '<RightMouse>', function()
+          vim.cmd.exec('"normal! \\<RightMouse>"')
+
+          local options = vim.bo.ft == 'NvimTree' and 'nvimtree' or 'default'
+          require('menu').open(
+            options,
+            { mouse = true, border = symbols.border.nvim_style }
+          )
+        end, {})
       end,
     },
   }
