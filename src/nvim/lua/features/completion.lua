@@ -10,17 +10,24 @@ mod.setup = vimrc.make_setup(function(context)
 
   feature.plugins = {
     { -- Autocompletion
-      'hrsh7th/nvim-cmp',
+      'iguanacucumber/magazine.nvim',
       cond = not vim.g.vscode,
+      name = 'nvim-cmp',
       event = 'InsertEnter',
       dependencies = {
         -- Adds other completion capabilities.
         --  nvim-cmp does not ship with all sources by default. They are split
         --  into multiple repos for maintenance purposes.
-        'hrsh7th/cmp-nvim-lsp',
-        'hrsh7th/cmp-path',
+        -- 'hrsh7th/cmp-nvim-lsp',
+        -- 'hrsh7th/cmp-path',
+        { 'iguanacucumber/mag-nvim-lsp', name = 'cmp-nvim-lsp', opts = {} },
+        { 'iguanacucumber/mag-nvim-lua', name = 'cmp-nvim-lua' },
+        { 'iguanacucumber/mag-buffer', name = 'cmp-buffer' },
+        { 'iguanacucumber/mag-cmdline', name = 'cmp-cmdline' },
+
         'hrsh7th/cmp-nvim-lsp-signature-help',
-        'hrsh7th/cmp-buffer',
+        'https://codeberg.org/FelipeLema/cmp-async-path',
+        -- 'hrsh7th/cmp-buffer',
       },
       config = function()
         local cmp = require('cmp')
@@ -90,7 +97,7 @@ mod.setup = vimrc.make_setup(function(context)
             },
             { name = 'nvim_lsp' },
             { name = 'buffer' },
-            { name = 'path' },
+            { name = 'async_path' },
             { name = 'nvim_lsp_signature_help' },
           },
         })
