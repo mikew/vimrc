@@ -49,6 +49,9 @@ mod.setup = vimrc.make_setup(function(context)
     -- Hide inline diagnostics.
     vim.diagnostic.config({
       virtual_text = false,
+      float = {
+        border = symbols.border.nvim_style,
+      },
     })
     vim.api.nvim_set_keymap(
       'n',
