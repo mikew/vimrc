@@ -79,6 +79,14 @@ mod.setup = vimrc.make_setup(function(context)
           -- local picker = action_state.get_current_picker(prompt_bufnr)
           -- pcall(vim.api.nvim_set_current_win, picker.original_win_id)
 
+          -- TODO Not sure which is better here.
+          -- vim.api.nvim_feedkeys(
+          --   vim.api.nvim_replace_termcodes('<ESC>', true, false, true),
+          --   'n',
+          --   true
+          -- )
+          vim.cmd('stopinsert')
+
           vimrc.go_to_file_or_open(filename, { row, col })
         end
 
