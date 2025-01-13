@@ -1,4 +1,5 @@
 local vimrc = require('vimrc')
+local symbols = require('symbols')
 
 local mod = {}
 
@@ -92,6 +93,15 @@ mod.setup = vimrc.make_setup(function(context)
             { name = 'buffer' },
             { name = 'path' },
             { name = 'nvim_lsp_signature_help' },
+          },
+
+          window = {
+            completion = {
+              border = symbols.border.nvim_style,
+            },
+            documentation = {
+              border = symbols.border.nvim_style,
+            },
           },
         })
       end,

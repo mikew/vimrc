@@ -160,6 +160,16 @@ mod.setup = vimrc.make_setup(function(context)
               -- This handles overriding only values explicitly passed
               -- by the server configuration above. Useful when disabling
               -- certain features of an LSP (for example, turning off formatting for tsserver)
+              server.handlers = vim.tbl_deep_extend('force', {}, {
+                ['textDocument/hover'] = vim.lsp.with(
+                  vim.lsp.handlers.hover,
+                  { border = symbols.border.nvim_style }
+                ),
+                ['textDocument/signatureHelp'] = vim.lsp.with(
+                  vim.lsp.handlers.signature_help,
+                  { border = symbols.border.nvim_style }
+                ),
+              }, server.handlers or {})
               server.capabilities = vim.tbl_deep_extend(
                 'force',
                 {},
