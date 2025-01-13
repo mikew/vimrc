@@ -519,133 +519,81 @@ mod.setup = vimrc.make_setup(function(context)
     },
 
     {
-      'nanozuki/tabby.nvim',
-      opts = function()
-        local buf_name = require('tabby.feature.buf_name')
-        local tabline = require('tabby.tabline')
+      'romgrk/barbar.nvim',
 
-        --- @param line TabbyLine
-        --- @param tab TabbyTab
-        --- @param opt TabbyTablinePresetOption
-        --- @return TabbyNode
-        local function preset_tab(line, tab, opt, num_tabs)
-          local cur_win = vim.api.nvim_tabpage_get_win(tab.id)
-          local bufnr = vim.api.nvim_win_get_buf(cur_win)
-          local hl = tab.is_current() and opt.theme.current_tab or opt.theme.tab
-          local is_changed = vim.api.nvim_get_option_value('modified', {
-            buf = bufnr,
-          })
+      init = function()
+        vim.g.barbar_auto_setup = false
+      end,
 
-          --- @type TabbyElement
-          local node = {}
+      opts = {
+        focus_on_close = 'left',
+        icons = {
+          buffer_index = false,
+          buffer_number = false,
 
-          if num_tabs > 1 then
-            -- `close_btn` only draws itself when there's more than one tab,
-            -- but it leaves an empty space when there's only one. This gives
-            -- us more control.
-            node = vim.list_extend(node, {
-              ' ',
-              tab.close_btn(opt.nerdfont and '' or '⨯'),
-              ' ',
-            })
-          end
+          button = '⨯',
 
-          if tab.in_jump_mode() then
-            node = vim.list_extend(node, {
-              tab.jump_key(),
-              ' ',
-            })
-          end
-
-          if is_changed then
-            node = vim.list_extend(node, {
-              '+',
-              ' ',
-            })
-          end
-
-          node = vim.list_extend(node, {
-            tab.name(),
-          })
-
-          --- @type TabbyElement
-          node = vim.tbl_extend('force', node, {
-            hl = hl,
-            margin = '',
-          })
-
-          return node
-        end
-
-        local opts = {
-          line = function(line)
-            return {
-              line.tabs().foreach(function(tab, index, length)
-                return preset_tab(line, tab, tabline.cfg.opt, length)
-              end),
-              hl = tabline.cfg.opt.theme.fill,
-            }
-          end,
-          option = {
-            nerdfont = false,
-            theme = {
-              -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
-              fill = 'TabLineFill',
-              current_tab = 'TabLineSel',
-              tab = 'TabLine',
+          diagnostics = {
+            [vim.diagnostic.severity.ERROR] = {
+              enabled = false,
+              icon = symbols.diagnostics.error,
             },
-            lualine_theme = nil, -- lualine theme name
-            tab_name = {
-              name_fallback = function(tabid)
-                local to_check = { vim.api.nvim_tabpage_get_win(tabid) }
-                vim.list_extend(to_check, vim.api.nvim_tabpage_list_wins(tabid))
-
-                --- @param wininfo { bufnr: integer, winid: integer, bufname: string, buftype: string }
-                local function should_skip(wininfo)
-                  if
-                    vim.tbl_contains(
-                      { 'nofile', 'quickfix', 'help' },
-                      wininfo.bufname
-                    )
-                  then
-                    return true
-                  end
-
-                  if vim.list_contains(context.features, 'drawer') then
-                    local drawer = require('nvim-drawer')
-
-                    if drawer.find_instance_for_winid(wininfo.winid) then
-                      return true
-                    end
-                  end
-                end
-
-                for _, winid in ipairs(to_check) do
-                  local bufnr = vim.api.nvim_win_get_buf(winid)
-                  local wininfo = {
-                    bufnr = bufnr,
-                    winid = winid,
-                    bufname = buf_name.get(winid),
-                    buftype = vim.api.nvim_get_option_value('buftype', {
-                      buf = bufnr,
-                    }),
-                  }
-
-                  if not should_skip(wininfo) then
-                    return wininfo.bufname
-                  end
-                end
-
-                return '[No Name]'
-              end,
+            [vim.diagnostic.severity.WARN] = {
+              enabled = false,
+              icon = symbols.diagnostics.warn,
             },
-            buf_name = {
-              mode = 'relative',
+            [vim.diagnostic.severity.INFO] = {
+              enabled = false,
+              icon = symbols.diagnostics.info,
+            },
+            [vim.diagnostic.severity.HINT] = {
+              enabled = false,
+              icon = symbols.diagnostics.hint,
             },
           },
-        }
 
-        return opts
+          gitsigns = {
+            added = { enabled = false, icon = symbols.git.untracked },
+            changed = { enabled = false, icon = symbols.git.changes },
+            deleted = { enabled = false, icon = symbols.git.deleted },
+          },
+
+          filetype = {
+            enabled = false,
+          },
+
+          modified = { button = '●' },
+        },
+
+        sort = {
+          ignore_case = true,
+        },
+      },
+    },
+
+    {
+      'nvzone/menu',
+      lazy = true,
+      dependencies = {
+        { 'nvzone/volt', lazy = true },
+      },
+      init = function()
+        -- Keyboard users
+        vim.keymap.set('n', '<C-t>', function()
+          local options = vim.bo.ft == 'NvimTree' and 'nvimtree' or 'default'
+          require('menu').open(options, { border = symbols.border.nvim_style })
+        end, {})
+
+        -- mouse users + nvimtree users!
+        vim.keymap.set('n', '<RightMouse>', function()
+          vim.cmd.exec('"normal! \\<RightMouse>"')
+
+          local options = vim.bo.ft == 'NvimTree' and 'nvimtree' or 'default'
+          require('menu').open(
+            options,
+            { mouse = true, border = symbols.border.nvim_style }
+          )
+        end, {})
       end,
     },
   }

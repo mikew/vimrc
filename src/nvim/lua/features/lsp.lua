@@ -345,7 +345,7 @@ mod.setup = vimrc.make_setup(function(context)
 
         vim.api.nvim_create_user_command(
           'SaveWithoutFormatting',
-          'let g:_disable_format_on_write = 1 | w',
+          'let g:_vimrc_disable_format_on_write = 1 | w',
           {}
         )
 

@@ -58,6 +58,8 @@ function mod.better_tabdo(callback)
   vim.cmd('tabnext ' .. current_tab)
 end
 
+--- @param name string
+--- @param clear? boolean
 function mod.create_augroup(name, clear)
   clear = clear == nil and true or clear
   return vim.api.nvim_create_augroup('vimrc_' .. name, { clear = clear })
