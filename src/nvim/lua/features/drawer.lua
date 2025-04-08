@@ -23,7 +23,7 @@ mod.setup = vimrc.make_setup(function()
 
         drawer.create_drawer({
           size = 40,
-          position = 'float',
+          position = 'right',
           should_reuse_previous_bufnr = false,
           should_close_on_bufwipeout = false,
 
