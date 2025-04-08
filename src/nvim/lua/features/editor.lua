@@ -519,82 +519,88 @@ mod.setup = vimrc.make_setup(function(context)
     },
 
     {
-      'romgrk/barbar.nvim',
-
-      init = function()
-        vim.g.barbar_auto_setup = false
-      end,
-
+      'akinsho/bufferline.nvim',
+      cond = not vim.g.vscode,
       opts = {
-        focus_on_close = 'left',
-        icons = {
-          buffer_index = false,
-          buffer_number = false,
+        options = {
+          mode = 'tabs',
 
-          button = '⨯',
+          -- numbers = function(opts)
+          --   return string.format('%s', opts.ordinal)
+          -- end,
 
-          diagnostics = {
-            [vim.diagnostic.severity.ERROR] = {
-              enabled = false,
-              icon = symbols.diagnostics.error,
-            },
-            [vim.diagnostic.severity.WARN] = {
-              enabled = false,
-              icon = symbols.diagnostics.warn,
-            },
-            [vim.diagnostic.severity.INFO] = {
-              enabled = false,
-              icon = symbols.diagnostics.info,
-            },
-            [vim.diagnostic.severity.HINT] = {
-              enabled = false,
-              icon = symbols.diagnostics.hint,
-            },
-          },
+          -- close_command = 'tabclose',
+          -- close_command = function(n)
+          --   return string.format('tabdo bdelete %d', n.id)
+          -- end,
 
-          gitsigns = {
-            added = { enabled = false, icon = symbols.git.untracked },
-            changed = { enabled = false, icon = symbols.git.changes },
-            deleted = { enabled = false, icon = symbols.git.deleted },
-          },
+          left_trunc_marker = '◀',
+          right_trunc_marker = '▶',
 
-          filetype = {
-            enabled = false,
-          },
+          right_mouse_command = false,
 
-          modified = { button = '●' },
-        },
+          show_buffer_icons = false,
+          -- show_close_icon = false,
+          -- show_buffer_close_icons = false,
 
-        sort = {
-          ignore_case = true,
+          diagnostics = 'nvim_lsp',
+
+          --- @param buf { name: string, path: string, bufnr: integer, buffers: integer[], tabnr: integer }
+          name_formatter = function(buf)
+            local to_check = {
+              -- Start with the focused window.
+              vim.api.nvim_tabpage_get_win(buf.tabnr),
+            }
+            -- Then add all other windows in the tab.
+            vim.list_extend(to_check, vim.api.nvim_tabpage_list_wins(buf.tabnr))
+
+            --- @param wininfo { bufnr: integer, winid: integer, bufname: string, buftype: string }
+            local function should_skip(wininfo)
+              if
+                vim.tbl_contains(
+                  { 'nofile', 'quickfix', 'help' },
+                  wininfo.buftype
+                )
+              then
+                return true
+              end
+
+              if vim.list_contains(context.features, 'drawer') then
+                local drawer = require('nvim-drawer')
+
+                if drawer.find_instance_for_winid(wininfo.winid) then
+                  return true
+                end
+              end
+            end
+
+            for _, winid in ipairs(to_check) do
+              local bufnr = vim.api.nvim_win_get_buf(winid)
+              local bufname =
+                vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ':t')
+
+              if bufname == '' then
+                bufname = '[No Name]'
+              end
+
+              local wininfo = {
+                bufnr = bufnr,
+                winid = winid,
+                bufname = bufname,
+                buftype = vim.api.nvim_get_option_value('buftype', {
+                  buf = bufnr,
+                }),
+              }
+
+              if not should_skip(wininfo) then
+                return wininfo.bufname
+              end
+            end
+
+            return '[No Name]'
+          end,
         },
       },
-    },
-
-    {
-      'nvzone/menu',
-      lazy = true,
-      dependencies = {
-        { 'nvzone/volt', lazy = true },
-      },
-      init = function()
-        -- Keyboard users
-        vim.keymap.set('n', '<C-t>', function()
-          local options = vim.bo.ft == 'NvimTree' and 'nvimtree' or 'default'
-          require('menu').open(options, { border = symbols.border.nvim_style })
-        end, {})
-
-        -- mouse users + nvimtree users!
-        vim.keymap.set('n', '<RightMouse>', function()
-          vim.cmd.exec('"normal! \\<RightMouse>"')
-
-          local options = vim.bo.ft == 'NvimTree' and 'nvimtree' or 'default'
-          require('menu').open(
-            options,
-            { mouse = true, border = symbols.border.nvim_style }
-          )
-        end, {})
-      end,
     },
   }
 
