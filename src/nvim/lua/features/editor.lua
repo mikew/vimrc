@@ -200,6 +200,17 @@ mod.setup = vimrc.make_setup(function(context)
     vim.keymap.set('t', '<S-Enter>', '<Enter>', { desc = 'Insert enter' })
     vim.keymap.set('t', '<S-Space>', '<Space>', { desc = 'Insert space' })
     vim.keymap.set('t', '<S-BS>', '<BS>', { desc = 'Insert backspace' })
+
+    vim.api.nvim_create_autocmd({
+      -- Doesn't seem to trigger on startup.
+      'WinEnter',
+      'BufWinEnter',
+    }, {
+      group = vimrc.create_augroup('dim_inactive_windows'),
+      callback = function()
+        vim.o.winhighlight = 'Normal:Normal,NormalNC:BufferLineBackground'
+      end,
+    })
   end
 
   --- @type VimrcFeature
