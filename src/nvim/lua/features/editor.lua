@@ -160,10 +160,18 @@ mod.setup = vimrc.make_setup(function(context)
     -- Remove `~`.
     vim.opt.fillchars = {
       eob = ' ',
+
       foldopen = symbols.generic.arrow_down,
       foldclose = symbols.generic.arrow_right_solid,
       fold = ' ',
       foldsep = ' ',
+
+      -- horiz = ' ',
+      -- horizup = ' ',
+      -- vert = ' ',
+      -- vertleft = ' ',
+      -- vertright = ' ',
+      -- verthoriz = ' ',
     }
 
     -- Only one statusline at the bottom of the window.
