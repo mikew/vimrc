@@ -153,29 +153,46 @@ mod.setup = vimrc.make_setup(function(context)
         -- })
         -- require('mason-tool-installer').setup({ ensure_installed = ensure_installed })
 
+        -- Work around the deprecation of `vim.lsp.with`.
+        -- https://github.com/nvim-telescope/telescope.nvim/issues/3436#issuecomment-2775658101
+        local original_hover = vim.lsp.buf.hover
+        vim.lsp.buf.hover = function(config)
+          original_hover(vim.tbl_deep_extend('force', {}, {
+            border = symbols.border.nvim_style,
+          }, config or {}))
+        end
+
+        local original_signature_help = vim.lsp.buf.signature_help
+        vim.lsp.buf.signature_help = function(config)
+          original_signature_help(vim.tbl_deep_extend('force', {}, {
+            border = symbols.border.nvim_style,
+          }, config or {}))
+        end
+
         require('mason-lspconfig').setup({
+          ensure_installed = {},
+          automatic_installation = {},
           handlers = {
             function(server_name)
               local server = servers[server_name] or {}
+
               -- This handles overriding only values explicitly passed
               -- by the server configuration above. Useful when disabling
               -- certain features of an LSP (for example, turning off formatting for tsserver)
               server.handlers = vim.tbl_deep_extend('force', {}, {
-                ['textDocument/hover'] = vim.lsp.with(
-                  vim.lsp.handlers.hover,
-                  { border = symbols.border.nvim_style }
-                ),
-                ['textDocument/signatureHelp'] = vim.lsp.with(
-                  vim.lsp.handlers.signature_help,
-                  { border = symbols.border.nvim_style }
-                ),
+                -- ['textDocument/signatureHelp'] = vim.lsp.with(
+                --   vim.lsp.handlers.signature_help,
+                --   { border = symbols.border.nvim_style }
+                -- ),
               }, server.handlers or {})
+
               server.capabilities = vim.tbl_deep_extend(
                 'force',
                 {},
                 base_capabilities,
                 server.capabilities or {}
               )
+
               require('lspconfig')[server_name].setup(server)
             end,
           },

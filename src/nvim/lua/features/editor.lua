@@ -26,6 +26,7 @@ mod.setup = vimrc.make_setup(function(context)
   vim.opt.foldmethod = 'indent'
   -- Don't fold by default.
   vim.opt.foldlevelstart = 100
+  vim.opt.foldcolumn = '1'
 
   -- Indent / outdent.
   vim.keymap.set('v', '<', '<gv')
@@ -159,6 +160,18 @@ mod.setup = vimrc.make_setup(function(context)
     -- Remove `~`.
     vim.opt.fillchars = {
       eob = ' ',
+
+      foldopen = symbols.generic.arrow_down,
+      foldclose = symbols.generic.arrow_right_solid,
+      fold = ' ',
+      foldsep = ' ',
+
+      -- horiz = ' ',
+      -- horizup = ' ',
+      -- vert = ' ',
+      -- vertleft = ' ',
+      -- vertright = ' ',
+      -- verthoriz = ' ',
     }
 
     -- Only one statusline at the bottom of the window.
@@ -421,18 +434,6 @@ mod.setup = vimrc.make_setup(function(context)
 
             {
               sign = {
-                namespace = { 'gitsign' },
-                maxwidth = 1,
-                colwidth = 1,
-                auto = false,
-              },
-              click = 'v:lua.ScSa',
-            },
-
-            { text = { ' ' } },
-
-            {
-              sign = {
                 namespace = { 'diagnostic' },
                 maxwidth = 1,
                 colwidth = 1,
@@ -441,11 +442,17 @@ mod.setup = vimrc.make_setup(function(context)
               click = 'v:lua.ScSa',
             },
 
-            { text = { ' ' } },
-
             { text = { builtin.foldfunc }, click = 'v:lua.ScFa' },
 
-            -- { text = { ' ' } },
+            {
+              sign = {
+                namespace = { 'gitsign' },
+                maxwidth = 1,
+                colwidth = 1,
+                auto = false,
+              },
+              click = 'v:lua.ScSa',
+            },
           },
           ft_ignore = {
             'man',
@@ -611,6 +618,19 @@ mod.setup = vimrc.make_setup(function(context)
             return '[No Name]'
           end,
         },
+      },
+    },
+
+    {
+      'kevinhwang91/nvim-ufo',
+      cond = not vim.g.vscode,
+      dependencies = {
+        'kevinhwang91/promise-async',
+      },
+      opts = {
+        provider_selector = function(bufnr, filetype, buftype)
+          return { 'treesitter', 'indent' }
+        end,
       },
     },
   }

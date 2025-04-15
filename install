@@ -3,6 +3,7 @@ set -ex
 
 main() {
   backup-file ~/.config/nvim
+  mkdir -p ~/.config
   ln -sf "$PWD/src/nvim" ~/.config/nvim
 
   mkdir -p \
