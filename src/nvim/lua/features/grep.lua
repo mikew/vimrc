@@ -101,7 +101,7 @@ mod.setup = vimrc.make_setup(function(context)
           defaults = vim.tbl_deep_extend(
             'force',
             {},
-            require('telescope.themes').get_ivy({
+            require('telescope.themes').get_dropdown({
               mappings = {
                 i = {
                   -- ['<c-enter>'] = 'to_fuzzy_refine',
