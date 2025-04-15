@@ -90,28 +90,34 @@ mod.setup = vimrc.make_setup(function(context)
           vimrc.go_to_file_or_open(filename, { row, col })
         end
 
-        return require('telescope_theme_fused').get_fused({
+        return {
           --  All the info you're looking for is in `:help telescope.setup()`
           pickers = {
             colorscheme = {
               enable_preview = true,
             },
           },
-          defaults = {
-            mappings = {
-              i = {
-                -- ['<c-enter>'] = 'to_fuzzy_refine',
-                ['<CR>'] = wut,
-                ['<C-CR>'] = 'select_default',
-                ['<S-CR>'] = 'select_vertical',
+
+          defaults = vim.tbl_deep_extend(
+            'force',
+            {},
+            require('telescope.themes').get_ivy({
+              mappings = {
+                i = {
+                  -- ['<c-enter>'] = 'to_fuzzy_refine',
+                  ['<CR>'] = wut,
+                  ['<C-CR>'] = 'select_default',
+                  ['<S-CR>'] = 'select_vertical',
+                },
+                n = {
+                  ['<CR>'] = wut,
+                  ['<C-CR>'] = 'select_default',
+                  ['<S-CR>'] = 'select_vertical',
+                },
               },
-              n = {
-                ['<CR>'] = wut,
-                ['<C-CR>'] = 'select_default',
-                ['<S-CR>'] = 'select_vertical',
-              },
-            },
-          },
+            })
+          ),
+
           -- extensions = {
           --   -- Disabling due to the fact that codeactons doesn't work, and
           --   -- disabling just codeactons also doesn't work.
@@ -120,7 +126,7 @@ mod.setup = vimrc.make_setup(function(context)
           --   --   require('telescope.themes').get_dropdown(),
           --   -- },
           -- },
-        })
+        }
       end,
       config = function(_, opts)
         -- Telescope is a fuzzy finder that comes with a lot of different things that
