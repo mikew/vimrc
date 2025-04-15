@@ -126,6 +126,10 @@ mod.setup = vimrc.make_setup(function(context)
     vim.opt.scrolloff = 5
     vim.opt.mousescroll = 'ver:5,hor:5'
 
+    -- lol why would `winborder` support the same style arguments as other
+    -- window border definitions in neovim???
+    vim.opt.winborder = 'rounded'
+
     -- Keybinds to make split navigation easier.
     -- Use CTRL+<hjkl> to switch between windows
     -- See `:help wincmd` for a list of all window commands
