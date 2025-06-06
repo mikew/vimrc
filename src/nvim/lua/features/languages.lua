@@ -27,7 +27,7 @@ mod.setup = vimrc.make_setup(function(context)
       opts = {
         highlight = {
           enable = true,
-          additional_vim_regex_highlighting = true,
+          additional_vim_regex_highlighting = false,
         },
 
         indent = {
