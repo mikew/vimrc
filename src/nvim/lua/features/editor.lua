@@ -221,7 +221,7 @@ mod.setup = vimrc.make_setup(function(context)
     }, {
       group = vimrc.create_augroup('dim_inactive_windows'),
       callback = function()
-        vim.o.winhighlight = 'Normal:Normal,NormalNC:BufferLineBackground'
+        vim.o.winhighlight = 'NormalNC:BufferLineBackground'
       end,
     })
   end
@@ -366,6 +366,19 @@ mod.setup = vimrc.make_setup(function(context)
         })
         vim.api.nvim_set_hl(0, 'WinSeparator', {
           link = 'IndentBlankLineChar',
+          force = true,
+        })
+
+        vim.api.nvim_set_hl(0, 'LineNr', {
+          link = 'CursorLineNr',
+          force = true,
+        })
+        vim.api.nvim_set_hl(0, 'FoldColumn', {
+          link = 'CursorLineNr',
+          force = true,
+        })
+        vim.api.nvim_set_hl(0, 'SignColumn', {
+          link = 'CursorLineNr',
           force = true,
         })
       end,
