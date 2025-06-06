@@ -23,10 +23,10 @@ mod.setup = vimrc.make_setup(function(context)
 
   feature.plugins = {
     {
-      'williamboman/mason.nvim',
+      'mason-org/mason.nvim',
       cond = not vim.g.vscode,
       dependencies = {
-        { 'williamboman/mason-lspconfig.nvim' },
+        { 'mason-org/mason-lspconfig.nvim' },
         { 'neovim/nvim-lspconfig' },
         {
           'nvimtools/none-ls.nvim',
@@ -306,7 +306,7 @@ mod.setup = vimrc.make_setup(function(context)
             local client = vim.lsp.get_client_by_id(event.data.client_id)
             if
               client
-              and client.supports_method(
+              and client:supports_method(
                 vim.lsp.protocol.Methods.textDocument_documentHighlight
               )
             then
@@ -344,7 +344,7 @@ mod.setup = vimrc.make_setup(function(context)
             -- This may be unwanted, since they displace some of your code
             if
               client
-              and client.supports_method(
+              and client:supports_method(
                 vim.lsp.protocol.Methods.textDocument_inlayHint
               )
             then

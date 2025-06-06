@@ -19,6 +19,7 @@ mod.setup = vimrc.make_setup(function(context)
       cond = not vim.g.vscode,
       version = false,
       build = ':TSUpdate',
+      main = 'nvim-treesitter.configs',
       event = { 'VeryLazy' },
       -- load treesitter early when opening a file from the cmdline
       lazy = vim.fn.argc(-1) == 0,
@@ -73,9 +74,6 @@ mod.setup = vimrc.make_setup(function(context)
           enable = true,
         },
       },
-      config = function(_, opts)
-        require('nvim-treesitter.configs').setup(opts)
-      end,
     },
   }
 
