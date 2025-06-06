@@ -221,7 +221,7 @@ mod.setup = vimrc.make_setup(function(context)
     }, {
       group = vimrc.create_augroup('dim_inactive_windows'),
       callback = function()
-        vim.o.winhighlight = 'Normal:Normal,NormalNC:BufferLineBackground'
+        vim.o.winhighlight = 'NormalNC:BufferLineBackground'
       end,
     })
   end
@@ -249,7 +249,7 @@ mod.setup = vimrc.make_setup(function(context)
 
     -- Detect tabstop and shiftwidth automatically
     {
-      'tpope/vim-sleuth',
+      'NMAC427/guess-indent.nvim',
       event = 'BufRead',
       cond = not vim.g.vscode,
     },
@@ -323,16 +323,6 @@ mod.setup = vimrc.make_setup(function(context)
       cond = not vim.g.vscode,
       event = 'InsertEnter',
       opts = {},
-      config = function(_, opts)
-        require('nvim-autopairs').setup(opts)
-
-        if vimrc.has_feature('completion') then
-          -- If you want to automatically add `(` after selecting a function or method
-          local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-          local cmp = require('cmp')
-          cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
-        end
-      end,
     },
 
     -- {
@@ -376,6 +366,19 @@ mod.setup = vimrc.make_setup(function(context)
         })
         vim.api.nvim_set_hl(0, 'WinSeparator', {
           link = 'IndentBlankLineChar',
+          force = true,
+        })
+
+        vim.api.nvim_set_hl(0, 'LineNr', {
+          link = 'CursorLineNr',
+          force = true,
+        })
+        vim.api.nvim_set_hl(0, 'FoldColumn', {
+          link = 'CursorLineNr',
+          force = true,
+        })
+        vim.api.nvim_set_hl(0, 'SignColumn', {
+          link = 'CursorLineNr',
           force = true,
         })
       end,
