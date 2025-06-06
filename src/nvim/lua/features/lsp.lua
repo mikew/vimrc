@@ -47,11 +47,8 @@ mod.setup = vimrc.make_setup(function(context)
         -- So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
         local base_capabilities = vim.lsp.protocol.make_client_capabilities()
         if vimrc.has_feature('completion') then
-          base_capabilities = vim.tbl_deep_extend(
-            'force',
-            base_capabilities,
-            require('cmp_nvim_lsp').default_capabilities()
-          )
+          base_capabilities =
+            require('blink.cmp').get_lsp_capabilities(base_capabilities)
         end
 
         -- Enable the following language servers
