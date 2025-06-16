@@ -43,7 +43,11 @@ mod.setup = vimrc.make_setup(function(context)
           -- See :h blink-cmp-config-keymap for defining your own keymap
           preset = 'none',
           ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
-          ['<CR>'] = { 'accept', 'fallback' },
+          ['<CR>'] = {
+            -- TODO Might want to check out `select_and_accept`.
+            'accept',
+            'fallback',
+          },
           ['<Up>'] = { 'select_prev', 'fallback' },
           ['<Down>'] = { 'select_next', 'fallback' },
           ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
@@ -74,7 +78,7 @@ mod.setup = vimrc.make_setup(function(context)
 
           list = {
             selection = {
-              preselect = true,
+              preselect = false,
               auto_insert = true,
             },
           },
@@ -120,6 +124,10 @@ mod.setup = vimrc.make_setup(function(context)
             -- preset = 'inherit',
             -- ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
             -- ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
+            -- Just accept, don't also run the command.
+            ['<CR>'] = { 'accept', 'fallback' },
+            -- Just hide the menu, don't exit the command line.
+            ['<ESC>'] = { 'hide', 'fallback' },
             ['<Up>'] = { 'select_prev', 'fallback' },
             ['<Down>'] = { 'select_next', 'fallback' },
           },
