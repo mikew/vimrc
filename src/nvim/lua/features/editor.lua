@@ -250,8 +250,7 @@ mod.setup = vimrc.make_setup(function(context)
 
     -- Detect tabstop and shiftwidth automatically
     {
-      'NMAC427/guess-indent.nvim',
-      event = 'BufRead',
+      'tpope/vim-sleuth',
       cond = not vim.g.vscode,
     },
 
