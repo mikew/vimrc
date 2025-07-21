@@ -27,6 +27,7 @@ mod.setup = vimrc.make_setup(function(context)
   -- Don't fold by default.
   vim.opt.foldlevelstart = 100
   vim.opt.foldcolumn = '1'
+  vim.opt.foldmarker = '#region,#endregion'
 
   -- Indent / outdent.
   vim.keymap.set('v', '<', '<gv')
@@ -249,8 +250,7 @@ mod.setup = vimrc.make_setup(function(context)
 
     -- Detect tabstop and shiftwidth automatically
     {
-      'NMAC427/guess-indent.nvim',
-      event = 'BufRead',
+      'tpope/vim-sleuth',
       cond = not vim.g.vscode,
     },
 
