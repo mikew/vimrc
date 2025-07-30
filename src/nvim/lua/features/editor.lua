@@ -210,10 +210,19 @@ mod.setup = vimrc.make_setup(function(context)
       end,
     })
 
+    -- Terminal annoyances.
     -- https://github.com/neovim/neovim/issues/24093
     vim.keymap.set('t', '<S-Enter>', '<Enter>', { desc = 'Insert enter' })
     vim.keymap.set('t', '<S-Space>', '<Space>', { desc = 'Insert space' })
     vim.keymap.set('t', '<S-BS>', '<BS>', { desc = 'Insert backspace' })
+    vim.api.nvim_create_autocmd({
+      -- 'TermOpen',
+      'WinEnter',
+    }, { pattern = 'term://*', command = 'startinsert' })
+    vim.api.nvim_create_autocmd(
+      { 'BufLeave' },
+      { pattern = 'term://*', command = 'stopinsert' }
+    )
 
     vim.api.nvim_create_autocmd({
       -- Doesn't seem to trigger on startup.
