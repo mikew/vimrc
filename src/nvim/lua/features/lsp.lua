@@ -363,14 +363,18 @@ mod.setup = vimrc.make_setup(function(context)
           {}
         )
 
+        vim.api.nvim_create_user_command('LspFormat', function()
+          local view = vim.fn.winsaveview()
+          vim.lsp.buf.format({
+            timeout_ms = 10000,
+          })
+          vim.fn.winrestview(view)
+        end, {})
+
         vim.api.nvim_create_autocmd('BufWritePre', {
           callback = function()
             if not vim.g._vimrc_disable_format_on_write then
-              local view = vim.fn.winsaveview()
-              vim.lsp.buf.format({
-                timeout_ms = 10000,
-              })
-              vim.fn.winrestview(view)
+              vim.cmd('undojoin | LspFormat')
             end
 
             vim.g._vimrc_disable_format_on_write = false
