@@ -223,7 +223,10 @@ mod.setup = vimrc.make_setup(function(context)
       { 'BufLeave' },
       { pattern = 'term://*', command = 'stopinsert' }
     )
+    -- TODO Need to find a better combo as this delays Esc key presses.
+    vim.keymap.set('t', '<Esc><Esc>', [[<C-\><C-n>]], { noremap = true })
 
+    -- Dim inactive windows.
     vim.api.nvim_create_autocmd({
       -- Doesn't seem to trigger on startup.
       'WinEnter',
