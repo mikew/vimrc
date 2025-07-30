@@ -120,6 +120,12 @@ if vimrc.context.os == 'macos' then
   -- vim.keymap.set('i', '<D-v>', '<C-r>+')
   vim.keymap.set('i', '<D-v>', '<C-o>"+p')
   vim.keymap.set('c', '<D-v>', '<C-r>+')
+  vim.keymap.set(
+    't',
+    '<D-v>',
+    [[<C-\><C-n>"+pi]],
+    { noremap = true, silent = true }
+  )
 
   -- Indent / outdent.
   vim.keymap.set('n', '<D-[>', '<<')
@@ -206,6 +212,12 @@ elseif vimrc.context.os == 'linux' then
   -- vim.keymap.set('i', '<D-v>', '<C-r>+')
   vim.keymap.set('i', '<C-S-V>', '<C-o>"+p')
   vim.keymap.set('c', '<C-S-V>', '<C-r>+')
+  vim.keymap.set(
+    't',
+    '<C-S-V>',
+    [[<C-\><C-n>"+pi]],
+    { noremap = true, silent = true }
+  )
 
   -- Indent / outdent.
   -- vim.keymap.set('n', '<C-[>', '<<')
