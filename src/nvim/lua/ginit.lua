@@ -116,9 +116,8 @@ if vimrc.context.os == 'macos' then
   vim.keymap.set('x', '<D-c>', '"+y')
 
   -- Paste.
-  vim.keymap.set('n', '<D-v>', '"+p')
-  -- vim.keymap.set('i', '<D-v>', '<C-r>+')
-  vim.keymap.set('i', '<D-v>', '<C-o>"+P')
+  vim.keymap.set('n', '<D-v>', '"+gP')
+  vim.keymap.set('i', '<D-v>', [[<C-\><C-o>"+gP]])
   vim.keymap.set('c', '<D-v>', '<C-r>+')
   vim.keymap.set(
     't',
@@ -208,9 +207,8 @@ elseif vimrc.context.os == 'linux' then
   vim.keymap.set('x', '<C-c>', '"+y')
 
   -- Paste.
-  vim.keymap.set('n', '<C-S-V>', '"+p')
-  -- vim.keymap.set('i', '<D-v>', '<C-r>+')
-  vim.keymap.set('i', '<C-S-V>', '<C-o>"+P')
+  vim.keymap.set('n', '<C-S-V>', '"+gP')
+  vim.keymap.set('i', '<C-S-V>', [[<C-\><C-o>"+gP]])
   vim.keymap.set('c', '<C-S-V>', '<C-r>+')
   vim.keymap.set(
     't',
