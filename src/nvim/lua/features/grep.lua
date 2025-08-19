@@ -37,7 +37,7 @@ mod.setup = vimrc.make_setup(function(context)
 
         -- Useful for getting pretty icons, but requires a Nerd Font.
         -- { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
-        { 'MunifTanjim/nui.nvim' },
+        -- { 'MunifTanjim/nui.nvim' },
       },
       opts = function()
         -- Adapted from https://github.com/nvim-telescope/telescope.nvim/blob/5972437de807c3bc101565175da66a1aa4f8707a/lua/telescope/actions/set.lua#L127
