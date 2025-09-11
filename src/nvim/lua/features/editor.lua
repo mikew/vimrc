@@ -156,7 +156,7 @@ mod.setup = vimrc.make_setup(function(context)
     )
 
     -- Rulers.
-    vim.opt.colorcolumn = { 80, 120 }
+    vim.opt.colorcolumn = { 81, 121 }
 
     -- Remove `~`.
     vim.opt.fillchars = {

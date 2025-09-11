@@ -8,7 +8,7 @@ local client_lookups = {
 
 local function get_value_or_star(table, keys)
   for _, value in ipairs(keys) do
-    if table[value] then
+    if table[value] ~= nil then
       return table[value]
     end
   end
@@ -17,7 +17,7 @@ local function get_value_or_star(table, keys)
 end
 
 local font_name = get_value_or_star({
-  ['*'] = 'Iosevka Custom Slab Terminal',
+  ['*'] = 'Iosevka Custom Slab',
 }, client_lookups)
 
 local font_size = get_value_or_star({
@@ -26,7 +26,7 @@ local font_size = get_value_or_star({
 }, client_lookups)
 
 local linespace = get_value_or_star({
-  ['*'] = 1,
+  ['*'] = 0,
 }, client_lookups)
 
 if vimrc.context.ui == 'nvim-qt' then
