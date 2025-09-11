@@ -73,7 +73,9 @@ mod.setup = vimrc.make_setup(function(context)
           documentation = {
             auto_show = false,
             auto_show_delay_ms = 500,
-            border = symbols.border.nvim_style,
+            window = {
+              border = symbols.border.nvim_style,
+            },
           },
 
           list = {
