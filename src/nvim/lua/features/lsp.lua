@@ -48,7 +48,7 @@ mod.setup = vimrc.make_setup(function(context)
         local base_capabilities = vim.lsp.protocol.make_client_capabilities()
         if vimrc.has_feature('completion') then
           base_capabilities =
-            require('blink.cmp').get_lsp_capabilities(base_capabilities)
+            require('blink.cmp').get_lsp_capabilities(nil, true)
         end
 
         -- Enable the following language servers
@@ -60,6 +60,7 @@ mod.setup = vimrc.make_setup(function(context)
         -- - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
         -- - settings (table): Override the default settings passed when initializing the server.
         --       For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+        ---@type table<string, vim.lsp.Config>
         local servers = {
           -- clangd = {},
           -- gopls = {},
@@ -87,12 +88,9 @@ mod.setup = vimrc.make_setup(function(context)
 
           lua_ls = {
             on_attach = function(client)
-              client.server_capabilities.document_formatting = false
-              client.server_capabilities.document_range_formatting = false
+              client.server_capabilities.documentFormattingProvider = false
+              client.server_capabilities.documentRangeFormattingProvider = false
             end,
-            -- cmd = {...},
-            -- filetypes = { ...},
-            -- capabilities = {},
             -- settings = {
             --   Lua = {
             --     completion = {
@@ -168,32 +166,21 @@ mod.setup = vimrc.make_setup(function(context)
 
         require('mason-lspconfig').setup({
           ensure_installed = {},
-          automatic_installation = {},
-          handlers = {
-            function(server_name)
-              local server = servers[server_name] or {}
-
-              -- This handles overriding only values explicitly passed
-              -- by the server configuration above. Useful when disabling
-              -- certain features of an LSP (for example, turning off formatting for tsserver)
-              server.handlers = vim.tbl_deep_extend('force', {}, {
-                -- ['textDocument/signatureHelp'] = vim.lsp.with(
-                --   vim.lsp.handlers.signature_help,
-                --   { border = symbols.border.nvim_style }
-                -- ),
-              }, server.handlers or {})
-
-              server.capabilities = vim.tbl_deep_extend(
-                'force',
-                {},
-                base_capabilities,
-                server.capabilities or {}
-              )
-
-              require('lspconfig')[server_name].setup(server)
-            end,
-          },
+          automatic_enable = true,
         })
+
+        -- The following loop will configure each server with the capabilities we defined above.
+        -- This will ensure that all servers have the same base configuration, but also
+        -- allow for server-specific overrides.
+        for server_name, server_config in pairs(servers) do
+          server_config.capabilities = vim.tbl_deep_extend(
+            'force',
+            {},
+            base_capabilities,
+            server_config.capabilities or {}
+          )
+          vim.lsp.config(server_name, server_config)
+        end
 
         local null_ls = require('null-ls')
         null_ls.setup({
