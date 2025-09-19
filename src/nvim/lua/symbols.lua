@@ -44,7 +44,7 @@ local symbols = {
   },
 
   indent = {
-    line = '┊',
+    line = '│',
   },
 
   border = {

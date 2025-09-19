@@ -349,11 +349,6 @@ mod.setup = vimrc.make_setup(function()
       config = function(_, opts)
         local nvim_tree = require('nvim-tree')
         nvim_tree.setup(opts)
-
-        vim.api.nvim_set_hl(0, 'NvimTreeIndentMarker', {
-          link = 'IndentBlankLineChar',
-          force = true,
-        })
       end,
     },
 

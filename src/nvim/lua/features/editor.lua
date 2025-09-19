@@ -1,5 +1,6 @@
 local vimrc = require('vimrc')
 local symbols = require('symbols')
+local vimrc_colors = require('vimrc_colors')
 
 local mod = {}
 
@@ -234,7 +235,7 @@ mod.setup = vimrc.make_setup(function(context)
     }, {
       group = vimrc.create_augroup('dim_inactive_windows'),
       callback = function()
-        vim.o.winhighlight = 'NormalNC:BufferLineBackground'
+        vim.o.winhighlight = 'NormalNC:VimrcNormalNC'
       end,
     })
   end
@@ -355,12 +356,6 @@ mod.setup = vimrc.make_setup(function(context)
         char = symbols.indent.line,
       },
       config = function(_, opts)
-        vim.api.nvim_set_hl(0, 'IndentLine', {
-          link = 'IndentBlankLineChar',
-        })
-        vim.api.nvim_set_hl(0, 'IndentLineCurrent', {
-          link = 'IndentBlankLineContextChar',
-        })
         require('indentmini').setup(opts)
       end,
     },
@@ -372,27 +367,69 @@ mod.setup = vimrc.make_setup(function(context)
       config = function()
         vim.cmd('colorscheme base16-oceanicnext')
 
-        vim.api.nvim_set_hl(0, 'FloatBorder', {
-          link = 'IndentBlankLineChar',
-          force = true,
-        })
-        vim.api.nvim_set_hl(0, 'WinSeparator', {
-          link = 'IndentBlankLineChar',
-          force = true,
+        local function apply_additional_highlights()
+          local theme = {}
+
+          theme.background = vimrc_colors.get_hl_color('Normal', 'bg')
+            or '#000000'
+          theme.background_alt = vimrc_colors.darken(theme.background, 0.3)
+
+          theme.text_primary = vimrc_colors.get_hl_color('Normal', 'fg')
+            or '#ffffff'
+          theme.text_quiet1 =
+            vimrc_colors.mix(theme.text_primary, theme.background, 0.5)
+          theme.text_quiet2 =
+            vimrc_colors.mix(theme.text_primary, theme.background, 0.8)
+
+          vim.api.nvim_set_hl(0, 'VimrcNormalNC', {
+            fg = theme.text_quiet1,
+            bg = theme.background_alt,
+            force = true,
+          })
+          vim.api.nvim_set_hl(0, 'FloatBorder', {
+            fg = theme.text_quiet2,
+            force = true,
+          })
+          vim.api.nvim_set_hl(0, 'WinSeparator', {
+            fg = theme.text_quiet2,
+            force = true,
+          })
+
+          vim.api.nvim_set_hl(0, 'LineNr', {
+            link = 'CursorLineNr',
+            force = true,
+          })
+          vim.api.nvim_set_hl(0, 'FoldColumn', {
+            link = 'CursorLineNr',
+            force = true,
+          })
+          vim.api.nvim_set_hl(0, 'SignColumn', {
+            link = 'CursorLineNr',
+            force = true,
+          })
+
+          vim.api.nvim_set_hl(0, 'NvimTreeIndentMarker', {
+            fg = theme.text_quiet2,
+            force = true,
+          })
+
+          vim.api.nvim_set_hl(0, 'IndentLine', {
+            fg = theme.text_quiet2,
+            force = true,
+          })
+          vim.api.nvim_set_hl(0, 'IndentLineCurrent', {
+            fg = theme.text_quiet1,
+            force = true,
+          })
+        end
+
+        vim.api.nvim_create_autocmd({ 'ColorScheme' }, {
+          callback = function()
+            apply_additional_highlights()
+          end,
         })
 
-        vim.api.nvim_set_hl(0, 'LineNr', {
-          link = 'CursorLineNr',
-          force = true,
-        })
-        vim.api.nvim_set_hl(0, 'FoldColumn', {
-          link = 'CursorLineNr',
-          force = true,
-        })
-        vim.api.nvim_set_hl(0, 'SignColumn', {
-          link = 'CursorLineNr',
-          force = true,
-        })
+        apply_additional_highlights()
       end,
     },
     -- {
