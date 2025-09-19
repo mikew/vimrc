@@ -118,10 +118,17 @@ mod.setup = vimrc.make_setup(function(context)
         -- Shows a signature help window while you type arguments for a function
         signature = {
           enabled = true,
-          window = { border = 'single' },
+          window = { border = 'rounded' },
         },
 
         cmdline = {
+          -- On WSL2, blink.cmp may cause the editor to freeze due to a known limitation.
+          -- To address this issue, uncomment the following configuration:
+          -- enabled = function()
+          --   return vim.fn.getcmdtype() ~= ':'
+          --       or not vim.fn.getcmdline():match("^[%%0-9,'<>%-]*!")
+          -- end,
+
           keymap = {
             -- preset = 'inherit',
             -- ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },

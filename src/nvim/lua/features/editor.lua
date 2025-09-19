@@ -51,10 +51,15 @@ mod.setup = vimrc.make_setup(function(context)
 
     -- Hide inline diagnostics.
     vim.diagnostic.config({
-      virtual_text = false,
+      severity_sort = true,
+
       float = {
         border = symbols.border.nvim_style,
       },
+
+      virtual_text = false,
+      -- Display multiline diagnostics as virtual lines
+      -- virtual_lines = true,
     })
     vim.api.nvim_set_keymap(
       'n',
