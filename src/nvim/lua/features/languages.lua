@@ -76,8 +76,14 @@ mod.setup = vimrc.make_setup(function(context)
         }
         require('nvim-treesitter').install(parsers)
 
+        local all_fts = vim.list_extend({}, parsers)
+        all_fts = vim.list_extend(all_fts, {
+          'typescriptreact',
+          'javascriptreact',
+        })
+
         vim.api.nvim_create_autocmd('FileType', {
-          pattern = parsers,
+          pattern = all_fts,
           callback = function()
             -- Enables syntax highlighting and other treesitter features
             vim.treesitter.start()
