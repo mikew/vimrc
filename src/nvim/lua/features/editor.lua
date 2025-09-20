@@ -360,9 +360,6 @@ mod.setup = vimrc.make_setup(function(context)
       opts = {
         char = symbols.indent.line,
       },
-      config = function(_, opts)
-        require('indentmini').setup(opts)
-      end,
     },
 
     {
