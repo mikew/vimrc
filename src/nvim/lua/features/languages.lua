@@ -17,13 +17,12 @@ mod.setup = vimrc.make_setup(function(context)
     {
       'nvim-treesitter/nvim-treesitter',
       cond = not vim.g.vscode,
-      version = false,
-      build = ':TSUpdate',
-      main = 'nvim-treesitter.configs',
-      event = { 'VeryLazy' },
       -- load treesitter early when opening a file from the cmdline
       lazy = vim.fn.argc(-1) == 0,
-      cmd = { 'TSUpdateSync', 'TSUpdate', 'TSInstall' },
+      event = { 'VeryLazy' },
+      build = ':TSUpdate',
+      branch = 'main',
+
       opts = {
         highlight = {
           enable = true,
@@ -34,7 +33,17 @@ mod.setup = vimrc.make_setup(function(context)
           enable = true,
         },
 
-        ensure_installed = {
+        matchup = {
+          enable = true,
+        },
+
+        endwise = {
+          enable = true,
+        },
+      },
+
+      config = function(_, opts)
+        local parsers = {
           'bash',
           'c',
           'diff',
@@ -64,16 +73,30 @@ mod.setup = vimrc.make_setup(function(context)
           'vimdoc',
           'xml',
           'yaml',
-        },
+        }
+        require('nvim-treesitter').install(parsers)
 
-        matchup = {
-          enable = true,
-        },
+        local all_fts = vim.list_extend({}, parsers)
+        all_fts = vim.list_extend(all_fts, {
+          'typescriptreact',
+          'javascriptreact',
+        })
 
-        endwise = {
-          enable = true,
-        },
-      },
+        vim.api.nvim_create_autocmd('FileType', {
+          pattern = all_fts,
+          callback = function()
+            -- Enables syntax highlighting and other treesitter features
+            vim.treesitter.start()
+
+            -- Enables treesitter based folds
+            -- for more info on folds see `:help folds`
+            -- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+
+            -- enables treesitter based indentation
+            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end,
+        })
+      end,
     },
   }
 
