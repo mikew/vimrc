@@ -637,7 +637,7 @@ mod.setup = vimrc.make_setup(function(context)
                 return true
               end
 
-              if vim.list_contains(context.features, 'drawer') then
+              if vimrc.has_feature('drawer') then
                 local drawer = require('nvim-drawer')
 
                 if drawer.find_instance_for_winid(wininfo.winid) then
