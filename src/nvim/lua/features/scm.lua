@@ -2,6 +2,8 @@ local vimrc = require('vimrc')
 
 local mod = {}
 
+local map = vimrc.keymap
+
 mod.setup = vimrc.make_setup(function(context)
   --- @type VimrcFeature
   local feature = {
@@ -16,86 +18,45 @@ mod.setup = vimrc.make_setup(function(context)
         on_attach = function(bufnr)
           local gitsigns = require('gitsigns')
 
-          local function map(mode, l, r, opts)
-            opts = opts or {}
-            opts.buffer = bufnr
-            vim.keymap.set(mode, l, r, opts)
-          end
-
           -- Actions
           -- visual mode
-          map('v', '<leader>hs', function()
+          map('stage git hunk', '<leader>hs', 'v', function()
             gitsigns.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
-          end, { desc = 'stage git hunk' })
-          map('v', '<leader>hr', function()
+          end)
+          map('reset git hunk', '<leader>hr', 'v', function()
             gitsigns.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
-          end, { desc = 'reset git hunk' })
+          end)
 
           -- normal mode
+          map('git [s]tage hunk', '<leader>hs', 'n', gitsigns.stage_hunk)
+          map('git [r]eset hunk', '<leader>hr', 'n', gitsigns.reset_hunk)
+          map('git [S]tage buffer', '<leader>hS', 'n', gitsigns.stage_buffer)
           map(
-            'n',
-            '<leader>hs',
-            gitsigns.stage_hunk,
-            { desc = 'git [s]tage hunk' }
-          )
-          map(
-            'n',
-            '<leader>hr',
-            gitsigns.reset_hunk,
-            { desc = 'git [r]eset hunk' }
-          )
-          map(
-            'n',
-            '<leader>hS',
-            gitsigns.stage_buffer,
-            { desc = 'git [S]tage buffer' }
-          )
-          map(
-            'n',
+            'git [u]ndo stage hunk',
             '<leader>hu',
-            gitsigns.stage_hunk,
-            { desc = 'git [u]ndo stage hunk' }
-          )
-          map(
             'n',
-            '<leader>hR',
-            gitsigns.reset_buffer,
-            { desc = 'git [R]eset buffer' }
+            gitsigns.undo_stage_hunk
           )
-          map(
-            'n',
-            '<leader>hp',
-            gitsigns.preview_hunk,
-            { desc = 'git [p]review hunk' }
-          )
-          map(
-            'n',
-            '<leader>hb',
-            gitsigns.blame_line,
-            { desc = 'git [b]lame line' }
-          )
-          map(
-            'n',
-            '<leader>hd',
-            gitsigns.diffthis,
-            { desc = 'git [d]iff against index' }
-          )
-          map('n', '<leader>hD', function()
+          map('git [R]eset buffer', '<leader>hR', 'n', gitsigns.reset_buffer)
+          map('git [p]review hunk', '<leader>hp', 'n', gitsigns.preview_hunk)
+          map('git [b]lame line', '<leader>hb', 'n', gitsigns.blame_line)
+          map('git [d]iff against index', '<leader>hd', 'n', gitsigns.diffthis)
+          map('git [D]iff against last commit', '<leader>hD', 'n', function()
             gitsigns.diffthis('@')
-          end, { desc = 'git [D]iff against last commit' })
+          end)
 
           -- Toggles
           map(
-            'n',
+            '[T]oggle git show [b]lame line',
             '<leader>tb',
-            gitsigns.toggle_current_line_blame,
-            { desc = '[T]oggle git show [b]lame line' }
+            'n',
+            gitsigns.toggle_current_line_blame
           )
           map(
-            'n',
+            '[T]oggle git show [D]eleted',
             '<leader>tD',
-            gitsigns.preview_hunk_inline,
-            { desc = '[T]oggle git show [D]eleted' }
+            'n',
+            gitsigns.preview_hunk_inline
           )
         end,
       },
