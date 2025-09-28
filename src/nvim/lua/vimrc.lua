@@ -184,4 +184,18 @@ function mod.has_feature(name)
   return vim.list_contains(mod.context.features, name)
 end
 
+---@param desc string
+---@param lhs string
+---@param mode string|string[]
+---@param rhs string|function
+---@param opts? vim.keymap.set.Opts
+function mod.keymap(desc, lhs, mode, rhs, opts)
+  vim.keymap.set(
+    mode,
+    lhs,
+    rhs,
+    vim.tbl_extend('force', { desc = desc }, opts or {})
+  )
+end
+
 return mod

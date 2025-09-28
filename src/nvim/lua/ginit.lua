@@ -1,4 +1,5 @@
 local vimrc = require('vimrc')
+local map = vimrc.keymap
 
 local client_lookups = {
   vimrc.context.ui .. '/' .. vimrc.context.os,
@@ -44,184 +45,186 @@ end
 
 if vimrc.context.os == 'macos' then
   -- Save.
-  vim.keymap.set('n', '<D-s>', '<Cmd>w<CR>')
-  vim.keymap.set('i', '<D-s>', '<C-o><Cmd>w<CR>')
-  vim.keymap.set('x', '<D-s>', '<Esc><Cmd>w<CR>gv')
+  map('Save', '<D-s>', 'n', '<Cmd>w<CR>')
+  map('Save', '<D-s>', 'i', '<C-o><Cmd>w<CR>')
+  map('Save', '<D-s>', 'x', '<Esc><Cmd>w<CR>gv')
 
   -- Select All.
-  vim.keymap.set('n', '<D-a>', 'ggVG')
+  map('Select All', '<D-a>', 'n', 'ggVG')
   -- <Esc> is fine here because it's going to lose their cursor position
   -- anyways.
-  vim.keymap.set('i', '<D-a>', '<Esc>ggVG')
+  map('Select All', '<D-a>', 'i', '<Esc>ggVG')
 
   -- Undo.
-  vim.keymap.set('n', '<D-z>', 'u')
-  vim.keymap.set('i', '<D-z>', '<C-o>u')
+  map('Undo', '<D-z>', 'n', 'u')
+  map('Undo', '<D-z>', 'i', '<C-o>u')
 
   -- Redo.
-  vim.keymap.set('n', '<D-Z>', '<C-R>')
-  vim.keymap.set('i', '<D-Z>', '<C-o><C-R>')
+  map('Redo', '<D-Z>', 'n', '<C-R>')
+  map('Redo', '<D-Z>', 'i', '<C-o><C-R>')
 
   -- Command+Arrow movement.
-  vim.keymap.set('n', '<D-Left>', '^')
-  vim.keymap.set('i', '<D-Left>', '<Esc>I')
-  vim.keymap.set('n', '<D-Right>', '$')
-  vim.keymap.set('i', '<D-Right>', '<Esc>A')
-  vim.keymap.set('n', '<D-Up>', 'gg^')
-  vim.keymap.set('i', '<D-Up>', '<Esc>ggI')
-  vim.keymap.set('n', '<D-Down>', 'G$')
-  vim.keymap.set('i', '<D-Down>', '<Esc>G$a')
+  map('Go to beginning of line', '<D-Left>', 'n', '^')
+  map('Go to beginning of line', '<D-Left>', 'i', '<Esc>I')
+  map('Go to end of line', '<D-Right>', 'n', '$')
+  map('Go to end of line', '<D-Right>', 'i', '<Esc>A')
+  map('Go to beginning of file', '<D-Up>', 'n', 'gg^')
+  map('Go to beginning of file', '<D-Up>', 'i', '<Esc>ggI')
+  map('Go to end of file', '<D-Down>', 'n', 'G$')
+  map('Go to end of file', '<D-Down>', 'i', '<Esc>G$a')
 
   -- Alt+Arrow movement.
-  vim.keymap.set('n', '<M-Left>', 'b')
-  vim.keymap.set('i', '<M-Left>', '<C-o>b')
-  vim.keymap.set('n', '<M-Right>', 'w')
-  vim.keymap.set('i', '<M-Right>', '<C-o>w')
+  map('Move word backward', '<M-Left>', 'n', 'b')
+  map('Move word backward', '<M-Left>', 'i', '<C-o>b')
+  map('Move word forward', '<M-Right>', 'n', 'w')
+  map('Move word forward', '<M-Right>', 'i', '<C-o>w')
 
   -- New Tab.
-  vim.keymap.set('n', '<D-n>', '<Cmd>tabnew<CR>')
+  map('New tab', '<D-n>', 'n', '<Cmd>tabnew<CR>')
   -- Intentionally leave insert mode due to switching buffers.
-  vim.keymap.set('i', '<D-n>', '<Esc><Cmd>tabnew<CR>')
+  map('New tab', '<D-n>', 'i', '<Esc><Cmd>tabnew<CR>')
 
   -- Tab navigation.
-  vim.keymap.set('n', '<S-D-]>', '<Cmd>tabnext<CR>')
-  vim.keymap.set('n', '<D-}>', '<Cmd>tabnext<CR>')
+  map('Next tab', '<S-D-]>', 'n', '<Cmd>tabnext<CR>')
+  map('Next tab', '<D-}>', 'n', '<Cmd>tabnext<CR>')
   -- Intentionally leave insert mode due to switching buffers.
-  vim.keymap.set('i', '<S-D-]>', '<Esc><Cmd>tabnext<CR>')
-  vim.keymap.set('i', '<D-}>', '<Esc><Cmd>tabnext<CR>')
-  vim.keymap.set('n', '<S-D-[>', '<Cmd>tabprevious<CR>')
-  vim.keymap.set('n', '<D-{>', '<Cmd>tabprevious<CR>')
+  map('Next tab', '<S-D-]>', 'i', '<Esc><Cmd>tabnext<CR>')
+  map('Next tab', '<D-}>', 'i', '<Esc><Cmd>tabnext<CR>')
+  map('Previous tab', '<S-D-[>', 'n', '<Cmd>tabprevious<CR>')
+  map('Previous tab', '<D-{>', 'n', '<Cmd>tabprevious<CR>')
   -- Intentionally leave insert mode due to switching buffers.
-  vim.keymap.set('i', '<S-D-[>', '<Esc><Cmd>tabprevious<CR>')
-  vim.keymap.set('i', '<D-{>', '<Esc><Cmd>tabprevious<CR>')
+  map('Previous tab', '<S-D-[>', 'i', '<Esc><Cmd>tabprevious<CR>')
+  map('Previous tab', '<D-{>', 'i', '<Esc><Cmd>tabprevious<CR>')
 
   -- Close Tab.
-  vim.keymap.set('n', '<D-w>', '<Cmd>tabclose<CR>')
+  map('Close tab', '<D-w>', 'n', '<Cmd>tabclose<CR>')
   -- Intentionally leave insert mode due to switching buffers.
-  vim.keymap.set('i', '<D-w>', '<Esc><Cmd>tabclose<CR>')
+  map('Close tab', '<D-w>', 'i', '<Esc><Cmd>tabclose<CR>')
 
   -- Close Window.
-  vim.keymap.set('n', '<D-W>', '<Cmd>qa<CR>')
-  vim.keymap.set('i', '<D-W>', '<Esc><Cmd>qa<CR>')
+  map('Close window', '<D-W>', 'n', '<Cmd>qa<CR>')
+  map('Close window', '<D-W>', 'i', '<Esc><Cmd>qa<CR>')
 
   -- Close all but current.
   -- TODO Doesn't seem to work in nvim-qt, could be macos characters?
-  -- vim.keymap.set('n', '<M-D-w>', '<Cmd>tabonly<CR>')
-  -- vim.keymap.set('i', '<M-D-w>', '<C-o><Cmd>tabonly<CR>')
+  -- map('TODO', '<M-D-w>', 'n', '<Cmd>tabonly<CR>')
+  -- map('TODO', '<M-D-w>', 'i', '<C-o><Cmd>tabonly<CR>')
 
   -- Cut.
-  vim.keymap.set('x', '<D-x>', '"+x')
+  map('Cut', '<D-x>', 'x', '"+x')
 
   -- Copy.
-  vim.keymap.set('x', '<D-c>', '"+y')
+  map('Copy', '<D-c>', 'x', '"+y')
 
   -- Paste.
-  vim.keymap.set('n', '<D-v>', '"+gP')
-  vim.keymap.set('i', '<D-v>', [[<C-\><C-o>"+gP]])
-  vim.keymap.set('c', '<D-v>', '<C-r>+')
-  vim.keymap.set(
-    't',
+  map('Paste', '<D-v>', 'n', '"+gP')
+  map('Paste', '<D-v>', 'i', [[<C-\><C-o>"+gP]])
+  map('Paste', '<D-v>', 'c', '<C-r>+')
+  map(
+    'Paste',
     '<D-v>',
+    't',
     [[<C-\><C-n>"+pi]],
     { noremap = true, silent = true }
   )
 
   -- Indent / outdent.
-  vim.keymap.set('n', '<D-[>', '<<')
-  vim.keymap.set('n', '<D-]>', '>>')
-  vim.keymap.set('i', '<D-[>', '<C-o><<')
-  vim.keymap.set('i', '<D-]>', '<C-o>>>')
-  vim.keymap.set('v', '<D-[>', '<gv')
-  vim.keymap.set('v', '<D-]>', '>gv')
+  map('Outdent', '<D-[>', 'n', '<<')
+  map('Indent', '<D-]>', 'n', '>>')
+  map('Outdent', '<D-[>', 'i', '<C-o><<')
+  map('Indent', '<D-]>', 'i', '<C-o>>>')
+  map('Outdent', '<D-[>', 'v', '<gv')
+  map('Indent', '<D-]>', 'v', '>gv')
 elseif vimrc.context.os == 'linux' then
   -- Save.
-  vim.keymap.set('n', '<C-s>', '<Cmd>w<CR>')
-  vim.keymap.set('i', '<C-s>', '<C-o><Cmd>w<CR>')
-  vim.keymap.set('x', '<C-s>', '<Esc><Cmd>w<CR>gv')
+  map('Save', '<C-s>', 'n', '<Cmd>w<CR>')
+  map('Save', '<C-s>', 'i', '<C-o><Cmd>w<CR>')
+  map('Save', '<C-s>', 'x', '<Esc><Cmd>w<CR>gv')
 
   -- Select All.
-  vim.keymap.set('n', '<C-S-A>', 'ggVG')
+  map('Select all', '<C-S-A>', 'n', 'ggVG')
   -- <Esc> is fine here because it's going to lose their cursor position
   -- anyways.
-  vim.keymap.set('i', '<C-a>', '<Esc>ggVG')
+  map('Select all', '<C-a>', 'i', '<Esc>ggVG')
 
   -- Undo.
-  vim.keymap.set('n', '<C-z>', 'u')
-  vim.keymap.set('i', '<C-z>', '<C-o>u')
+  map('Undo', '<C-z>', 'n', 'u')
+  map('Undo', '<C-z>', 'i', '<C-o>u')
 
   -- Redo.
-  vim.keymap.set('n', '<C-Z>', '<C-R>')
-  vim.keymap.set('i', '<C-Z>', '<C-o><C-R>')
+  map('Redo', '<C-Z>', 'n', '<C-R>')
+  map('Redo', '<C-Z>', 'i', '<C-o><C-R>')
 
   -- Command+Arrow movement.
-  vim.keymap.set('n', '<C-S-Left>', '^')
-  vim.keymap.set('i', '<C-S-Left>', '<Esc>I')
-  vim.keymap.set('n', '<C-S-Right>', '$')
-  vim.keymap.set('i', '<C-S-Right>', '<Esc>A')
-  vim.keymap.set('n', '<C-S-Up>', 'gg^')
-  vim.keymap.set('i', '<C-S-Up>', '<Esc>ggI')
-  vim.keymap.set('n', '<C-S-Down>', 'G$')
-  vim.keymap.set('i', '<C-S-Down>', '<Esc>G$a')
+  map('Go to beginning of line', '<C-S-Left>', 'n', '^')
+  map('Go to beginning of line', '<C-S-Left>', 'i', '<Esc>I')
+  map('Go to end of line', '<C-S-Right>', 'n', '$')
+  map('Go to end of line', '<C-S-Right>', 'i', '<Esc>A')
+  map('Go to beginning of file', '<C-S-Up>', 'n', 'gg^')
+  map('Go to beginning of file', '<C-S-Up>', 'i', '<Esc>ggI')
+  map('Go to end of file', '<C-S-Down>', 'n', 'G$')
+  map('Go to end of file', '<C-S-Down>', 'i', '<Esc>G$a')
 
   -- Alt+Arrow movement.
-  vim.keymap.set('n', '<M-Left>', 'b')
-  vim.keymap.set('i', '<M-Left>', '<C-o>b')
-  vim.keymap.set('n', '<M-Right>', 'w')
-  vim.keymap.set('i', '<M-Right>', '<C-o>w')
+  map('Move word backward', '<M-Left>', 'n', 'b')
+  map('Move word backward', '<M-Left>', 'i', '<C-o>b')
+  map('Move word forward', '<M-Right>', 'n', 'w')
+  map('Move word forward', '<M-Right>', 'i', '<C-o>w')
 
   -- New Tab.
-  vim.keymap.set('n', '<C-S-N>', '<Cmd>tabnew<CR>')
+  map('New tab', '<C-S-N>', 'n', '<Cmd>tabnew<CR>')
   -- Intentionally leave insert mode due to switching buffers.
-  vim.keymap.set('i', '<C-S-N>', '<Esc><Cmd>tabnew<CR>')
+  map('New tab', '<C-S-N>', 'i', '<Esc><Cmd>tabnew<CR>')
 
   -- Tab navigation.
-  vim.keymap.set('n', '<C-S-]>', '<Cmd>tabnext<CR>')
-  vim.keymap.set('n', '<C-}>', '<Cmd>tabnext<CR>')
+  map('Next tab', '<C-S-]>', 'n', '<Cmd>tabnext<CR>')
+  map('Next tab', '<C-}>', 'n', '<Cmd>tabnext<CR>')
   -- Intentionally leave insert mode due to switching buffers.
-  vim.keymap.set('i', '<C-S-]>', '<Esc><Cmd>tabnext<CR>')
-  vim.keymap.set('i', '<C-}>', '<Esc><Cmd>tabnext<CR>')
-  vim.keymap.set('n', '<C-S-[>', '<Cmd>tabprevious<CR>')
-  vim.keymap.set('n', '<C-{>', '<Cmd>tabprevious<CR>')
+  map('Next tab', '<C-S-]>', 'i', '<Esc><Cmd>tabnext<CR>')
+  map('Next tab', '<C-}>', 'i', '<Esc><Cmd>tabnext<CR>')
+  map('Previous tab', '<C-S-[>', 'n', '<Cmd>tabprevious<CR>')
+  map('Previous tab', '<C-{>', 'n', '<Cmd>tabprevious<CR>')
   -- Intentionally leave insert mode due to switching buffers.
-  vim.keymap.set('i', '<C-S-[>', '<Esc><Cmd>tabprevious<CR>')
-  vim.keymap.set('i', '<C-{>', '<Esc><Cmd>tabprevious<CR>')
+  map('Previous tab', '<C-S-[>', 'i', '<Esc><Cmd>tabprevious<CR>')
+  map('Previous tab', '<C-{>', 'i', '<Esc><Cmd>tabprevious<CR>')
 
   -- Close Tab.
-  -- vim.keymap.set('n', '<D-w>', '<Cmd>tabclose<CR>')
+  -- map('Close tab', '<D-w>', 'n', '<Cmd>tabclose<CR>')
   -- Intentionally leave insert mode due to switching buffers.
-  -- vim.keymap.set('i', '<D-w>', '<Esc><Cmd>tabclose<CR>')
+  -- map('Close tab', '<D-w>', 'i', '<Esc><Cmd>tabclose<CR>')
 
   -- Close Window.
-  vim.keymap.set('n', '<C-S-W>', '<Cmd>qa<CR>')
-  vim.keymap.set('i', '<C-S-W>', '<Esc><Cmd>qa<CR>')
+  map('Close window', '<C-S-W>', 'n', '<Cmd>qa<CR>')
+  map('Close window', '<C-S-W>', 'i', '<Esc><Cmd>qa<CR>')
 
   -- Close all but current.
   -- TODO Doesn't seem to work in nvim-qt, could be macos characters?
-  vim.keymap.set('n', '<M-C-W>', '<Cmd>tabonly<CR>')
-  vim.keymap.set('i', '<M-C-W>', '<C-o><Cmd>tabonly<CR>')
+  map('Close other tabs', '<M-C-W>', 'n', '<Cmd>tabonly<CR>')
+  map('Close other tabs', '<M-C-W>', 'i', '<C-o><Cmd>tabonly<CR>')
 
   -- Cut.
-  vim.keymap.set('x', '<C-x>', '"+x')
+  map('Cut', '<C-x>', 'x', '"+x')
 
   -- Copy.
-  vim.keymap.set('x', '<C-c>', '"+y')
+  map('Copy', '<C-c>', 'x', '"+y')
 
   -- Paste.
-  vim.keymap.set('n', '<C-S-V>', '"+gP')
-  vim.keymap.set('i', '<C-S-V>', [[<C-\><C-o>"+gP]])
-  vim.keymap.set('c', '<C-S-V>', '<C-r>+')
-  vim.keymap.set(
-    't',
+  map('Paste', '<C-S-V>', 'n', '"+gP')
+  map('Paste', '<C-S-V>', 'i', [[<C-\><C-o>"+gP]])
+  map('Paste', '<C-S-V>', 'c', '<C-r>+')
+  map(
+    'Paste',
     '<C-S-V>',
+    't',
     [[<C-\><C-n>"+pi]],
     { noremap = true, silent = true }
   )
 
   -- Indent / outdent.
-  -- vim.keymap.set('n', '<C-[>', '<<')
-  -- vim.keymap.set('n', '<C-]>', '>>')
-  -- vim.keymap.set('i', '<C-[>', '<C-o><<')
-  -- vim.keymap.set('i', '<C-]>', '<C-o>>>')
-  -- vim.keymap.set('v', '<C-[>', '<gv')
-  -- vim.keymap.set('v', '<C-]>', '>gv')
+  -- map('TODO', '<C-[>', 'n', '<<')
+  -- map('TODO', '<C-]>', 'n', '>>')
+  -- map('TODO', '<C-[>', 'i', '<C-o><<')
+  -- map('TODO', '<C-]>', 'i', '<C-o>>>')
+  -- map('TODO', '<C-[>', 'v', '<gv')
+  -- map('TODO', '<C-]>', 'v', '>gv')
 end

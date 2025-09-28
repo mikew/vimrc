@@ -1,5 +1,6 @@
 local vimrc = require('vimrc')
 local symbols = require('symbols')
+local map = vimrc.keymap
 
 local mod = {}
 
@@ -42,7 +43,7 @@ mod.setup = vimrc.make_setup(function()
             -- })
 
             --- Example mapping to toggle.
-            vim.keymap.set('n', '<leader>e', function()
+            map('Toggle file explorer', '<leader>e', 'n', function()
               event.instance.focus_or_toggle()
             end)
           end,
@@ -101,22 +102,19 @@ mod.setup = vimrc.make_setup(function()
             -- <leader>tt: go to the next terminal.
             -- <leader>tT: go to the previous terminal.
             -- <leader>tz: zoom the terminal.
-            vim.keymap.set('n', '<C-`>', function()
+            map('Focus or toggle terminal', '<C-`>', { 'n', 't' }, function()
               event.instance.focus_or_toggle()
             end)
-            vim.keymap.set('t', '<C-`>', function()
-              event.instance.focus_or_toggle()
-            end)
-            vim.keymap.set('n', '<leader>tn', function()
+            map('Open new terminal', '<leader>tn', 'n', function()
               event.instance.open({ mode = 'new' })
             end)
-            vim.keymap.set('n', '<leader>tt', function()
+            map('Go to next terminal', '<leader>tt', 'n', function()
               event.instance.go(1)
             end)
-            vim.keymap.set('n', '<leader>tT', function()
+            map('Go to previous terminal', '<leader>tT', 'n', function()
               event.instance.go(-1)
             end)
-            vim.keymap.set('n', '<leader>tz', function()
+            map('Toggle terminal zoom', '<leader>tz', 'n', function()
               event.instance.toggle_zoom()
             end)
           end,
@@ -131,6 +129,7 @@ mod.setup = vimrc.make_setup(function()
             vim.opt_local.number = false
             vim.opt_local.signcolumn = 'no'
             vim.opt_local.statuscolumn = ''
+            vim.opt_local.foldcolumn = '0'
           end,
 
           -- Scroll to the end when changing tabs.
@@ -158,10 +157,10 @@ mod.setup = vimrc.make_setup(function()
           end,
 
           on_vim_enter = function(event)
-            vim.keymap.set('n', '<leader>nn', function()
+            map('Toggle notes', '<leader>nn', 'n', function()
               event.instance.focus_or_toggle()
             end)
-            vim.keymap.set('n', '<leader>nz', function()
+            map('Toggle notes zoom', '<leader>nz', 'n', function()
               event.instance.toggle_zoom()
             end)
           end,
@@ -180,7 +179,7 @@ mod.setup = vimrc.make_setup(function()
           end,
 
           on_vim_enter = function(event)
-            vim.keymap.set('n', '<leader>S', function()
+            map('Toggle search and replace', '<leader>S', 'n', function()
               -- If the drawer has never been opened, call spectre. Once its
               -- window opens, it will be claimed by the drawer, and we can use
               -- the drawer API afterwards.
@@ -229,33 +228,37 @@ mod.setup = vimrc.make_setup(function()
             vimrc.go_to_file_or_open(filename)
           end
 
-          local function opts(desc)
-            return {
-              desc = 'nvim-tree: ' .. desc,
-              buffer = bufnr,
-              noremap = true,
-              silent = true,
-              nowait = true,
-            }
-          end
-
           api.config.mappings.default_on_attach(bufnr)
 
-          vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open: Tab'))
-          vim.keymap.set(
+          map(
+            'nvim-tree: Open: Tab',
+            '<CR>',
             'n',
-            '<2-LeftMouse>',
             api.node.open.edit,
-            opts('Open: Tab')
+            { buffer = bufnr, noremap = true, silent = true, nowait = true }
+          )
+          map(
+            'nvim-tree: Open: Tab',
+            '<2-LeftMouse>',
+            'n',
+            api.node.open.edit,
+            { buffer = bufnr, noremap = true, silent = true, nowait = true }
           )
           -- vim.keymap.set('n', '<C-CR>', api.node.open.edit, opts('Open'))
-          vim.keymap.set(
-            'n',
+          map(
+            'nvim-tree: Open: Vertical Split',
             '<S-CR>',
+            'n',
             api.node.open.vertical,
-            opts('Open: Vertical Split')
+            { buffer = bufnr, noremap = true, silent = true, nowait = true }
           )
-          vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
+          map(
+            'nvim-tree: Help',
+            '?',
+            'n',
+            api.tree.toggle_help,
+            { buffer = bufnr, noremap = true, silent = true, nowait = true }
+          )
         end,
 
         hijack_netrw = false,

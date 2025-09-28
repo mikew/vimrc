@@ -3,6 +3,7 @@ local symbols = require('symbols')
 local vimrc_colors = require('vimrc_colors')
 
 local mod = {}
+local map = vimrc.keymap
 
 mod.setup = vimrc.make_setup(function(context)
   -- Set <space> as the leader key
@@ -10,7 +11,7 @@ mod.setup = vimrc.make_setup(function(context)
   --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be
   --  used)
   --  Space as leader needs to be nooped before it will work.
-  vim.keymap.set('n', ' ', '<Nop>', { silent = true, remap = false })
+  map('Prepare leader', ' ', 'n', '<Nop>', { silent = true, remap = false })
   vim.g.mapleader = ' '
   vim.g.maplocalleader = ' '
 
@@ -31,11 +32,11 @@ mod.setup = vimrc.make_setup(function(context)
   vim.opt.foldmarker = '#region,#endregion'
 
   -- Indent / outdent.
-  vim.keymap.set('v', '<', '<gv')
-  vim.keymap.set('v', '>', '>gv')
+  map('Indent and reselect', '<', 'v', '<gv')
+  map('Outdent and reselect', '>', 'v', '>gv')
 
   -- New line.
-  vim.keymap.set('i', '<D-CR>', '<C-o>o')
+  map('Insert new line below', '<D-CR>', 'i', '<C-o>o')
 
   if not vim.g.vscode then
     vim.opt.shiftwidth = 2
@@ -61,9 +62,10 @@ mod.setup = vimrc.make_setup(function(context)
       -- Display multiline diagnostics as virtual lines
       -- virtual_lines = true,
     })
-    vim.api.nvim_set_keymap(
-      'n',
+    map(
+      'Open diagnostic float',
       '<Leader>d',
+      'n',
       ':lua vim.diagnostic.open_float()<CR>',
       { noremap = true, silent = true }
     )
@@ -136,30 +138,10 @@ mod.setup = vimrc.make_setup(function(context)
     -- Keybinds to make split navigation easier.
     -- Use CTRL+<hjkl> to switch between windows
     -- See `:help wincmd` for a list of all window commands
-    vim.keymap.set(
-      'n',
-      '<C-h>',
-      '<C-w><C-h>',
-      { desc = 'Move focus to the left window' }
-    )
-    vim.keymap.set(
-      'n',
-      '<C-l>',
-      '<C-w><C-l>',
-      { desc = 'Move focus to the right window' }
-    )
-    vim.keymap.set(
-      'n',
-      '<C-j>',
-      '<C-w><C-j>',
-      { desc = 'Move focus to the lower window' }
-    )
-    vim.keymap.set(
-      'n',
-      '<C-k>',
-      '<C-w><C-k>',
-      { desc = 'Move focus to the upper window' }
-    )
+    map('Move focus to the left window', '<C-h>', 'n', '<C-w><C-h>')
+    map('Move focus to the right window', '<C-l>', 'n', '<C-w><C-l>')
+    map('Move focus to the lower window', '<C-j>', 'n', '<C-w><C-j>')
+    map('Move focus to the upper window', '<C-k>', 'n', '<C-w><C-k>')
 
     -- Rulers.
     vim.opt.colorcolumn = { 81, 121 }
@@ -218,9 +200,9 @@ mod.setup = vimrc.make_setup(function(context)
 
     -- Terminal annoyances.
     -- https://github.com/neovim/neovim/issues/24093
-    vim.keymap.set('t', '<S-Enter>', '<Enter>', { desc = 'Insert enter' })
-    vim.keymap.set('t', '<S-Space>', '<Space>', { desc = 'Insert space' })
-    vim.keymap.set('t', '<S-BS>', '<BS>', { desc = 'Insert backspace' })
+    map('Insert enter', '<S-Enter>', 't', '<Enter>')
+    map('Insert space', '<S-Space>', 't', '<Space>')
+    map('Insert backspace', '<S-BS>', 't', '<BS>')
     vim.api.nvim_create_autocmd({
       -- 'TermOpen',
       'WinEnter',
@@ -230,7 +212,13 @@ mod.setup = vimrc.make_setup(function(context)
       { pattern = 'term://*', command = 'stopinsert' }
     )
     -- TODO Need to find a better combo as this delays Esc key presses.
-    vim.keymap.set('t', '<Esc><Esc>', [[<C-\><C-n>]], { noremap = true })
+    map(
+      'Exit terminal mode',
+      '<Esc><Esc>',
+      't',
+      [[<C-\><C-n>]],
+      { noremap = true }
+    )
 
     -- Dim inactive windows.
     vim.api.nvim_create_autocmd({
@@ -254,6 +242,29 @@ mod.setup = vimrc.make_setup(function(context)
     {
       'equalsraf/neovim-gui-shim',
       cond = context.ui == 'nvim-qt',
+    },
+
+    -- Snacks is entirely too many things, split up across multiple features in
+    -- this repo. This initial bit just makes sure we don't enable any feature.
+    {
+      'folke/snacks.nvim',
+      priority = 1000,
+      lazy = false,
+      ---@type snacks.Config
+      opts = {
+        bigfile = { enabled = false },
+        dashboard = { enabled = false },
+        explorer = { enabled = false },
+        indent = { enabled = false },
+        input = { enabled = false },
+        notifier = { enabled = false },
+        picker = { enabled = false },
+        quickfile = { enabled = false },
+        scope = { enabled = false },
+        scroll = { enabled = false },
+        statuscolumn = { enabled = false },
+        words = { enabled = false },
+      },
     },
 
     {
@@ -524,18 +535,21 @@ mod.setup = vimrc.make_setup(function(context)
             'dapui_stacks',
             'dapui_breakpoints',
             'dapui_scopes',
+            -- 'snacks_picker_list',
+            -- 'snacks_picker_preview',
           },
         }
       end,
       config = function(_, opts)
         require('statuscol').setup(opts)
 
-        vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+        vim.api.nvim_create_autocmd('BufWinEnter', {
           callback = function()
             if vim.tbl_contains(opts.ft_ignore, vim.bo.filetype) then
               vim.opt_local.statuscolumn = ''
               vim.opt_local.signcolumn = 'no'
               vim.opt_local.number = false
+              vim.opt_local.foldcolumn = '0'
             end
           end,
         })
@@ -637,7 +651,7 @@ mod.setup = vimrc.make_setup(function(context)
                 return true
               end
 
-              if vim.list_contains(context.features, 'drawer') then
+              if vimrc.has_feature('drawer') then
                 local drawer = require('nvim-drawer')
 
                 if drawer.find_instance_for_winid(wininfo.winid) then
