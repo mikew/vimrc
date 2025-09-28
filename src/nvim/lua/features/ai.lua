@@ -15,6 +15,8 @@ mod.setup = vimrc.make_setup(function(context)
     --   cond = not vim.g.vscode,
     --   init = function()
     --     vim.g.copilot_no_tab_map = true
+    --     vim.g.copilot_node_command =
+    --       '~/.local/share/mise/installs/node/latest/bin/node'
     --     vim.keymap.set('i', '<C-CR>', 'copilot#Accept("")', {
     --       expr = true,
     --       replace_keycodes = false,

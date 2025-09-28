@@ -256,6 +256,29 @@ mod.setup = vimrc.make_setup(function(context)
       cond = context.ui == 'nvim-qt',
     },
 
+    -- Snacks is entirely too many things, split up across multiple features in
+    -- this repo. This initial bit just makes sure we don't enable any feature.
+    {
+      'folke/snacks.nvim',
+      priority = 1000,
+      lazy = false,
+      ---@type snacks.Config
+      opts = {
+        bigfile = { enabled = false },
+        dashboard = { enabled = false },
+        explorer = { enabled = false },
+        indent = { enabled = false },
+        input = { enabled = false },
+        notifier = { enabled = false },
+        picker = { enabled = false },
+        quickfile = { enabled = false },
+        scope = { enabled = false },
+        scroll = { enabled = false },
+        statuscolumn = { enabled = false },
+        words = { enabled = false },
+      },
+    },
+
     {
       'kylechui/nvim-surround',
       -- Use for stability; omit to use `main` branch for the latest features
@@ -524,18 +547,21 @@ mod.setup = vimrc.make_setup(function(context)
             'dapui_stacks',
             'dapui_breakpoints',
             'dapui_scopes',
+            -- 'snacks_picker_list',
+            -- 'snacks_picker_preview',
           },
         }
       end,
       config = function(_, opts)
         require('statuscol').setup(opts)
 
-        vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+        vim.api.nvim_create_autocmd('BufWinEnter', {
           callback = function()
             if vim.tbl_contains(opts.ft_ignore, vim.bo.filetype) then
               vim.opt_local.statuscolumn = ''
               vim.opt_local.signcolumn = 'no'
               vim.opt_local.number = false
+              vim.opt_local.foldcolumn = '0'
             end
           end,
         })

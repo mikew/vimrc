@@ -3,6 +3,8 @@ local symbols = require('symbols')
 
 local mod = {}
 
+local map = vimrc.keymap
+
 mod.setup = vimrc.make_setup(function(context)
   local diagnostic_symbols = {
     Hint = symbols.diagnostics.hint,
@@ -214,76 +216,59 @@ mod.setup = vimrc.make_setup(function(context)
               return
             end
 
-            --- @param keys string
-            --- @param func function
-            --- @param desc string
-            --- @param mode? string
-            local map = function(keys, func, desc, mode)
-              mode = mode or 'n'
-
-              vim.keymap.set(
-                mode,
-                keys,
-                func,
-                { buffer = event.buf, desc = 'LSP: ' .. desc }
-              )
-            end
-
             if vimrc.has_feature('grep') then
               -- Jump to the definition of the word under your cursor.
               -- This is where a variable was first declared, or where a function is defined, etc.
               -- To jump back, press <C-t>.
-              map('gd', function(...)
-                require('telescope.builtin').lsp_definitions(...)
-              end, '[G]oto [D]efinition')
+              map('Goto Definition', 'gd', 'n', function(...)
+                Snacks.picker.lsp_definitions()
+              end)
 
               -- Find references for the word under your cursor.
-              map('gr', function(...)
-                require('telescope.builtin').lsp_references(...)
-              end, '[G]oto [R]eferences')
+              map('Goto References', 'gr', 'n', function(...)
+                Snacks.picker.lsp_references()
+              end)
 
               -- Jump to the implementation of the word under your cursor.
               -- Useful when your language has ways of declaring types without an actual implementation.
-              map('gI', function(...)
-                require('telescope.builtin').lsp_implementations(...)
-              end, '[G]oto [I]mplementation')
+              map('Goto Implementation', 'gI', 'n', function(...)
+                Snacks.picker.lsp_implementations()
+              end)
 
               -- Jump to the type of the word under your cursor.
               -- Useful when you're not sure what type a variable is and you want to see
               -- the definition of its *type*, not where it was *defined*.
-              map('<leader>D', function(...)
-                require('telescope.builtin').lsp_type_definitions(...)
-              end, 'Type [D]efinition')
+              map('Type Definition', '<leader>D', 'n', function(...)
+                Snacks.picker.lsp_type_definitions()
+              end)
 
               -- Fuzzy find all the symbols in your current document.
               -- Symbols are things like variables, functions, types, etc.
-              map('<leader>ds', function(...)
-                require('telescope.builtin').lsp_document_symbols(...)
-              end, '[D]ocument [S]ymbols')
+              map('Document Symbols', '<leader>ds', 'n', function(...)
+                Snacks.picker.lsp_symbols()
+              end)
 
               -- Fuzzy find all the symbols in your current workspace.
               -- Similar to document symbols, except searches over your entire project.
-              map('<leader>ws', function(...)
-                require('telescope.builtin').lsp_dynamic_workspace_symbols(...)
-              end, '[W]orkspace [S]ymbols')
+              map('Workspace Symbols', '<leader>ws', 'n', function(...)
+                Snacks.picker.lsp_workspace_symbols()
+              end)
             end
 
             -- Rename the variable under your cursor.
             -- Most Language Servers support renaming across files, etc.
-            map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-            map('<F2>', vim.lsp.buf.rename, '[R]e[n]ame')
+            map('Rename', '<leader>rn', 'n', vim.lsp.buf.rename)
+            map('Rename', '<F2>', 'n', vim.lsp.buf.rename)
 
             -- Execute a code action, usually your cursor needs to be on top of an error
             -- or a suggestion from your LSP for this to activate.
-            map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-            map('<D-.>', vim.lsp.buf.code_action, '[C]ode [A]ction')
-            map('<D-.>', vim.lsp.buf.code_action, '[C]ode [A]ction', 'i')
-            map('<C-.>', vim.lsp.buf.code_action, '[C]ode [A]ction')
-            map('<C-.>', vim.lsp.buf.code_action, '[C]ode [A]ction', 'i')
+            map('Code Action', '<leader>ca', 'n', vim.lsp.buf.code_action)
+            map('Code Action', '<D-.>', { 'n', 'i' }, vim.lsp.buf.code_action)
+            map('Code Action', '<C-.>', { 'n', 'i' }, vim.lsp.buf.code_action)
 
             -- WARN: This is not Goto Definition, this is Goto Declaration.
             --  For example, in C this would take you to the header.
-            map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+            map('Goto Declaration', 'gD', 'n', vim.lsp.buf.declaration)
 
             -- The following two autocommands are used to highlight references of the
             -- word under your cursor when your cursor rests there for a little while.
@@ -335,11 +320,11 @@ mod.setup = vimrc.make_setup(function(context)
                 vim.lsp.protocol.Methods.textDocument_inlayHint
               )
             then
-              map('<leader>th', function()
+              map('Toggle Inlay Hints', '<leader>th', 'n', function()
                 vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({
                   bufnr = event.buf,
                 }))
-              end, '[T]oggle Inlay [H]ints')
+              end)
             end
           end,
         })
