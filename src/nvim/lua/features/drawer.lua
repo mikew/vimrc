@@ -228,16 +228,6 @@ mod.setup = vimrc.make_setup(function()
             vimrc.go_to_file_or_open(filename)
           end
 
-          local function opts(desc)
-            return {
-              desc = 'nvim-tree: ' .. desc,
-              buffer = bufnr,
-              noremap = true,
-              silent = true,
-              nowait = true,
-            }
-          end
-
           api.config.mappings.default_on_attach(bufnr)
 
           map(
