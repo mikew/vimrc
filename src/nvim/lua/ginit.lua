@@ -120,7 +120,13 @@ if vimrc.context.os == 'macos' then
   map('Paste', '<D-v>', 'n', '"+gP')
   map('Paste', '<D-v>', 'i', [[<C-\><C-o>"+gP]])
   map('Paste', '<D-v>', 'c', '<C-r>+')
-  map('Paste', '<D-v>', 't', [[<C-\><C-n>"+pi]], { noremap = true, silent = true })
+  map(
+    'Paste',
+    '<D-v>',
+    't',
+    [[<C-\><C-n>"+pi]],
+    { noremap = true, silent = true }
+  )
 
   -- Indent / outdent.
   map('Outdent', '<D-[>', 'n', '<<')
@@ -206,7 +212,13 @@ elseif vimrc.context.os == 'linux' then
   map('Paste', '<C-S-V>', 'n', '"+gP')
   map('Paste', '<C-S-V>', 'i', [[<C-\><C-o>"+gP]])
   map('Paste', '<C-S-V>', 'c', '<C-r>+')
-  map('Paste', '<C-S-V>', 't', [[<C-\><C-n>"+pi]], { noremap = true, silent = true })
+  map(
+    'Paste',
+    '<C-S-V>',
+    't',
+    [[<C-\><C-n>"+pi]],
+    { noremap = true, silent = true }
+  )
 
   -- Indent / outdent.
   -- map('TODO', '<C-[>', 'n', '<<')
