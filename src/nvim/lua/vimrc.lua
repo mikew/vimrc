@@ -122,6 +122,7 @@ function mod.go_to_file_or_open(path, pos)
     if pos and pos[1] and pos[2] then
       vim.schedule(function()
         vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] })
+        vim.cmd('norm! zzzv')
       end)
     end
   end
