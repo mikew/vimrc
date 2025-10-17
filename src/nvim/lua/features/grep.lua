@@ -260,6 +260,17 @@ mod.setup = vimrc.make_setup(function(context)
             history_bonus = true,
           },
 
+          sources = {
+            git_grep = {
+              ignorecase = true,
+            },
+          },
+
+          jump = {
+            reuse_win = true, -- reuse an existing window if the buffer is already open
+            match = true, -- jump to the first match position. (useful for `lines`)
+          },
+
           win = {
             input = {
               keys = {
@@ -296,6 +307,7 @@ mod.setup = vimrc.make_setup(function(context)
         },
       },
       config = function(_, opts)
+        require('picker_patches')
         local snacks = require('snacks')
         snacks.setup(opts)
 
