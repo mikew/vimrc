@@ -71,7 +71,7 @@ function mod.determine_os()
     return force_os
   end
 
-  local os = vim.loop.os_uname().sysname
+  local os = vim.uv.os_uname().sysname
 
   if os == 'Linux' then
     return 'linux'
