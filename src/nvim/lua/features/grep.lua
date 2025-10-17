@@ -312,26 +312,26 @@ mod.setup = vimrc.make_setup(function(context)
         snacks.setup(opts)
 
         map('Find Files', '<C-p>', { 'n', 'i', 't' }, function()
-          snacks.picker.git_files()
+          snacks.picker.git_files({ untracked = true })
         end)
         if context.has_gui_running then
           if context.os == 'macos' then
             map('Find Files', '<D-t>', { 'n', 'i', 't' }, function()
-              snacks.picker.git_files()
+              snacks.picker.git_files({ untracked = true })
             end)
             map('Find Files', '<D-p>', { 'n', 'i', 't' }, function()
-              snacks.picker.git_files()
+              snacks.picker.git_files({ untracked = true })
             end)
           end
         end
 
         map('Search by Grep', '<C-S-F>', { 'n', 'i', 't' }, function()
-          snacks.picker.git_grep()
+          snacks.picker.git_grep({ untracked = true })
         end)
         if context.has_gui_running then
           if context.os == 'macos' then
             map('Search by Grep', '<D-F>', { 'n', 'i', 't' }, function()
-              snacks.picker.git_grep()
+              snacks.picker.git_grep({ untracked = true })
             end)
           end
         end
