@@ -19,6 +19,14 @@ mod.setup = vimrc.make_setup(function(context)
           enabled = true,
           ui_select = false,
 
+          on_show = function(picker)
+            -- Fix when launching a picker from terminal.
+            -- https://github.com/folke/snacks.nvim/discussions/2164#discussioncomment-14278259
+            vim.schedule(function()
+              vim.cmd('startinsert')
+            end)
+          end,
+
           matcher = {
             sort_empty = true,
             frecency = true,
