@@ -104,6 +104,38 @@ mod.setup = vimrc.make_setup(function(context)
             -- },
           },
 
+          tscgo = {
+            on_attach = function(client)
+              client.server_capabilities.documentFormattingProvider = false
+              client.server_capabilities.documentRangeFormattingProvider = false
+            end,
+            cmd = {
+              vim.fn.expand(
+                '~/.local/share/mise/installs/node/latest/bin/node'
+              ),
+              vim.fn.expand(
+                '~/.local/share/mise/installs/node/latest/lib/node_modules/@typescript/native-preview/bin/tsgo.js'
+              ),
+              '--lsp',
+              '-stdio',
+            },
+            filetypes = {
+              'javascript',
+              'javascriptreact',
+              'javascript.jsx',
+              'typescript',
+              'typescriptreact',
+              'typescript.tsx',
+            },
+            root_markers = {
+              'tsconfig.json',
+              'jsconfig.json',
+              'package.json',
+              '.git',
+              'tsconfig.base.json',
+            },
+          },
+
           eslint = {
             filetypes = {
               'javascript',

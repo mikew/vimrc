@@ -71,7 +71,7 @@ function mod.determine_os()
     return force_os
   end
 
-  local os = vim.loop.os_uname().sysname
+  local os = vim.uv.os_uname().sysname
 
   if os == 'Linux' then
     return 'linux'
@@ -94,11 +94,15 @@ function mod.get_window_info_for_file(path)
 
   for _, winid in ipairs(vim.api.nvim_list_wins()) do
     local bufnr = vim.api.nvim_win_get_buf(winid)
-    -- Intentionally use `bufname` instead of `nvim_buf_get_name` because
-    -- because the latter always returns a full path.
-    local bufname = vim.fn.bufname(bufnr)
+    local bufname_with_cwd = vim.api.nvim_buf_get_name(bufnr)
+    local bufname = vim.fn.fnamemodify(bufname_with_cwd, ':.')
 
-    if bufname == path or bufname == path_with_cwd then
+    if
+      bufname == path
+      or bufname == path_with_cwd
+      or bufname_with_cwd == path
+      or bufname_with_cwd == path_with_cwd
+    then
       local tabpage = vim.api.nvim_win_get_tabpage(winid)
       --- @type GetWindowInfoResult
       local result = {
@@ -122,6 +126,7 @@ function mod.go_to_file_or_open(path, pos)
     if pos and pos[1] and pos[2] then
       vim.schedule(function()
         vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] })
+        vim.cmd('norm! zzzv')
       end)
     end
   end
@@ -135,7 +140,7 @@ function mod.go_to_file_or_open(path, pos)
     local first_window = vim.api.nvim_tabpage_list_wins(0)[1] or -1
 
     local function tabedit()
-      vim.cmd('tabedit ' .. path)
+      vim.cmd('tabedit ' .. vim.fn.fnameescape(path))
       go_to_pos()
     end
 
@@ -156,7 +161,7 @@ function mod.go_to_file_or_open(path, pos)
 
     if is_first_window_empty then
       vim.api.nvim_win_call(first_window, function()
-        vim.cmd('edit ' .. path)
+        vim.cmd('edit ' .. vim.fn.fnameescape(path))
         go_to_pos()
       end)
 
