@@ -136,7 +136,7 @@ function mod.go_to_file_or_open(path, pos)
     local first_window = vim.api.nvim_tabpage_list_wins(0)[1] or -1
 
     local function tabedit()
-      vim.cmd('tabedit ' .. path)
+      vim.cmd('tabedit ' .. vim.fn.fnameescape(path))
       go_to_pos()
     end
 
@@ -157,7 +157,7 @@ function mod.go_to_file_or_open(path, pos)
 
     if is_first_window_empty then
       vim.api.nvim_win_call(first_window, function()
-        vim.cmd('edit ' .. path)
+        vim.cmd('edit ' .. vim.fn.fnameescape(path))
         go_to_pos()
       end)
 
