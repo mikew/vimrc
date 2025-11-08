@@ -94,11 +94,15 @@ function mod.get_window_info_for_file(path)
 
   for _, winid in ipairs(vim.api.nvim_list_wins()) do
     local bufnr = vim.api.nvim_win_get_buf(winid)
-    -- Intentionally use `bufname` instead of `nvim_buf_get_name` because
-    -- because the latter always returns a full path.
-    local bufname = vim.fn.bufname(bufnr)
+    local bufname_with_cwd = vim.api.nvim_buf_get_name(bufnr)
+    local bufname = vim.fn.fnamemodify(bufname_with_cwd, ':.')
 
-    if bufname == path or bufname == path_with_cwd then
+    if
+      bufname == path
+      or bufname == path_with_cwd
+      or bufname_with_cwd == path
+      or bufname_with_cwd == path_with_cwd
+    then
       local tabpage = vim.api.nvim_win_get_tabpage(winid)
       --- @type GetWindowInfoResult
       local result = {
