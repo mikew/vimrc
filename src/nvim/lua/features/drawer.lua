@@ -341,6 +341,14 @@ mod.setup = vimrc.make_setup(function()
         filters = {
           dotfiles = true,
         },
+
+        actions = {
+          open_file = {
+            window_picker = {
+              enable = false,
+            },
+          },
+        },
       },
 
       init = function()
