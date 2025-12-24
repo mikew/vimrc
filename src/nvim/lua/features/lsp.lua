@@ -196,10 +196,7 @@ mod.setup = vimrc.make_setup(function(context)
           }, config or {}))
         end
 
-        require('mason-lspconfig').setup({
-          ensure_installed = {},
-          automatic_enable = true,
-        })
+        require('mason-lspconfig').setup()
 
         -- The following loop will configure each server with the capabilities we defined above.
         -- This will ensure that all servers have the same base configuration, but also

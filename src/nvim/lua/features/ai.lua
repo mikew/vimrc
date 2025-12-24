@@ -1,5 +1,4 @@
 local vimrc = require('vimrc')
-local symbols = require('symbols')
 
 local mod = {}
 
