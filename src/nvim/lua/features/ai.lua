@@ -56,6 +56,14 @@ mod.setup = vimrc.make_setup(function(context)
         },
       },
     },
+
+    {
+      'olimorris/codecompanion.nvim',
+      opts = {},
+      dependencies = {
+        'nvim-lua/plenary.nvim',
+      },
+    },
   }
 
   return feature
