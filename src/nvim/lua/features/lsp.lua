@@ -110,12 +110,10 @@ mod.setup = vimrc.make_setup(function(context)
               client.server_capabilities.documentRangeFormattingProvider = false
             end,
             cmd = {
-              vim.fn.expand(
-                '~/.local/share/mise/installs/node/latest/bin/node'
-              ),
-              vim.fn.expand(
-                '~/.local/share/mise/installs/node/latest/lib/node_modules/@typescript/native-preview/bin/tsgo.js'
-              ),
+              -- Technically this incurs a small memory overhead since it's a
+              -- nodejs process that launches a golang process.
+              'mise-global-tool',
+              'tsgo',
               '--lsp',
               '-stdio',
             },
