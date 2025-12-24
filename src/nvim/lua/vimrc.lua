@@ -203,4 +203,53 @@ function mod.keymap(desc, lhs, mode, rhs, opts)
   )
 end
 
+function mod.buffer_delete()
+  local drawer = require('nvim-drawer')
+
+  local winid = vim.api.nvim_get_current_win()
+
+  if drawer.find_instance_for_winid(winid) then
+    local windows_in_tab = vim.api.nvim_tabpage_list_wins(0)
+    local windows_in_tab_without_current = vim.tbl_filter(function(local_winid)
+      return local_winid ~= winid
+    end, windows_in_tab)
+
+    for _, local_winid in ipairs(windows_in_tab_without_current) do
+      if drawer.find_instance_for_winid(local_winid) == nil then
+        winid = local_winid
+        break
+      end
+    end
+  end
+
+  --- @type integer
+  local bufnr
+  if winid then
+    bufnr = vim.api.nvim_win_get_buf(winid)
+  else
+    bufnr = 0
+  end
+
+  vim.api.nvim_buf_delete(bufnr, {})
+end
+
+vim.api.nvim_create_autocmd('WinClosed', {
+  desc = 'nvim-drawer: Close tab when all non-drawers are closed',
+  callback = function(event)
+    local drawer = require('nvim-drawer')
+
+    --- @type integer
+    --- @diagnostic disable-next-line: assign-type-mismatch
+    local closing_window_id = tonumber(event.match)
+    local closing_instance = drawer.find_instance_for_winid(closing_window_id)
+
+    if closing_instance then
+      return
+    end
+
+    local bufnr_closed = vim.api.nvim_win_get_buf(closing_window_id)
+    vim.api.nvim_buf_delete(bufnr_closed, {})
+  end,
+})
+
 return mod
