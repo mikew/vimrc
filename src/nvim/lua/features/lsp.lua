@@ -109,14 +109,6 @@ mod.setup = vimrc.make_setup(function(context)
               client.server_capabilities.documentFormattingProvider = false
               client.server_capabilities.documentRangeFormattingProvider = false
             end,
-            cmd = {
-              -- Technically this incurs a small memory overhead since it's a
-              -- nodejs process that launches a golang process.
-              'mise-global-tool',
-              'tsgo',
-              '--lsp',
-              '-stdio',
-            },
             filetypes = {
               'javascript',
               'javascriptreact',
@@ -211,7 +203,6 @@ mod.setup = vimrc.make_setup(function(context)
           vim.lsp.config(server_name, server_config)
         end
 
-        vim.lsp.enable('tsgo')
         vim.lsp.enable('vtsls', false)
 
         local null_ls = require('null-ls')
