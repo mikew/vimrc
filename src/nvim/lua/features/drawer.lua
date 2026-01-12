@@ -271,7 +271,7 @@ mod.setup = vimrc.make_setup(function()
             enable = true,
             icons = {
               edge = symbols.indent.line,
-              item = symbols.indent.line,
+              item = symbols.border.symbols.left_joiner,
               corner = symbols.border.symbols.bottom_left,
             },
           },
@@ -340,6 +340,14 @@ mod.setup = vimrc.make_setup(function()
 
         filters = {
           dotfiles = true,
+        },
+
+        actions = {
+          open_file = {
+            window_picker = {
+              enable = false,
+            },
+          },
         },
       },
 

@@ -1,5 +1,4 @@
 local vimrc = require('vimrc')
-local symbols = require('symbols')
 
 local mod = {}
 
@@ -51,9 +50,18 @@ mod.setup = vimrc.make_setup(function(context)
           gitcommit = true,
           gitrebase = false,
         },
-        copilot_node_command = vim.fn.expand(
-          '~/.local/share/mise/installs/node/latest/bin/node'
-        ),
+        copilot_node_command = {
+          'mise-global-tool',
+          'node',
+        },
+      },
+    },
+
+    {
+      'olimorris/codecompanion.nvim',
+      opts = {},
+      dependencies = {
+        'nvim-lua/plenary.nvim',
       },
     },
   }

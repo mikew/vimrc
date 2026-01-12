@@ -104,21 +104,11 @@ mod.setup = vimrc.make_setup(function(context)
             -- },
           },
 
-          tscgo = {
+          tsgo = {
             on_attach = function(client)
               client.server_capabilities.documentFormattingProvider = false
               client.server_capabilities.documentRangeFormattingProvider = false
             end,
-            cmd = {
-              vim.fn.expand(
-                '~/.local/share/mise/installs/node/latest/bin/node'
-              ),
-              vim.fn.expand(
-                '~/.local/share/mise/installs/node/latest/lib/node_modules/@typescript/native-preview/bin/tsgo.js'
-              ),
-              '--lsp',
-              '-stdio',
-            },
             filetypes = {
               'javascript',
               'javascriptreact',
@@ -198,10 +188,7 @@ mod.setup = vimrc.make_setup(function(context)
           }, config or {}))
         end
 
-        require('mason-lspconfig').setup({
-          ensure_installed = {},
-          automatic_enable = true,
-        })
+        require('mason-lspconfig').setup()
 
         -- The following loop will configure each server with the capabilities we defined above.
         -- This will ensure that all servers have the same base configuration, but also
@@ -215,6 +202,8 @@ mod.setup = vimrc.make_setup(function(context)
           )
           vim.lsp.config(server_name, server_config)
         end
+
+        vim.lsp.enable('vtsls', false)
 
         local null_ls = require('null-ls')
         null_ls.setup({
