@@ -6,6 +6,10 @@ local mod = {}
 local map = vimrc.keymap
 
 mod.setup = vimrc.make_setup(function(context)
+  for _, tool in ipairs({ 'node', 'python' }) do
+    vimrc.prepend_mise_tool_path(tool)
+  end
+
   -- Set <space> as the leader key
   -- See `:help mapleader`
   --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be

@@ -50,10 +50,6 @@ mod.setup = vimrc.make_setup(function(context)
           gitcommit = true,
           gitrebase = false,
         },
-        copilot_node_command = {
-          'mise-global-tool',
-          'node',
-        },
       },
     },
 
