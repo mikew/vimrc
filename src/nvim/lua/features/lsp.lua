@@ -203,7 +203,6 @@ mod.setup = vimrc.make_setup(function(context)
           vim.lsp.config(server_name, server_config)
         end
 
-        vim.lsp.enable('vtsls', false)
 
         local null_ls = require('null-ls')
         null_ls.setup({
