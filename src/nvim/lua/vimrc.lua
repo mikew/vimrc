@@ -123,9 +123,9 @@ end
 --- @param pos? (integer | nil)[]
 function mod.go_to_file_or_open(path, pos)
   local function go_to_pos()
-    if pos and pos[1] and pos[2] then
+    if pos and pos[1] ~= nil then
       vim.schedule(function()
-        vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] })
+        vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] or 0 })
         vim.cmd('norm! zzzv')
       end)
     end
