@@ -235,6 +235,13 @@ mod.setup = vimrc.make_setup(function(context)
         vim.o.winhighlight = 'NormalNC:VimrcNormalNC'
       end,
     })
+
+    ---@param filename string
+    ---@param line number?
+    ---@param col number?
+    _G.nvrh_open_file_handler = function(filename, line, col)
+      vimrc.go_to_file_or_open(filename, { line, col })
+    end
   end
 
   --- @type VimrcFeature

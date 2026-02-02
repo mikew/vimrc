@@ -218,7 +218,19 @@ vim.api.nvim_create_autocmd('WinClosed', {
     end
 
     local bufnr_closed = vim.api.nvim_win_get_buf(closing_window_id)
-    vim.api.nvim_buf_delete(bufnr_closed, {})
+
+    -- If the buffer is open in any other window, do nothing.
+    for _, winid in ipairs(vim.api.nvim_list_wins()) do
+      if winid ~= closing_window_id then
+        local bufnr = vim.api.nvim_win_get_buf(winid)
+        if bufnr == bufnr_closed then
+          return
+        end
+      end
+    end
+
+    -- Otherwise delete the buffer.
+    vim.api.nvim_buf_delete(bufnr_closed, { force = true })
   end,
 })
 
