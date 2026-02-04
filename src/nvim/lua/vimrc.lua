@@ -134,14 +134,30 @@ function mod.go_to_file_or_open(path, pos)
   local window_info = mod.get_window_info_for_file(path)
 
   if window_info then
+    if pos and pos[1] ~= nil then
+      _G.skip_view_restore = true
+    end
+
     vim.api.nvim_set_current_win(window_info.winid)
     go_to_pos()
+
+    vim.schedule(function()
+      _G.skip_view_restore = false
+    end)
   else
     local first_window = vim.api.nvim_tabpage_list_wins(0)[1] or -1
 
     local function tabedit()
+      if pos and pos[1] ~= nil then
+        _G.skip_view_restore = true
+      end
+
       vim.cmd('tabedit ' .. vim.fn.fnameescape(path))
       go_to_pos()
+
+      vim.schedule(function()
+        _G.skip_view_restore = false
+      end)
     end
 
     if first_window == -1 then

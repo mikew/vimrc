@@ -242,6 +242,79 @@ mod.setup = vimrc.make_setup(function(context)
     _G.nvrh_open_file_handler = function(filename, line, col)
       vimrc.go_to_file_or_open(filename, { line, col })
     end
+
+    -- Save / restore folds & cursor.
+    vim.opt.viewoptions = {
+      'folds',
+      'cursor',
+    }
+    local view_group = vimrc.create_augroup('view_restore')
+    local ignore_ft = { 'gitcommit', 'gitrebase', 'hgcommit', 'svn', 'xxd' }
+    local ignore_bt = { 'terminal', 'nofile', 'quickfix', 'help' }
+
+    vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufLeave', 'WinLeave' }, {
+      group = view_group,
+      pattern = '?*',
+      callback = function()
+        local ft = vim.bo.filetype
+        local bt = vim.bo.buftype
+
+        if
+          vim.tbl_contains(ignore_ft, ft) or vim.tbl_contains(ignore_bt, bt)
+        then
+          return
+        end
+
+        vim.cmd('silent! mkview!')
+      end,
+    })
+
+    vim.api.nvim_create_autocmd('BufWinEnter', {
+      group = view_group,
+      pattern = '?*',
+      callback = function()
+        local ft = vim.bo.filetype
+        local bt = vim.bo.buftype
+
+        if
+          vim.tbl_contains(ignore_ft, ft) or vim.tbl_contains(ignore_bt, bt)
+        then
+          return
+        end
+
+        if _G.skip_view_restore then
+          return
+        end
+
+        local cur = vim.api.nvim_win_get_cursor(0)
+        if cur[1] > 1 or cur[2] > 0 then
+          return
+        end
+
+        vim.cmd('silent! loadview')
+      end,
+    })
+
+    vim.api.nvim_create_autocmd('VimLeavePre', {
+      group = view_group,
+      callback = function()
+        for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+          local bt = vim.api.nvim_get_option_value('buftype', { buf = bufnr })
+          local ft = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
+
+          if
+            vim.tbl_contains(ignore_ft, ft)
+            or vim.tbl_contains(ignore_bt, bt)
+          then
+            return
+          end
+
+          vim.api.nvim_buf_call(bufnr, function()
+            vim.cmd('silent! mkview!')
+          end)
+        end
+      end,
+    })
   end
 
   --- @type VimrcFeature
@@ -291,11 +364,6 @@ mod.setup = vimrc.make_setup(function(context)
     -- Detect tabstop and shiftwidth automatically
     {
       'tpope/vim-sleuth',
-      cond = not vim.g.vscode,
-    },
-
-    {
-      'farmergreg/vim-lastplace',
       cond = not vim.g.vscode,
     },
 
