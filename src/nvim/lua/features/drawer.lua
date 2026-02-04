@@ -122,30 +122,7 @@ mod.setup = vimrc.make_setup(function()
           -- When a new buffer is created, switch it to a terminal.
           on_did_create_buffer = function(event)
             vim.api.nvim_buf_call(event.bufnr, function()
-              -- Intentionally not using `vim.o.shell` directly. When started
-              -- from powershell it defaults to `cmd.exe`.
-              -- local shell = vim.o.shell
-              local shell = ''
-
-              local shell_env = vim.env.SHELL
-              if shell_env and shell_env ~= '' then
-                shell = shell_env
-              elseif vim.env.PSMODULEPATH then
-                shell = vim.env.SYSTEMROOT
-                  .. [[\System32\WindowsPowerShell\v1.0\powershell.exe]]
-              elseif vim.env.COMSPEC and vim.env.PROMPT then
-                shell = 'cmd.exe'
-              end
-
-              if not shell or shell == '' then
-                vim.notify(
-                  'Could not determine shell to open terminal drawer',
-                  vim.log.levels.ERROR
-                )
-                return
-              end
-
-              vim.fn.jobstart(shell, { term = true })
+              vim.fn.jobstart(vim.o.shell, { term = true })
             end)
           end,
 
