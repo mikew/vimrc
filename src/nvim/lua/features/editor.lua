@@ -282,10 +282,6 @@ mod.setup = vimrc.make_setup(function(context)
           return
         end
 
-        if _G.skip_view_restore then
-          return
-        end
-
         local cur = vim.api.nvim_win_get_cursor(0)
         if cur[1] > 1 or cur[2] > 0 then
           return
