@@ -252,7 +252,7 @@ mod.setup = vimrc.make_setup(function(context)
     local ignore_ft = { 'gitcommit', 'gitrebase', 'hgcommit', 'svn', 'xxd' }
     local ignore_bt = { 'terminal', 'nofile', 'quickfix', 'help' }
 
-    vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufLeave', 'WinLeave' }, {
+    vim.api.nvim_create_autocmd('BufWinLeave', {
       group = view_group,
       pattern = '?*',
       callback = function()
@@ -288,27 +288,6 @@ mod.setup = vimrc.make_setup(function(context)
         end
 
         vim.cmd('silent! loadview')
-      end,
-    })
-
-    vim.api.nvim_create_autocmd('VimLeavePre', {
-      group = view_group,
-      callback = function()
-        for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-          local bt = vim.api.nvim_get_option_value('buftype', { buf = bufnr })
-          local ft = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
-
-          if
-            vim.tbl_contains(ignore_ft, ft)
-            or vim.tbl_contains(ignore_bt, bt)
-          then
-            return
-          end
-
-          vim.api.nvim_buf_call(bufnr, function()
-            vim.cmd('silent! mkview!')
-          end)
-        end
       end,
     })
   end
