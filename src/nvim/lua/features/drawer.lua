@@ -120,8 +120,10 @@ mod.setup = vimrc.make_setup(function()
           end,
 
           -- When a new buffer is created, switch it to a terminal.
-          on_did_create_buffer = function()
-            vim.fn.termopen(os.getenv('SHELL'))
+          on_did_create_buffer = function(event)
+            vim.api.nvim_buf_call(event.bufnr, function()
+              vim.fn.jobstart(vim.o.shell, { term = true })
+            end)
           end,
 
           -- Remove some UI elements.

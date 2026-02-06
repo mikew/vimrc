@@ -246,9 +246,11 @@ function mod.prepend_mise_tool_path(binary)
 
   if vim.v.shell_error == 0 and full_path ~= '' then
     local bin_dir = vim.fn.fnamemodify(full_path, ':h')
-    local sep = vim.loop.os_uname().sysname == 'Windows_NT' and ';' or ':'
+    local sep = vim.uv.os_uname().sysname == 'Windows_NT' and ';' or ':'
+    local paths =
+      vim.split(vim.env.PATH, sep, { plain = true, trimempty = true })
 
-    if not vim.startswith(vim.env.PATH, bin_dir) then
+    if not vim.list_contains(paths, bin_dir) then
       vim.env.PATH = bin_dir .. sep .. vim.env.PATH
     end
   end

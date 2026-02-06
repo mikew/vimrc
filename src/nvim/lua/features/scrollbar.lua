@@ -24,6 +24,7 @@ mod.setup = vimrc.make_setup(function(context)
         },
 
         -- current_only = true,
+        always_show = true,
         signs_on_startup = {
           'conflicts',
           'cursor',
