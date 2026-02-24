@@ -37,6 +37,7 @@ mod.setup = vimrc.make_setup(function(context)
           },
         },
         { 'nvimtools/none-ls-extras.nvim' },
+        { 'b0o/schemastore.nvim' },
       },
       opts = {
         ui = {
@@ -149,6 +150,41 @@ mod.setup = vimrc.make_setup(function(context)
               'graphql',
             },
           },
+
+          jsonls = {
+            on_attach = function(client)
+              client.server_capabilities.documentFormattingProvider = false
+              client.server_capabilities.documentRangeFormattingProvider = false
+            end,
+            settings = {
+              json = {
+                schemas = require('schemastore').json.schemas(),
+                validate = {
+                  -- https://github.com/b0o/SchemaStore.nvim/issues/8
+                  enable = true,
+                },
+              },
+            },
+          },
+
+          yamlls = {
+            format = {
+              enable = false,
+            },
+
+            settings = {
+              yaml = {
+                schemaStore = {
+                  -- You must disable built-in schemaStore support if you want to use
+                  -- this plugin and its advanced options like `ignore`.
+                  enable = false,
+                  -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+                  url = '',
+                },
+                schemas = require('schemastore').yaml.schemas(),
+              },
+            },
+          },
         }
 
         local disabled_buftypes = {}
@@ -202,7 +238,6 @@ mod.setup = vimrc.make_setup(function(context)
           )
           vim.lsp.config(server_name, server_config)
         end
-
 
         local null_ls = require('null-ls')
         null_ls.setup({
