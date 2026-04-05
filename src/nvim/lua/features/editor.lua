@@ -21,19 +21,19 @@ mod.setup = vimrc.make_setup(function(context)
 
   -- Case-insensitive searching UNLESS \C or one or more capital letters in the
   -- search term
-  vim.opt.ignorecase = true
-  vim.opt.smartcase = true
+  vim.o.ignorecase = true
+  vim.o.smartcase = true
 
   -- Disable word wrap.
   vim.wo.wrap = false
   vim.wo.list = false
 
   -- Use indent as default fold method.
-  vim.opt.foldmethod = 'indent'
+  vim.o.foldmethod = 'indent'
   -- Don't fold by default.
-  vim.opt.foldlevelstart = 100
-  vim.opt.foldcolumn = '1'
-  vim.opt.foldmarker = '#region,#endregion'
+  vim.o.foldlevelstart = 100
+  vim.o.foldcolumn = '1'
+  vim.o.foldmarker = '#region,#endregion'
 
   -- Indent / outdent.
   map('Indent and reselect', '<', 'v', '<gv')
@@ -43,19 +43,21 @@ mod.setup = vimrc.make_setup(function(context)
   map('Insert new line below', '<D-CR>', 'i', '<C-o>o')
 
   if not vim.g.vscode then
-    vim.opt.shiftwidth = 2
-    vim.opt.tabstop = 2
-    vim.opt.softtabstop = 2
-    vim.opt.expandtab = true
+    vim.o.shiftwidth = 2
+    vim.o.tabstop = 2
+    vim.o.softtabstop = 2
+    vim.o.expandtab = true
 
-    vim.opt.termguicolors = true
-    vim.opt.cmdheight = 0
+    vim.o.termguicolors = true
+    vim.o.cmdheight = 0
 
     -- Always show tab bar.
-    vim.opt.showtabline = 2
+    vim.o.showtabline = 2
 
-    -- Does this actually exist? It's not in my nvim but it's documented.
-    vim.opt.confirm = true
+    -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
+    -- instead raise a dialog asking if you wish to save the current file(s)
+    -- See `:help 'confirm'`
+    vim.o.confirm = true
 
     -- Hide inline diagnostics.
     vim.diagnostic.config({
@@ -106,49 +108,49 @@ mod.setup = vimrc.make_setup(function(context)
     -- set vb t_vb=
 
     -- Make line numbers default
-    vim.opt.number = true
-    vim.opt.numberwidth = 4
+    vim.o.number = true
+    vim.o.numberwidth = 4
     -- You can also add relative line numbers, to help with jumping.
     -- Experiment for yourself to see if you like it!
-    -- vim.opt.relativenumber = true
+    -- vim.o.relativenumber = true
 
     -- Enable mouse mode, can be useful for resizing splits for example!
-    vim.opt.mouse = 'a'
+    vim.o.mouse = 'a'
 
     -- Don't show the mode, since it's already in the status line
-    vim.opt.showmode = false
+    vim.o.showmode = false
 
     -- Sync clipboard between OS and Neovim.
     -- Schedule the setting after `UiEnter` because it can increase startup-time.
     -- Remove this option if you want your OS clipboard to remain independent.
     -- See `:help 'clipboard'`
     -- vim.schedule(function()
-    --   vim.opt.clipboard = 'unnamedplus'
+    --   vim.o.clipboard = 'unnamedplus'
     -- end)
 
     -- Enable break indent
-    vim.opt.breakindent = true
+    vim.o.breakindent = true
 
     -- Save undo history
-    vim.opt.undofile = true
+    vim.o.undofile = true
 
     -- Keep signcolumn on by default
     -- Stop gitsigns and diagnostics from clobbering each other.
-    vim.opt.signcolumn = 'yes:2'
+    vim.o.signcolumn = 'yes:2'
 
     -- Configure how new splits should be opened
-    vim.opt.splitright = true
-    vim.opt.splitbelow = true
+    vim.o.splitright = true
+    vim.o.splitbelow = true
 
     -- Preview substitutions live, as you type!
-    vim.opt.inccommand = 'split'
+    vim.o.inccommand = 'split'
 
     -- Show which line your cursor is on
-    vim.opt.cursorline = true
+    vim.o.cursorline = true
 
     -- Minimal number of screen lines to keep above and below the cursor.
-    vim.opt.scrolloff = 5
-    vim.opt.mousescroll = 'ver:5,hor:5'
+    vim.o.scrolloff = 5
+    vim.o.mousescroll = 'ver:5,hor:5'
 
     -- Keybinds to make split navigation easier.
     -- Use CTRL+<hjkl> to switch between windows
@@ -179,7 +181,7 @@ mod.setup = vimrc.make_setup(function(context)
     }
 
     -- Only one statusline at the bottom of the window.
-    vim.opt.laststatus = 3
+    vim.o.laststatus = 3
 
     -- Highlight when yanking (copying) text
     --  Try it with `yap` in normal mode
@@ -210,7 +212,7 @@ mod.setup = vimrc.make_setup(function(context)
       group = vimrc.create_augroup('json_conceal'),
       pattern = { 'json', 'jsonc', 'json5' },
       callback = function()
-        vim.opt_local.conceallevel = 0
+        vim.wo.conceallevel = 0
       end,
     })
 
@@ -625,10 +627,10 @@ mod.setup = vimrc.make_setup(function(context)
         vim.api.nvim_create_autocmd('BufWinEnter', {
           callback = function()
             if vim.tbl_contains(opts.ft_ignore, vim.bo.filetype) then
-              vim.opt_local.statuscolumn = ''
-              vim.opt_local.signcolumn = 'no'
-              vim.opt_local.number = false
-              vim.opt_local.foldcolumn = '0'
+              vim.wo.statuscolumn = ''
+              vim.wo.signcolumn = 'no'
+              vim.wo.number = false
+              vim.wo.foldcolumn = '0'
             end
           end,
         })

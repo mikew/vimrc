@@ -1,5 +1,7 @@
 local mod = {}
 
+--- @module 'lazy'
+
 --- @class VimrcFeature
 --- @field name string
 --- @field plugins? LazySpec[]

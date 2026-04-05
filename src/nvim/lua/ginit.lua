@@ -36,10 +36,10 @@ if vimrc.context.ui == 'nvim-qt' then
   pcall(vim.fn.GuiClipboard)
 else
   pcall(function()
-    vim.opt.guifont = string.format('%s:h%s', font_name, font_size)
+    vim.o.guifont = string.format('%s:h%s', font_name, font_size)
   end)
   pcall(function()
-    vim.opt.guilinespace = linespace
+    vim.o.guilinespace = linespace
   end)
 end
 
