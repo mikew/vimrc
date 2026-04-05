@@ -54,7 +54,6 @@ mod.setup = vimrc.make_setup(function(context)
           'javascript',
           'jsdoc',
           'json',
-          'jsonc',
           'lua',
           'luadoc',
           'luap',
@@ -76,24 +75,34 @@ mod.setup = vimrc.make_setup(function(context)
         }
         require('nvim-treesitter').install(parsers)
 
-        local all_fts = vim.list_extend({}, parsers)
-        all_fts = vim.list_extend(all_fts, {
-          'typescriptreact',
-          'javascriptreact',
-        })
-
+        local all_parsers = require('nvim-treesitter').get_available()
+        -- local installed_parsers = require('nvim-treesitter').get_installed()
         vim.api.nvim_create_autocmd('FileType', {
-          pattern = all_fts,
-          callback = function()
-            -- Enables syntax highlighting and other treesitter features
-            vim.treesitter.start()
+          callback = function(args)
+            local bufnr = args.buf
+            local vim_filetype = args.match
 
-            -- Enables treesitter based folds
-            -- for more info on folds see `:help folds`
-            -- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+            local ts_lang = vim.treesitter.language.get_lang(vim_filetype)
+            if not ts_lang or not vim.tbl_contains(all_parsers, ts_lang) then
+              return
+            end
 
-            -- enables treesitter based indentation
-            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+            -- Either return if the parser isn't installed ...
+            -- if not vim.tbl_contains(installed_parsers, ts_lang) then
+            --   return
+            -- end
+            -- ... or install it automatically.
+            require('nvim-treesitter').install(ts_lang):await(function(...)
+              -- Enables syntax highlighting and other treesitter features
+              vim.treesitter.start(bufnr, ts_lang)
+
+              -- Enables treesitter based folds
+              -- for more info on folds see `:help folds`
+              -- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+
+              -- enables treesitter based indentation
+              vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+            end)
           end,
         })
       end,
