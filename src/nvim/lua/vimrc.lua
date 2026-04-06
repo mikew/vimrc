@@ -60,6 +60,27 @@ function mod.better_tabdo(callback)
   vim.cmd('tabnext ' .. current_tab)
 end
 
+--- @param tabpage integer
+function mod.better_tabclose(tabpage)
+  local tabnumber = vim.api.nvim_tabpage_get_number(tabpage)
+  local success, err = pcall(function()
+    vim.cmd('tabclose ' .. tabnumber)
+  end)
+
+  if not success then
+    local tabpages = vim.api.nvim_list_tabpages()
+
+    if #tabpages == 1 then
+      vim.cmd('tabnew')
+      vim.cmd('tabclose ' .. tabnumber)
+    end
+  end
+end
+
+vim.api.nvim_create_user_command('BetterTabclose', function(args)
+  mod.better_tabclose(tonumber(args.args))
+end, { nargs = 1 })
+
 --- @param name string
 --- @param clear? boolean
 function mod.create_augroup(name, clear)

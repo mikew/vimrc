@@ -688,9 +688,11 @@ mod.setup = vimrc.make_setup(function(context)
     {
       'akinsho/bufferline.nvim',
       cond = not vim.g.vscode,
+      --- @type bufferline.UserConfig
       opts = {
         options = {
           mode = 'tabs',
+          close_command = 'BetterTabclose %d',
 
           -- numbers = function(opts)
           --   return string.format('%s', opts.ordinal)

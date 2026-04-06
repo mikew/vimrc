@@ -97,9 +97,9 @@ if vimrc.context.os == 'macos' then
   map('Previous tab', '<D-{>', 'i', '<Esc><Cmd>tabprevious<CR>')
 
   -- Close Tab.
-  map('Close tab', '<D-w>', 'n', '<Cmd>tabclose<CR>')
+  map('Close tab', '<D-w>', 'n', '<Cmd>BetterTabclose 0<CR>')
   -- Intentionally leave insert mode due to switching buffers.
-  map('Close tab', '<D-w>', 'i', '<Esc><Cmd>tabclose<CR>')
+  map('Close tab', '<D-w>', 'i', '<Esc><Cmd>BetterTabclose 0<CR>')
 
   -- Close Window.
   map('Close window', '<D-W>', 'n', '<Cmd>qa<CR>')
