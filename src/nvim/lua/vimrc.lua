@@ -229,7 +229,6 @@ function mod.keymap(desc, lhs, mode, rhs, opts)
 end
 
 vim.api.nvim_create_autocmd('WinClosed', {
-  desc = 'nvim-drawer: Close tab when all non-drawers are closed',
   callback = function(event)
     local drawer = require('nvim-drawer')
 
