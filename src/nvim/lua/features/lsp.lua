@@ -6,7 +6,6 @@ local mod = {}
 local map = vimrc.keymap
 
 mod.setup = vimrc.make_setup(function(context)
-
   --- @type VimrcFeature
   local feature = {
     name = 'lsp',
@@ -383,6 +382,8 @@ mod.setup = vimrc.make_setup(function(context)
                 }))
               end)
             end
+
+            vim.lsp.semantic_tokens.enable(false)
           end,
         })
 
