@@ -627,10 +627,13 @@ mod.setup = vimrc.make_setup(function(context)
         vim.api.nvim_create_autocmd('BufWinEnter', {
           callback = function()
             if vim.tbl_contains(opts.ft_ignore, vim.bo.filetype) then
-              vim.wo.statuscolumn = ''
-              vim.wo.signcolumn = 'no'
-              vim.wo.number = false
-              vim.wo.foldcolumn = '0'
+              -- Intentionally not using `vim.wo[event.winid]` here since it
+              -- seems to mess up the options for windows opened from this
+              -- window.
+              vim.opt_local.statuscolumn = ''
+              vim.opt_local.signcolumn = 'no'
+              vim.opt_local.number = false
+              vim.opt_local.foldcolumn = '0'
             end
           end,
         })
