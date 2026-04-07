@@ -361,11 +361,6 @@ mod.setup = vimrc.make_setup(function()
         vim.g.loaded_netrw = 1
         vim.g.loaded_netrwPlugin = 1
       end,
-
-      config = function(_, opts)
-        local nvim_tree = require('nvim-tree')
-        nvim_tree.setup(opts)
-      end,
     },
 
     {
