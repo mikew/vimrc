@@ -61,9 +61,12 @@ mod.setup = vimrc.make_setup(function()
             local nvim_tree_api = require('nvim-tree.api')
             nvim_tree_api.tree.reload()
 
-            vim.wo.number = false
-            vim.wo.signcolumn = 'no'
-            vim.wo.statuscolumn = ''
+            -- Intentionally not using `vim.wo[event.winid]` here since it
+            -- seems to mess up the options for windows opened from this
+            -- window.
+            vim.opt_local.number = false
+            vim.opt_local.signcolumn = 'no'
+            vim.opt_local.statuscolumn = ''
           end,
 
           --- Cleans up some things when closing the drawer.
@@ -128,10 +131,10 @@ mod.setup = vimrc.make_setup(function()
 
           -- Remove some UI elements.
           on_did_open_buffer = function()
-            vim.wo.number = false
-            vim.wo.signcolumn = 'no'
-            vim.wo.statuscolumn = ''
-            vim.wo.foldcolumn = '0'
+            vim.opt_local.number = false
+            vim.opt_local.signcolumn = 'no'
+            vim.opt_local.statuscolumn = ''
+            vim.opt_local.foldcolumn = '0'
           end,
 
           -- Scroll to the end when changing tabs.
@@ -197,9 +200,9 @@ mod.setup = vimrc.make_setup(function()
 
           -- Remove some UI elements.
           on_did_open_buffer = function()
-            vim.wo.number = false
-            vim.wo.signcolumn = 'no'
-            vim.wo.statuscolumn = ''
+            vim.opt_local.number = false
+            vim.opt_local.signcolumn = 'no'
+            vim.opt_local.statuscolumn = ''
           end,
         })
       end,
