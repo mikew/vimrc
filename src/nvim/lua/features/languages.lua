@@ -33,7 +33,6 @@ mod.setup = vimrc.make_setup(function()
     {
       'nvim-treesitter/nvim-treesitter',
       cond = not vim.g.vscode,
-      -- load treesitter early when opening a file from the cmdline
       build = ':TSUpdate',
       branch = 'main',
 
