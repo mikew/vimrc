@@ -233,7 +233,7 @@ mod.setup = vimrc.make_setup(function()
             vimrc.go_to_file_or_open(filename)
           end
 
-          api.config.mappings.default_on_attach(bufnr)
+          api.map.on_attach.default(bufnr)
 
           map(
             'nvim-tree: Open: Tab',
