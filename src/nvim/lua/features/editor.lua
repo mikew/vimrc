@@ -188,10 +188,7 @@ mod.setup = vimrc.make_setup(function(context)
     --  See `:help vim.hl.on_yank()`
     vim.api.nvim_create_autocmd('TextYankPost', {
       desc = 'Highlight when yanking (copying) text',
-      group = vim.api.nvim_create_augroup(
-        'kickstart-highlight-yank',
-        { clear = true }
-      ),
+      group = vimrc.create_augroup('kickstart-highlight-yank'),
       callback = function()
         vim.hl.on_yank()
       end,
@@ -653,6 +650,10 @@ mod.setup = vimrc.make_setup(function(context)
     {
       'andymass/vim-matchup',
       cond = not vim.g.vscode,
+      main = 'match-up',
+      --- @module 'match-up'
+      --- @type matchup.Config
+      ---@diagnostic disable-next-line: missing-fields
       opts = {},
     },
 
@@ -691,6 +692,7 @@ mod.setup = vimrc.make_setup(function(context)
     {
       'akinsho/bufferline.nvim',
       cond = not vim.g.vscode,
+      --- @module 'bufferline'
       --- @type bufferline.UserConfig
       opts = {
         options = {
