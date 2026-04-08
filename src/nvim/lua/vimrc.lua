@@ -60,9 +60,26 @@ function mod.better_tabdo(callback)
   vim.cmd('tabnext ' .. current_tab)
 end
 
---- @param tabpage integer
-function mod.better_tabclose(tabpage)
-  local tabnumber = vim.api.nvim_tabpage_get_number(tabpage)
+--- @param tabid integer
+function mod.better_tabclose(tabid)
+  local tabnumber = vim.api.nvim_tabpage_get_number(tabid)
+
+  -- If any window in the tabpage has an unsaved buffer, print a message and
+  -- bail asap
+  for _, winid in ipairs(vim.api.nvim_tabpage_list_wins(tabid)) do
+    local bufnr = vim.api.nvim_win_get_buf(winid)
+    local is_modified =
+      vim.api.nvim_get_option_value('modified', { buf = bufnr })
+
+    if is_modified then
+      vim.notify(
+        'Cannot close tab ' .. tabnumber .. ' because it has unsaved changes.',
+        vim.log.levels.WARN
+      )
+      return
+    end
+  end
+
   local success, err = pcall(function()
     vim.cmd('tabclose ' .. tabnumber)
   end)
