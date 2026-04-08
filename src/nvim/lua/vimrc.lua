@@ -1,5 +1,7 @@
 local mod = {}
 
+--- @module 'lazy'
+
 --- @class VimrcFeature
 --- @field name string
 --- @field plugins? LazySpec[]
@@ -57,6 +59,44 @@ function mod.better_tabdo(callback)
   callback()
   vim.cmd('tabnext ' .. current_tab)
 end
+
+--- @param tabid integer
+function mod.better_tabclose(tabid)
+  local tabnumber = vim.api.nvim_tabpage_get_number(tabid)
+
+  -- If any window in the tabpage has an unsaved buffer, print a message and
+  -- bail asap
+  for _, winid in ipairs(vim.api.nvim_tabpage_list_wins(tabid)) do
+    local bufnr = vim.api.nvim_win_get_buf(winid)
+    local is_modified =
+      vim.api.nvim_get_option_value('modified', { buf = bufnr })
+
+    if is_modified then
+      vim.notify(
+        'Cannot close tab ' .. tabnumber .. ' because it has unsaved changes.',
+        vim.log.levels.WARN
+      )
+      return
+    end
+  end
+
+  local success, err = pcall(function()
+    vim.cmd('tabclose ' .. tabnumber)
+  end)
+
+  if not success then
+    local tabpages = vim.api.nvim_list_tabpages()
+
+    if #tabpages == 1 then
+      vim.cmd('tabnew')
+      vim.cmd('tabclose ' .. tabnumber)
+    end
+  end
+end
+
+vim.api.nvim_create_user_command('BetterTabclose', function(args)
+  mod.better_tabclose(tonumber(args.args))
+end, { nargs = 1 })
 
 --- @param name string
 --- @param clear? boolean
@@ -125,8 +165,10 @@ function mod.go_to_file_or_open(path, pos)
   local function go_to_pos()
     if pos and pos[1] ~= nil then
       vim.schedule(function()
-        vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] or 0 })
-        vim.cmd('norm! zzzv')
+        vim.schedule(function()
+          vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] or 0 })
+          vim.cmd('norm! zzzv')
+        end)
       end)
     end
   end
@@ -204,7 +246,6 @@ function mod.keymap(desc, lhs, mode, rhs, opts)
 end
 
 vim.api.nvim_create_autocmd('WinClosed', {
-  desc = 'nvim-drawer: Close tab when all non-drawers are closed',
   callback = function(event)
     local drawer = require('nvim-drawer')
 

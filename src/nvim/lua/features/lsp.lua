@@ -6,18 +6,6 @@ local mod = {}
 local map = vimrc.keymap
 
 mod.setup = vimrc.make_setup(function(context)
-  local diagnostic_symbols = {
-    Hint = symbols.diagnostics.hint,
-    Info = symbols.diagnostics.info,
-    Warn = symbols.diagnostics.warn,
-    Error = symbols.diagnostics.error,
-  }
-
-  for name, symbol in pairs(diagnostic_symbols) do
-    local hl = 'DiagnosticSign' .. name
-    vim.fn.sign_define(hl, { text = symbol, numhl = hl, texthl = hl })
-  end
-
   --- @type VimrcFeature
   local feature = {
     name = 'lsp',
@@ -38,6 +26,12 @@ mod.setup = vimrc.make_setup(function(context)
         },
         { 'nvimtools/none-ls-extras.nvim' },
         { 'b0o/schemastore.nvim' },
+        {
+          'antosha417/nvim-lsp-file-operations',
+          opts = {
+            -- debug = true
+          },
+        },
       },
       opts = {
         ui = {
@@ -53,6 +47,13 @@ mod.setup = vimrc.make_setup(function(context)
           base_capabilities =
             require('blink.cmp').get_lsp_capabilities(nil, true)
         end
+
+        base_capabilities = vim.tbl_deep_extend(
+          'force',
+          {},
+          base_capabilities,
+          require('lsp-file-operations').default_capabilities()
+        )
 
         -- Enable the following language servers
         -- Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -381,6 +382,8 @@ mod.setup = vimrc.make_setup(function(context)
                 }))
               end)
             end
+
+            vim.lsp.semantic_tokens.enable(false)
           end,
         })
 

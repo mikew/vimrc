@@ -36,10 +36,10 @@ if vimrc.context.ui == 'nvim-qt' then
   pcall(vim.fn.GuiClipboard)
 else
   pcall(function()
-    vim.opt.guifont = string.format('%s:h%s', font_name, font_size)
+    vim.o.guifont = string.format('%s:h%s', font_name, font_size)
   end)
   pcall(function()
-    vim.opt.guilinespace = linespace
+    vim.o.guilinespace = linespace
   end)
 end
 
@@ -97,9 +97,9 @@ if vimrc.context.os == 'macos' then
   map('Previous tab', '<D-{>', 'i', '<Esc><Cmd>tabprevious<CR>')
 
   -- Close Tab.
-  map('Close tab', '<D-w>', 'n', '<Cmd>tabclose<CR>')
+  map('Close tab', '<D-w>', 'n', '<Cmd>BetterTabclose 0<CR>')
   -- Intentionally leave insert mode due to switching buffers.
-  map('Close tab', '<D-w>', 'i', '<Esc><Cmd>tabclose<CR>')
+  map('Close tab', '<D-w>', 'i', '<Esc><Cmd>BetterTabclose 0<CR>')
 
   -- Close Window.
   map('Close window', '<D-W>', 'n', '<Cmd>qa<CR>')

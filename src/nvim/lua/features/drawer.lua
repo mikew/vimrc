@@ -61,6 +61,9 @@ mod.setup = vimrc.make_setup(function()
             local nvim_tree_api = require('nvim-tree.api')
             nvim_tree_api.tree.reload()
 
+            -- Intentionally not using `vim.wo[event.winid]` here since it
+            -- seems to mess up the options for windows opened from this
+            -- window.
             vim.opt_local.number = false
             vim.opt_local.signcolumn = 'no'
             vim.opt_local.statuscolumn = ''
@@ -230,7 +233,7 @@ mod.setup = vimrc.make_setup(function()
             vimrc.go_to_file_or_open(filename)
           end
 
-          api.config.mappings.default_on_attach(bufnr)
+          api.map.on_attach.default(bufnr)
 
           map(
             'nvim-tree: Open: Tab',
@@ -357,11 +360,6 @@ mod.setup = vimrc.make_setup(function()
         -- disable netrw
         vim.g.loaded_netrw = 1
         vim.g.loaded_netrwPlugin = 1
-      end,
-
-      config = function(_, opts)
-        local nvim_tree = require('nvim-tree')
-        nvim_tree.setup(opts)
       end,
     },
 
