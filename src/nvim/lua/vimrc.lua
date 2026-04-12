@@ -94,10 +94,6 @@ function mod.better_tabclose(tabid)
   end
 end
 
-vim.api.nvim_create_user_command('BetterTabclose', function(args)
-  mod.better_tabclose(tonumber(args.args))
-end, { nargs = 1 })
-
 --- @param name string
 --- @param clear? boolean
 function mod.create_augroup(name, clear)
@@ -244,36 +240,6 @@ function mod.keymap(desc, lhs, mode, rhs, opts)
     vim.tbl_extend('force', { desc = desc }, opts or {})
   )
 end
-
-vim.api.nvim_create_autocmd('WinClosed', {
-  callback = function(event)
-    local drawer = require('nvim-drawer')
-
-    --- @type integer
-    --- @diagnostic disable-next-line: assign-type-mismatch
-    local closing_window_id = tonumber(event.match)
-    local closing_instance = drawer.find_instance_for_winid(closing_window_id)
-
-    if closing_instance then
-      return
-    end
-
-    local bufnr_closed = vim.api.nvim_win_get_buf(closing_window_id)
-
-    -- If the buffer is open in any other window, do nothing.
-    for _, winid in ipairs(vim.api.nvim_list_wins()) do
-      if winid ~= closing_window_id then
-        local bufnr = vim.api.nvim_win_get_buf(winid)
-        if bufnr == bufnr_closed then
-          return
-        end
-      end
-    end
-
-    -- Otherwise delete the buffer.
-    vim.api.nvim_buf_delete(bufnr_closed, { force = true })
-  end,
-})
 
 ---@param binary string
 function mod.prepend_mise_tool_path(binary)
