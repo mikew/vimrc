@@ -215,7 +215,7 @@ mod.setup = vimrc.make_setup(function(context)
         vim.lsp.util.open_floating_preview = function(contents, syntax, fn_opts)
           fn_opts = vim.tbl_deep_extend('force', {
             border = symbols.border.nvim_style,
-          }, config or {}))
+          }, fn_opts or {})
 
           local bufnr, winid =
             original_open_floating_preview(contents, syntax, fn_opts)
