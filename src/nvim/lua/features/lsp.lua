@@ -210,19 +210,22 @@ mod.setup = vimrc.make_setup(function(context)
         -- require('mason-tool-installer').setup({ ensure_installed = ensure_installed })
 
         -- Work around the deprecation of `vim.lsp.with`.
-        -- https://github.com/nvim-telescope/telescope.nvim/issues/3436#issuecomment-2775658101
-        local original_hover = vim.lsp.buf.hover
-        vim.lsp.buf.hover = function(config)
-          original_hover(vim.tbl_deep_extend('force', {}, {
+        local original_open_floating_preview =
+          vim.lsp.util.open_floating_preview
+        vim.lsp.util.open_floating_preview = function(contents, syntax, fn_opts)
+          fn_opts = vim.tbl_deep_extend('force', {
             border = symbols.border.nvim_style,
-          }, config or {}))
-        end
+          }, fn_opts or {})
 
-        local original_signature_help = vim.lsp.buf.signature_help
-        vim.lsp.buf.signature_help = function(config)
-          original_signature_help(vim.tbl_deep_extend('force', {}, {
-            border = symbols.border.nvim_style,
-          }, config or {}))
+          local bufnr, winid =
+            original_open_floating_preview(contents, syntax, fn_opts)
+
+          -- This breaks single-line floating previews. They are wrapped in
+          -- markdown codeblocks and the calculation seems to assume
+          -- `conceallevel = 2` behaviour.
+          -- vim.wo[winid].conceallevel = 0
+
+          return bufnr, winid
         end
 
         require('mason-lspconfig').setup()
