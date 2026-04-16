@@ -157,6 +157,7 @@ mod.setup = vimrc.make_setup(function(context)
 
     -- Minimal number of screen lines to keep above and below the cursor.
     -- vim.o.scrolloff = 3
+    vim.o.sidescrolloff = 5
     vim.o.mousescroll = 'ver:5,hor:5'
 
     -- Keybinds to make split navigation easier.
