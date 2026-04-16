@@ -50,6 +50,9 @@ mod.setup = vimrc.make_setup(function(context)
 
     vim.o.termguicolors = true
     vim.o.cmdheight = 0
+    require('vim._core.ui2').enable({
+      enable = true,
+    })
 
     vim.o.title = true
     vim.o.titlestring = table.concat({
