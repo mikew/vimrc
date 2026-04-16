@@ -51,6 +51,13 @@ mod.setup = vimrc.make_setup(function(context)
     vim.o.termguicolors = true
     vim.o.cmdheight = 0
 
+    vim.o.title = true
+    vim.o.titlestring = table.concat({
+      '%t',
+      '%{fnamemodify(getcwd(), ":t")}',
+      '%{hostname()}',
+    }, ' - ')
+
     -- Always show tab bar.
     vim.o.showtabline = 2
 
