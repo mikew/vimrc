@@ -44,6 +44,10 @@ vim.api.nvim_create_autocmd('WinClosed', {
     --- @type integer
     --- @diagnostic disable-next-line: assign-type-mismatch
     local closing_window_id = tonumber(event.match)
+    if not vim.api.nvim_win_is_valid(closing_window_id) then
+      return
+    end
+
     local closing_instance = drawer.find_instance_for_winid(closing_window_id)
 
     if closing_instance then
