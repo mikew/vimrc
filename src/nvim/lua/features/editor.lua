@@ -645,15 +645,6 @@ mod.setup = vimrc.make_setup(function(context)
       end,
     },
 
-    {
-      'nvim-treesitter/nvim-treesitter-context',
-      cond = not vim.g.vscode,
-      event = { 'BufRead' },
-      opts = {
-        mode = 'topline',
-        multiline_threshold = 2,
-      },
-    },
 
     {
       'andymass/vim-matchup',
