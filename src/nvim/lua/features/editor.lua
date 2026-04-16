@@ -669,6 +669,22 @@ mod.setup = vimrc.make_setup(function(context)
           lualine_a = { 'mode' },
           lualine_b = {
             'branch',
+
+            -- Looks like `pwd  branch`
+            -- {
+            --   function()
+            --     return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+            --   end,
+            --   separator = '',
+            --   padding = 1,
+            -- },
+            -- {
+            --   'branch',
+            --   separator = '',
+            --   icon = '',
+            --   padding = { left = 0, right = 1 },
+            -- },
+
             -- {
             --   'diagnostics',
             --   symbols = {
@@ -685,93 +701,90 @@ mod.setup = vimrc.make_setup(function(context)
           lualine_y = {},
           lualine_z = { 'location' },
         },
-      },
-    },
 
-    {
-      'akinsho/bufferline.nvim',
-      cond = not vim.g.vscode,
-      --- @module 'bufferline'
-      --- @type bufferline.UserConfig
-      opts = {
-        options = {
-          mode = 'tabs',
-          close_command = 'BetterTabclose %d',
+        tabline = {
+          lualine_a = {
+            {
+              'tabs',
 
-          -- numbers = function(opts)
-          --   return string.format('%s', opts.ordinal)
-          -- end,
+              mode = 1,
+              path = 0,
+              max_length = function()
+                return vim.o.columns
+              end,
 
-          -- close_command = 'tabclose',
-          -- close_command = function(n)
-          --   return string.format('tabdo bdelete %d', n.id)
-          -- end,
+              --- @param fallback_name string
+              --- @param fmt_context {
+              --- buftype: string,
+              --- current: boolean,
+              --- file: string,
+              --- filetype: string,
+              --- first: boolean,
+              --- last: boolean,
+              --- options: table,
+              --- tabId: integer,
+              --- tabnr: integer,
+              --- }
+              fmt = function(fallback_name, fmt_context)
+                local no_name = '[No Name]'
 
-          left_trunc_marker = '◀',
-          right_trunc_marker = '▶',
-
-          right_mouse_command = false,
-
-          show_buffer_icons = false,
-          -- show_close_icon = false,
-          -- show_buffer_close_icons = false,
-
-          diagnostics = 'nvim_lsp',
-
-          --- @param buf { name: string, path: string, bufnr: integer, buffers: integer[], tabnr: integer }
-          name_formatter = function(buf)
-            local to_check = {
-              -- Start with the focused window.
-              vim.api.nvim_tabpage_get_win(buf.tabnr),
-            }
-            -- Then add all other windows in the tab.
-            vim.list_extend(to_check, vim.api.nvim_tabpage_list_wins(buf.tabnr))
-
-            --- @param wininfo { bufnr: integer, winid: integer, bufname: string, buftype: string }
-            local function should_skip(wininfo)
-              if
-                vim.tbl_contains(
-                  { 'nofile', 'quickfix', 'help' },
-                  wininfo.buftype
+                local to_check = {
+                  -- Start with the focused window.
+                  vim.api.nvim_tabpage_get_win(fmt_context.tabId),
+                }
+                -- Then add all other windows in the tab.
+                vim.list_extend(
+                  to_check,
+                  vim.api.nvim_tabpage_list_wins(fmt_context.tabId)
                 )
-              then
-                return true
-              end
 
-              if vimrc.has_feature('drawer') then
-                local drawer = require('nvim-drawer')
+                --- @param wininfo { bufnr: integer, winid: integer, bufname: string, buftype: string }
+                local function should_skip(wininfo)
+                  if
+                    vim.tbl_contains(
+                      { 'nofile', 'quickfix', 'help' },
+                      wininfo.buftype
+                    )
+                  then
+                    return true
+                  end
 
-                if drawer.find_instance_for_winid(wininfo.winid) then
-                  return true
+                  if vimrc.has_feature('drawer') then
+                    local drawer = require('nvim-drawer')
+
+                    if drawer.find_instance_for_winid(wininfo.winid) then
+                      return true
+                    end
+                  end
                 end
-              end
-            end
 
-            for _, winid in ipairs(to_check) do
-              local bufnr = vim.api.nvim_win_get_buf(winid)
-              local bufname =
-                vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ':t')
+                for _, winid in ipairs(to_check) do
+                  local bufnr = vim.api.nvim_win_get_buf(winid)
+                  local bufname =
+                    vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ':t')
 
-              if bufname == '' then
-                bufname = '[No Name]'
-              end
+                  if bufname == '' then
+                    bufname = no_name
+                  end
 
-              local wininfo = {
-                bufnr = bufnr,
-                winid = winid,
-                bufname = bufname,
-                buftype = vim.api.nvim_get_option_value('buftype', {
-                  buf = bufnr,
-                }),
-              }
+                  local wininfo = {
+                    bufnr = bufnr,
+                    winid = winid,
+                    bufname = bufname,
+                    buftype = vim.api.nvim_get_option_value('buftype', {
+                      buf = bufnr,
+                    }),
+                  }
 
-              if not should_skip(wininfo) then
-                return wininfo.bufname
-              end
-            end
+                  if not should_skip(wininfo) then
+                    return wininfo.bufname
+                  end
+                end
 
-            return '[No Name]'
-          end,
+                return no_name
+              end,
+            },
+          },
         },
       },
     },
