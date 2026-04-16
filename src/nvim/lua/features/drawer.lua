@@ -124,9 +124,12 @@ mod.setup = vimrc.make_setup(function()
 
           -- When a new buffer is created, switch it to a terminal.
           on_did_create_buffer = function(event)
-            vim.api.nvim_buf_call(event.bufnr, function()
-              vim.fn.jobstart(vim.o.shell, { term = true })
-            end)
+            -- This actually is annoying as hell on Windows, where as
+            -- `:terminal` seems to always work.
+            -- vim.api.nvim_buf_call(event.bufnr, function()
+            --   vim.fn.jobstart(vim.o.shell, { term = true })
+            -- end)
+            vim.cmd('terminal')
           end,
 
           -- Remove some UI elements.
