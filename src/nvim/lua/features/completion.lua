@@ -136,7 +136,18 @@ mod.setup = vimrc.make_setup(function(context)
             -- Just accept, don't also run the command.
             ['<CR>'] = { 'accept', 'fallback' },
             -- Just hide the menu, don't exit the command line.
-            ['<ESC>'] = { 'hide', 'fallback' },
+            ['<ESC>'] = {
+              'hide',
+
+              -- cancel
+              function()
+                vim.api.nvim_feedkeys(
+                  vim.api.nvim_replace_termcodes('<C-c>', true, true, true),
+                  'n',
+                  true
+                )
+              end,
+            },
             ['<Up>'] = { 'select_prev', 'fallback' },
             ['<Down>'] = { 'select_next', 'fallback' },
           },
