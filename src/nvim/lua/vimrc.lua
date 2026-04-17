@@ -6,6 +6,18 @@ local mod = {}
 --- @field name string
 --- @field plugins? LazySpec[]
 
+--- @class VimrcContext
+mod.context = {
+  os = '',
+  ui = '',
+  has_gui_running = false,
+
+  --- @type string[]
+  features = {},
+  --- @type LazySpec[]
+  plugins = {},
+}
+
 --- @param fn fun(context: VimrcContext): VimrcFeature
 --- @return fun(context: VimrcContext): VimrcFeature
 function mod.make_setup(fn)
@@ -46,11 +58,11 @@ function mod.determine_ui()
     return 'nvim-qt'
   end
 
-  return 'term'
+  return 'nvim-tui'
 end
 
 function mod.has_gui_running()
-  return mod.determine_ui() ~= 'term'
+  return mod.context.ui ~= 'nvim-tui'
 end
 
 --- @param callback fun()
@@ -209,18 +221,6 @@ function mod.go_to_file_or_open(path, pos)
     end
   end
 end
-
---- @class VimrcContext
-mod.context = {
-  os = mod.determine_os(),
-  ui = mod.determine_ui(),
-  has_gui_running = mod.has_gui_running(),
-
-  --- @type string[]
-  features = {},
-  --- @type LazySpec[]
-  plugins = {},
-}
 
 --- @param name string
 function mod.has_feature(name)

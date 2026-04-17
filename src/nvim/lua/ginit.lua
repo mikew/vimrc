@@ -3,11 +3,7 @@ local map = vimrc.keymap
 
 local mod = {}
 
----@param force boolean?
-function mod.setup(force)
-  if _G._nvrh and not force then
-    return
-  end
+function mod.setup()
 
   --- @type string[]
   local client_lookups = {

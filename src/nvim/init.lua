@@ -74,3 +74,71 @@ vim.api.nvim_create_autocmd('WinClosed', {
     end)
   end,
 })
+
+-- gui loading
+--- @type table<integer, boolean>
+local uis_already_handled = {}
+vim.api.nvim_create_autocmd('UIEnter', {
+  group = vimrc.create_augroup('detect_ui'),
+  callback = function(event)
+    local function try_latest_ui()
+      -- For some reason `event.data` is nil.
+      -- local chan = event.data.chan
+      -- So instead loop through all the channels, finding the latest where
+      -- `client.type` is `ui`.
+      --- @type integer?
+      local chan
+      for _, c in pairs(vim.api.nvim_list_chans()) do
+        if
+          c.client
+          and c.client.type == 'ui'
+          and not uis_already_handled[c.id]
+        then
+          chan = c.id
+        end
+      end
+
+      if not chan then
+        vim.schedule(try_latest_ui)
+        return
+      end
+
+      uis_already_handled[chan] = true
+
+      local uienter_chan = vim.api.nvim_get_chan_info(chan)
+
+      if uienter_chan.client then
+        vimrc.context.ui = uienter_chan.client.name
+      end
+
+      -- If we're in an nvrh session we can get the client OS from the channel.
+      if _G._nvrh then
+        for _, c in pairs(vim.api.nvim_list_chans()) do
+          if
+            c.client
+            and c.client.name == 'nvrh'
+            and c.client.attributes
+            and c.client.attributes.nvrh_assumed_ui_channel == tostring(chan)
+          then
+            local nvrh_client_os = c.client.attributes.nvrh_client_os
+            if nvrh_client_os == 'darwin' then
+              nvrh_client_os = 'macos'
+            end
+            vimrc.context.os = nvrh_client_os
+
+            break
+          end
+        end
+      else
+        -- Or determine the OS ourselves.
+        vimrc.context.os = vimrc.determine_os()
+      end
+
+      vim.schedule(function()
+        require('ginit').setup()
+      end)
+    end
+
+    try_latest_ui()
+  end,
+})
