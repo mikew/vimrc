@@ -1,1 +1,1 @@
-lua require('ginit')
+lua require('ginit').setup()
