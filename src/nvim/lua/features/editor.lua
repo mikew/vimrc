@@ -343,6 +343,7 @@ mod.setup = vimrc.make_setup(function(context)
       'folke/snacks.nvim',
       priority = 1000,
       lazy = false,
+      ---@module 'snacks'
       ---@type snacks.Config
       opts = {
         bigfile = { enabled = false },
