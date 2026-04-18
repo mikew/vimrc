@@ -136,6 +136,9 @@ vim.api.nvim_create_autocmd('UIEnter', {
 
       vim.schedule(function()
         require('ginit').setup()
+        for _, cb in ipairs(vimrc._ui_ready_callbacks) do
+          cb()
+        end
       end)
     end
 

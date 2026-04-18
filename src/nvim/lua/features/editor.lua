@@ -384,50 +384,48 @@ mod.setup = vimrc.make_setup(function(context)
         ignore = '^(%s*)$',
       },
       -- lazy = false,
-      keys = function()
-        local keys = {}
-
-        if context.has_gui_running then
-          if context.os == 'macos' then
-            keys = vim.list_extend(keys, {
-              {
-                '<D-/>',
-                '<Plug>(comment_toggle_linewise_current)',
-                mode = 'n',
-              },
-              {
-                '<D-/>',
-                '<C-o><Plug>(comment_toggle_linewise_current)',
-                mode = 'i',
-              },
-              {
-                '<D-/>',
-                '<Plug>(comment_toggle_linewise_visual)gv',
-                mode = 'v',
-              },
-            })
+      init = function()
+        vimrc.on_ui_ready(function()
+          if vimrc.has_gui_running() and vimrc.context.os == 'macos' then
+            map(
+              'Toggle comment linewise',
+              '<D-/>',
+              'n',
+              '<Plug>(comment_toggle_linewise_current)'
+            )
+            map(
+              'Toggle comment linewise',
+              '<D-/>',
+              'i',
+              '<C-o><Plug>(comment_toggle_linewise_current)'
+            )
+            map(
+              'Toggle comment linewise',
+              '<D-/>',
+              'v',
+              '<Plug>(comment_toggle_linewise_visual)gv'
+            )
+          else
+            map(
+              'Toggle comment linewise',
+              '<C-/>',
+              'n',
+              '<Plug>(comment_toggle_linewise_current)'
+            )
+            map(
+              'Toggle comment linewise',
+              '<C-/>',
+              'i',
+              '<C-o><Plug>(comment_toggle_linewise_current)'
+            )
+            map(
+              'Toggle comment linewise',
+              '<C-/>',
+              'v',
+              '<Plug>(comment_toggle_linewise_visual)gv'
+            )
           end
-        end
-
-        keys = vim.list_extend(keys, {
-          {
-            '<C-/>',
-            '<Plug>(comment_toggle_linewise_current)',
-            mode = 'n',
-          },
-          {
-            '<C-/>',
-            '<C-o><Plug>(comment_toggle_linewise_current)',
-            mode = 'i',
-          },
-          {
-            '<C-/>',
-            '<Plug>(comment_toggle_linewise_visual)gv',
-            mode = 'v',
-          },
-        })
-
-        return keys
+        end)
       end,
     },
 
@@ -647,7 +645,6 @@ mod.setup = vimrc.make_setup(function(context)
         })
       end,
     },
-
 
     {
       'andymass/vim-matchup',

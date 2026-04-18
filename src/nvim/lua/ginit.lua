@@ -4,7 +4,6 @@ local map = vimrc.keymap
 local mod = {}
 
 function mod.setup()
-
   --- @type string[]
   local client_lookups = {
     vimrc.context.ui .. '/' .. vimrc.context.os,
@@ -144,7 +143,7 @@ function mod.setup()
     map('Indent', '<D-]>', 'i', '<C-o>>>')
     map('Outdent', '<D-[>', 'v', '<gv')
     map('Indent', '<D-]>', 'v', '>gv')
-  elseif vimrc.context.os == 'linux' then
+  else
     -- Save.
     map('Save', '<C-s>', 'n', '<Cmd>w<CR>')
     map('Save', '<C-s>', 'i', '<C-o><Cmd>w<CR>')

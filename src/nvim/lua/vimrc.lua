@@ -10,13 +10,22 @@ local mod = {}
 mod.context = {
   os = '',
   ui = '',
-  has_gui_running = false,
 
   --- @type string[]
   features = {},
   --- @type LazySpec[]
   plugins = {},
 }
+
+--- @type fun()[]
+mod._ui_ready_callbacks = {}
+
+--- Queue a callback to run after UIEnter, once context.ui and context.os are set.
+--- Must be called at setup/startup time, not lazily.
+--- @param callback fun()
+function mod.on_ui_ready(callback)
+  table.insert(mod._ui_ready_callbacks, callback)
+end
 
 --- @param fn fun(context: VimrcContext): VimrcFeature
 --- @return fun(context: VimrcContext): VimrcFeature
