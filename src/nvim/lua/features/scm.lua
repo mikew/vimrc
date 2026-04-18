@@ -1,4 +1,5 @@
 local vimrc = require('vimrc')
+local symbols = require('symbols')
 
 local mod = {}
 
@@ -18,6 +19,9 @@ mod.setup = vimrc.make_setup(function(context)
       --- @type Gitsigns.Config
       --- @diagnostic disable-next-line: missing-fields
       opts = {
+        preview_config = {
+          border = symbols.border.nvim_style,
+        },
         on_attach = function(bufnr)
           local gitsigns = require('gitsigns')
 
