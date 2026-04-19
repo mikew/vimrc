@@ -22,8 +22,6 @@ function mod.run_ui_ready_callbacks()
   for _, cb in ipairs(_ui_ready_callbacks) do
     cb()
   end
-
-  _ui_ready_callbacks = {}
 end
 
 function mod.determine_ui()
