@@ -17,12 +17,13 @@ local function get_value_or_star(values, keys)
   return values['*']
 end
 
-function mod.setup()
+--- @param ui_context VimrcUiContext
+function mod.setup(ui_context)
   --- @type string[]
   local client_lookups = {
-    vimrc.context.ui .. '/' .. vimrc.context.os,
-    vimrc.context.ui,
-    vimrc.context.os,
+    ui_context.ui .. '/' .. ui_context.os,
+    ui_context.ui,
+    ui_context.os,
   }
 
   local font_name = get_value_or_star({
@@ -38,7 +39,7 @@ function mod.setup()
     ['*'] = 0,
   }, client_lookups)
 
-  if vimrc.context.ui == 'nvim-qt' then
+  if ui_context.ui == 'nvim-qt' then
     pcall(vim.cmd, string.format('GuiFont! %s:h%s', font_name, font_size))
     pcall(vim.cmd, string.format('GuiLinespace %s', linespace))
     pcall(vim.fn.GuiClipboard)
@@ -51,7 +52,7 @@ function mod.setup()
     end)
   end
 
-  if vimrc.context.os == 'macos' then
+  if ui_context.os == 'macos' then
     -- Save.
     map('Save', '<D-s>', 'n', '<Cmd>w<CR>')
     map('Save', '<D-s>', 'i', '<C-o><Cmd>w<CR>')

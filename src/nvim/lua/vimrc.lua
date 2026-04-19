@@ -1,54 +1,25 @@
 local mod = {}
 
---- @class VimrcContext
-mod.context = {
-  os = '',
-  ui = '',
-}
+--- @class VimrcUiContext
+--- @field os string
+--- @field ui string
+--- @field has_gui boolean
 
---- @type fun()[]
+--- @type fun(context: VimrcUiContext)[]
 local _ui_ready_callbacks = {}
 
 --- Queue a callback to run after UIEnter, once context.ui and context.os are set.
 --- Must be called at setup/startup time, not lazily.
---- @param callback fun()
+--- @param callback fun(context: VimrcUiContext)
 function mod.on_ui_ready(callback)
   table.insert(_ui_ready_callbacks, callback)
 end
 
-function mod.run_ui_ready_callbacks()
+--- @param ui_context VimrcUiContext
+function mod.run_ui_ready_callbacks(ui_context)
   for _, cb in ipairs(_ui_ready_callbacks) do
-    cb()
+    cb(ui_context)
   end
-end
-
-function mod.determine_ui()
-  local force_ui = os.getenv('NVIM_FORCE_UI')
-  if force_ui ~= nil then
-    return force_ui
-  end
-
-  if vim.g.neovide then
-    return 'neovide'
-  end
-
-  if vim.g.fvim_loaded then
-    return 'fvim'
-  end
-
-  if
-    vim.tbl_contains(vim.v.argv, function(v)
-      return string.find(v, 'nvim-qt', 1, true)
-    end, { predicate = true })
-  then
-    return 'nvim-qt'
-  end
-
-  return 'nvim-tui'
-end
-
-function mod.has_gui_running()
-  return mod.context.ui ~= 'nvim-tui'
 end
 
 --- @param callback fun()
@@ -99,21 +70,22 @@ function mod.create_augroup(name, clear)
   return vim.api.nvim_create_augroup('vimrc_' .. name, { clear = clear })
 end
 
+--- @type table<string, string>
+local sysname_map = {
+  Linux = 'linux',
+  Darwin = 'macos',
+  Windows = 'windows',
+}
+
 function mod.determine_os()
   local force_os = os.getenv('NVIM_FORCE_OS')
   if force_os ~= nil then
     return force_os
   end
 
-  local os = vim.uv.os_uname().sysname
+  local sysname = vim.uv.os_uname().sysname
 
-  if os == 'Linux' then
-    return 'linux'
-  elseif os == 'Darwin' then
-    return 'macos'
-  elseif os == 'Windows' then
-    return 'windows'
-  end
+  return sysname_map[sysname] or sysname
 end
 
 --- @class GetWindowInfoResult

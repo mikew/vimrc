@@ -74,8 +74,15 @@ vim.api.nvim_create_autocmd('UIEnter', {
 
       local uienter_chan = vim.api.nvim_get_chan_info(chan)
 
+      --- @type VimrcUiContext
+      local ui_context = {
+        ui = '',
+        os = '',
+        has_gui = false,
+      }
+
       if uienter_chan.client then
-        vimrc.context.ui = uienter_chan.client.name
+        ui_context.ui = uienter_chan.client.name
       end
 
       -- If we're in an nvrh session we can get the client OS from the channel.
@@ -91,22 +98,22 @@ vim.api.nvim_create_autocmd('UIEnter', {
             if nvrh_client_os == 'darwin' then
               nvrh_client_os = 'macos'
             end
-            vimrc.context.os = nvrh_client_os
+            ui_context.os = nvrh_client_os
 
             break
           end
         end
       else
         -- Or determine the OS ourselves.
-        vimrc.context.os = vimrc.determine_os()
+        ui_context.os = vimrc.determine_os()
       end
 
       vim.schedule(function()
-        if vimrc.has_gui_running() then
-          require('ginit').setup()
+        if ui_context.has_gui then
+          require('ginit').setup(ui_context)
         end
 
-        vimrc.run_ui_ready_callbacks()
+        vimrc.run_ui_ready_callbacks(ui_context)
       end)
     end
 

@@ -283,8 +283,8 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
   end,
 })
 
-vimrc.on_ui_ready(function()
-  if vimrc.context.ui == 'nvim-qt' then
+vimrc.on_ui_ready(function(ui_context)
+  if ui_context.ui == 'nvim-qt' then
     vimrc_pack.add({ { 'https://github.com/equalsraf/neovim-gui-shim' } })
   end
 end)
@@ -414,8 +414,8 @@ vimrc_pack.add({
       require('Comment').setup({
         ignore = '^(%s*)$',
       })
-      vimrc.on_ui_ready(function()
-        if vimrc.has_gui_running() and vimrc.context.os == 'macos' then
+      vimrc.on_ui_ready(function(ui_context)
+        if ui_context.has_gui and ui_context.os == 'macos' then
           map(
             'Toggle comment linewise',
             '<D-/>',

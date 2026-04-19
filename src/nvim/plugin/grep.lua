@@ -75,10 +75,10 @@ vimrc_pack.add({
     setup = function()
       require('picker_patches')
 
-      vimrc.on_ui_ready(function()
+      vimrc.on_ui_ready(function(ui_context)
         local snacks = require('snacks')
 
-        if vimrc.has_gui_running() and vimrc.context.os == 'macos' then
+        if ui_context.has_gui and ui_context.os == 'macos' then
           map('Find Files', '<D-t>', { 'n', 'i', 't' }, function()
             snacks.picker.git_files({ untracked = true })
           end)
