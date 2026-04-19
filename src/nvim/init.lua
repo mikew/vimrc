@@ -108,6 +108,8 @@ vim.api.nvim_create_autocmd('UIEnter', {
         ui_context.os = vimrc.determine_os()
       end
 
+      ui_context.has_gui = ui_context.ui ~= 'nvim-tui'
+
       vim.schedule(function()
         if ui_context.has_gui then
           require('ginit').setup(ui_context)
