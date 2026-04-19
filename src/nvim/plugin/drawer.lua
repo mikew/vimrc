@@ -4,69 +4,15 @@ local symbols = require('symbols')
 local map = vimrc.keymap
 
 vimrc_pack.add({
-  { 'https://github.com/mikew/nvim-drawer' },
-  -- { vim.fn.expand('~/Work/nvim-drawer') },
-  { 'https://github.com/nvim-tree/nvim-tree.lua' },
   {
-    'https://github.com/nvim-pack/nvim-spectre',
+    'https://github.com/mikew/nvim-drawer',
+    -- vim.fn.expand('~/Work/nvim-drawer'),
+    lazy = true,
     setup = function()
       local drawer = require('nvim-drawer')
+
       drawer.setup({
         position_order = { 'left', 'right', 'above', 'below', 'float' },
-      })
-
-      drawer.create_drawer({
-        size = 40,
-        position = 'right',
-        should_reuse_previous_bufnr = false,
-        should_close_on_bufwipeout = false,
-
-        win_config = {
-          margin = 2,
-          border = symbols.border.nvim_style,
-          anchor = 'CE',
-          width = 40,
-          height = '80%',
-        },
-
-        on_vim_enter = function(event)
-          --- Open the drawer on startup.
-          -- event.instance.open({
-          --   focus = false,
-          -- })
-
-          --- Example mapping to toggle.
-          map('Toggle file explorer', '<leader>e', 'n', function()
-            event.instance.focus_or_toggle()
-          end)
-        end,
-
-        --- Ideally, we would just call this here and be done with it, but
-        --- mappings in nvim-tree don't seem to apply when re-using a buffer in
-        --- a new tab / window.
-        on_did_create_buffer = function()
-          local nvim_tree_api = require('nvim-tree.api')
-          nvim_tree_api.tree.open({ current_window = true })
-        end,
-
-        --- This gets the tree to sync when changing tabs.
-        on_did_open = function()
-          local nvim_tree_api = require('nvim-tree.api')
-          nvim_tree_api.tree.reload()
-
-          -- Intentionally not using `vim.wo[event.winid]` here since it
-          -- seems to mess up the options for windows opened from this
-          -- window.
-          vim.opt_local.number = false
-          vim.opt_local.signcolumn = 'no'
-          vim.opt_local.statuscolumn = ''
-        end,
-
-        --- Cleans up some things when closing the drawer.
-        on_did_close = function()
-          local nvim_tree_api = require('nvim-tree.api')
-          nvim_tree_api.tree.close()
-        end,
       })
 
       drawer.create_drawer({
@@ -170,39 +116,72 @@ vimrc_pack.add({
           vim.cmd('edit NOTES.md')
         end,
       })
+    end,
+  },
+
+  {
+    'https://github.com/nvim-tree/nvim-tree.lua',
+    lazy = true,
+    setup = function()
+      -- disable netrw (done here rather than in an `init` since we don't have that)
+      vim.g.loaded_netrw = 1
+      vim.g.loaded_netrwPlugin = 1
+
+      local drawer = require('nvim-drawer')
 
       drawer.create_drawer({
-        position = 'below',
-        size = 30,
+        size = 40,
+        position = 'right',
+        should_reuse_previous_bufnr = false,
+        should_close_on_bufwipeout = false,
 
-        does_own_window = function(context)
-          return context.bufname:match('spectre') ~= nil
-        end,
+        win_config = {
+          margin = 2,
+          border = symbols.border.nvim_style,
+          anchor = 'CE',
+          width = 40,
+          height = '80%',
+        },
 
         on_vim_enter = function(event)
-          map('Toggle search and replace', '<leader>S', 'n', function()
-            -- If the drawer has never been opened, call spectre. Once its
-            -- window opens, it will be claimed by the drawer, and we can use
-            -- the drawer API afterwards.
-            if #vim.tbl_keys(event.instance.state.windows_and_buffers) == 0 then
-              require('spectre').toggle()
-            else
-              event.instance.focus_or_toggle()
-            end
+          --- Open the drawer on startup.
+          -- event.instance.open({
+          --   focus = false,
+          -- })
+
+          --- Example mapping to toggle.
+          map('Toggle file explorer', '<leader>e', 'n', function()
+            event.instance.focus_or_toggle()
           end)
         end,
 
-        -- Remove some UI elements.
-        on_did_open_buffer = function()
+        --- Ideally, we would just call this here and be done with it, but
+        --- mappings in nvim-tree don't seem to apply when re-using a buffer in
+        --- a new tab / window.
+        on_did_create_buffer = function()
+          local nvim_tree_api = require('nvim-tree.api')
+          nvim_tree_api.tree.open({ current_window = true })
+        end,
+
+        --- This gets the tree to sync when changing tabs.
+        on_did_open = function()
+          local nvim_tree_api = require('nvim-tree.api')
+          nvim_tree_api.tree.reload()
+
+          -- Intentionally not using `vim.wo[event.winid]` here since it
+          -- seems to mess up the options for windows opened from this
+          -- window.
           vim.opt_local.number = false
           vim.opt_local.signcolumn = 'no'
           vim.opt_local.statuscolumn = ''
         end,
-      })
 
-      -- disable netrw (done here rather than in an `init` since we don't have that)
-      vim.g.loaded_netrw = 1
-      vim.g.loaded_netrwPlugin = 1
+        --- Cleans up some things when closing the drawer.
+        on_did_close = function()
+          local nvim_tree_api = require('nvim-tree.api')
+          nvim_tree_api.tree.close()
+        end,
+      })
 
       require('nvim-tree').setup({
         on_attach = function(bufnr)
@@ -346,6 +325,42 @@ vimrc_pack.add({
             },
           },
         },
+      })
+    end,
+  },
+
+  {
+    'https://github.com/nvim-pack/nvim-spectre',
+    setup = function()
+      local drawer = require('nvim-drawer')
+
+      drawer.create_drawer({
+        position = 'below',
+        size = 30,
+
+        does_own_window = function(context)
+          return context.bufname:match('spectre') ~= nil
+        end,
+
+        on_vim_enter = function(event)
+          map('Toggle search and replace', '<leader>S', 'n', function()
+            -- If the drawer has never been opened, call spectre. Once its
+            -- window opens, it will be claimed by the drawer, and we can use
+            -- the drawer API afterwards.
+            if #vim.tbl_keys(event.instance.state.windows_and_buffers) == 0 then
+              require('spectre').toggle()
+            else
+              event.instance.focus_or_toggle()
+            end
+          end)
+        end,
+
+        -- Remove some UI elements.
+        on_did_open_buffer = function()
+          vim.opt_local.number = false
+          vim.opt_local.signcolumn = 'no'
+          vim.opt_local.statuscolumn = ''
+        end,
       })
 
       local function spectre_select_entry()
