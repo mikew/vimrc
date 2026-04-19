@@ -1,16 +1,15 @@
-local vimrc = require('vimrc')
+local vimrc_pack = require('vimrc_pack')
 local symbols = require('symbols')
 
-vim.pack.add({
+vimrc_pack.add({
   {
-    src = 'https://github.com/saghen/blink.cmp',
+    'https://github.com/saghen/blink.cmp',
     version = vim.version.range('1.*'),
-  },
-})
-vimrc.setup_plugin_lazy(function()
-  ---@module 'blink.cmp'
-  ---@type blink.cmp.Config
-  require('blink.cmp').setup({
+    lazy = true,
+    setup = function()
+      ---@module 'blink.cmp'
+      ---@type blink.cmp.Config
+      require('blink.cmp').setup({
     keymap = {
       -- 'default' (recommended) for mappings similar to built-in completions
       --   <c-y> to accept ([y]es) the completion.
@@ -149,6 +148,8 @@ vimrc.setup_plugin_lazy(function()
           auto_show = false,
         },
       },
-    },
-  })
-end)
+      },
+    })
+    end,
+  },
+})

@@ -1,24 +1,25 @@
 local vimrc = require('vimrc')
+local vimrc_pack = require('vimrc_pack')
 local symbols = require('symbols')
 
 local map = vimrc.keymap
 
-vim.pack.add({
-  'https://github.com/mason-org/mason.nvim',
-  'https://github.com/mason-org/mason-lspconfig.nvim',
-  'https://github.com/neovim/nvim-lspconfig',
-  'https://github.com/nvim-lua/plenary.nvim',
-  'https://github.com/nvimtools/none-ls.nvim',
-  'https://github.com/nvimtools/none-ls-extras.nvim',
-  'https://github.com/b0o/schemastore.nvim',
-  'https://github.com/antosha417/nvim-lsp-file-operations',
+vimrc_pack.add({
+  { 'https://github.com/mason-org/mason.nvim' },
+  { 'https://github.com/mason-org/mason-lspconfig.nvim' },
+  { 'https://github.com/neovim/nvim-lspconfig' },
+  { 'https://github.com/nvim-lua/plenary.nvim' },
+  { 'https://github.com/nvimtools/none-ls.nvim' },
+  { 'https://github.com/nvimtools/none-ls-extras.nvim' },
+  { 'https://github.com/b0o/schemastore.nvim' },
+  { 'https://github.com/antosha417/nvim-lsp-file-operations' },
 })
-vimrc.setup_plugin_lazy(function()
+vimrc_pack.setup_plugin_lazy(function()
   -- By default, Neovim doesn't support everything that is in the LSP specification.
   -- When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
   -- So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
   local base_capabilities = vim.lsp.protocol.make_client_capabilities()
-  if vimrc.has_plugin('blink.cmp') then
+  if vimrc_pack.has_plugin('blink.cmp') then
     base_capabilities = require('blink.cmp').get_lsp_capabilities(nil, true)
   end
 
@@ -244,7 +245,7 @@ vimrc.setup_plugin_lazy(function()
         return
       end
 
-      if vimrc.has_plugin('snacks.nvim') then
+      if vimrc_pack.has_plugin('snacks.nvim') then
         -- Jump to the definition of the word under your cursor.
         -- This is where a variable was first declared, or where a function is defined, etc.
         -- To jump back, press <C-t>.
@@ -387,7 +388,12 @@ vimrc.setup_plugin_lazy(function()
   })
 end)
 
-vim.pack.add({ 'https://github.com/folke/lazydev.nvim' })
-vimrc.setup_plugin_lazy(function()
-  require('lazydev').setup({})
-end)
+vimrc_pack.add({
+  {
+    'https://github.com/folke/lazydev.nvim',
+    lazy = true,
+    setup = function()
+      require('lazydev').setup({})
+    end,
+  },
+})

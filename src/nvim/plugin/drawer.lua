@@ -1,14 +1,15 @@
 local vimrc = require('vimrc')
+local vimrc_pack = require('vimrc_pack')
 local symbols = require('symbols')
 local map = vimrc.keymap
 
-vim.pack.add({
-  'https://github.com/mikew/nvim-drawer',
-  -- { src = vim.fn.expand('~/Work/nvim-drawer'), load = true },
-  'https://github.com/nvim-tree/nvim-tree.lua',
-  'https://github.com/nvim-pack/nvim-spectre',
-})
-vimrc.setup_plugin(function()
+vimrc_pack.add({
+  { 'https://github.com/mikew/nvim-drawer' },
+  -- { vim.fn.expand('~/Work/nvim-drawer') },
+  { 'https://github.com/nvim-tree/nvim-tree.lua' },
+  {
+    'https://github.com/nvim-pack/nvim-spectre',
+    setup = function()
   local drawer = require('nvim-drawer')
   drawer.setup({
     position_order = { 'left', 'right', 'above', 'below', 'float' },
@@ -372,4 +373,6 @@ vimrc.setup_plugin(function()
       },
     },
   })
-end)
+    end,
+  },
+})

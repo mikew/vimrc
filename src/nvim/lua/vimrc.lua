@@ -2,19 +2,10 @@ local mod = {}
 
 --- @module 'lazy'
 
---- @class VimrcFeature
---- @field name string
---- @field plugins? LazySpec[]
-
 --- @class VimrcContext
 mod.context = {
   os = '',
   ui = '',
-
-  --- @type string[]
-  features = {},
-  --- @type LazySpec[]
-  plugins = {},
 }
 
 --- @type fun()[]
@@ -34,24 +25,6 @@ function mod.run_ui_ready_callbacks()
 
   _ui_ready_callbacks = {}
 end
-
---- @param fn fun(context: VimrcContext): VimrcFeature
---- @return fun(context: VimrcContext): VimrcFeature
--- function mod.make_setup(fn)
---   --- @param context VimrcContext
---   return function(context)
---     local feature = fn(context)
---     table.insert(context.features, feature.name)
-
---     if feature.plugins then
---       for _, plugin in ipairs(feature.plugins) do
---         table.insert(context.plugins, plugin)
---       end
---     end
-
---     return feature
---   end
--- end
 
 function mod.determine_ui()
   local force_ui = os.getenv('NVIM_FORCE_UI')
@@ -237,67 +210,6 @@ function mod.go_to_file_or_open(path, pos)
       tabedit()
     end
   end
-end
-
---- @param name string
-function mod.has_feature(name)
-  return vim.list_contains(mod.context.features, name)
-end
-
---- @type table<string, boolean>
-local _plugin_cache = {}
-
---- @param name string
-function mod.has_plugin(name)
-  if _plugin_cache[name] then
-    return true
-  end
-
-  for _, plug in ipairs(vim.pack.get()) do
-    if plug.spec.name == name then
-      _plugin_cache[name] = true
-      return true
-    end
-  end
-
-  return false
-end
-
---- @type fun()[]
-local _plugin_setup_fns = {}
-
--- Note that `vimrc.has_plugin` will be unreliable in `fn` as plugins may still
--- be registering. Please only use it inside some other handler.
---- @param fn fun()
-function mod.setup_plugin(fn)
-  table.insert(_plugin_setup_fns, fn)
-end
-
---- @type fun()[]
-local _plugin_setup_lazy_fns = {}
-
--- `vimrc.has_plugin` can be used anywhere in here.
---- @param fn fun()
-function mod.setup_plugin_lazy(fn)
-  table.insert(_plugin_setup_lazy_fns, fn)
-end
-
-function mod.run_plugin_setups()
-  for _, fn in ipairs(_plugin_setup_fns) do
-    pcall(fn)
-  end
-
-  _plugin_setup_fns = {}
-
-  vim.api.nvim_create_autocmd('VimEnter', {
-    callback = function()
-      for _, fn in ipairs(_plugin_setup_lazy_fns) do
-        pcall(fn)
-      end
-
-      _plugin_setup_lazy_fns = {}
-    end,
-  })
 end
 
 ---@param desc string

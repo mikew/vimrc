@@ -1,3 +1,3 @@
-local vimrc = require('vimrc')
+local vimrc_pack = require('vimrc_pack')
 
-vimrc.run_plugin_setups()
+vimrc_pack.run_plugin_setups()

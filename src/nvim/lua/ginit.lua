@@ -3,6 +3,20 @@ local map = vimrc.keymap
 
 local mod = {}
 
+--- @generic T
+--- @param values table<string, T>
+--- @param keys string[]
+--- @return T
+local function get_value_or_star(values, keys)
+  for _, key in ipairs(keys) do
+    if values[key] ~= nil then
+      return values[key]
+    end
+  end
+
+  return values['*']
+end
+
 function mod.setup()
   --- @type string[]
   local client_lookups = {
@@ -10,20 +24,6 @@ function mod.setup()
     vimrc.context.ui,
     vimrc.context.os,
   }
-
-  --- @generic T
-  --- @param values table<string, T>
-  --- @param keys string[]
-  --- @return T
-  local function get_value_or_star(values, keys)
-    for _, key in ipairs(keys) do
-      if values[key] ~= nil then
-        return values[key]
-      end
-    end
-
-    return values['*']
-  end
 
   local font_name = get_value_or_star({
     ['*'] = 'Iosevka Custom Slab',

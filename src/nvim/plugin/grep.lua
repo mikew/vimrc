@@ -1,50 +1,14 @@
 local vimrc = require('vimrc')
+local vimrc_pack = require('vimrc_pack')
 
 local map = vimrc.keymap
 
 -- snacks.nvim is registered in plugin/editor.lua. This file configures the
 -- picker feature specifically.
-vimrc.setup_plugin_lazy(function()
-  require('picker_patches')
-
-  vimrc.on_ui_ready(function()
-    local snacks = require('snacks')
-
-    if vimrc.has_gui_running() and vimrc.context.os == 'macos' then
-      map('Find Files', '<D-t>', { 'n', 'i', 't' }, function()
-        snacks.picker.git_files({ untracked = true })
-      end)
-      map('Find Files', '<D-p>', { 'n', 'i', 't' }, function()
-        snacks.picker.git_files({ untracked = true })
-      end)
-      map('Search by Grep', '<D-F>', { 'n', 'i', 't' }, function()
-        snacks.picker.git_grep({ untracked = true })
-      end)
-    else
-      map('Find Files', '<C-p>', { 'n', 'i', 't' }, function()
-        snacks.picker.git_files({ untracked = true })
-      end)
-
-      map('Search by Grep', '<C-S-F>', { 'n', 'i', 't' }, function()
-        snacks.picker.git_grep({ untracked = true })
-      end)
-    end
-  end)
-
-  map('Search Diagnostics', '<leader>sd', 'n', function()
-    Snacks.picker.diagnostics()
-  end)
-
-  map('Resume Search', '<leader>sr', 'n', function()
-    Snacks.picker.resume()
-  end)
-
-  map('Find Buffers', '<leader><leader>', 'n', function()
-    Snacks.picker.buffers()
-  end)
-
-  require('snacks').setup({
-    picker = {
+vimrc_pack.add({
+  {
+    'https://github.com/folke/snacks.nvim',
+    data = {
       enabled = true,
       ui_select = false,
 
@@ -107,5 +71,46 @@ vimrc.setup_plugin_lazy(function()
         },
       },
     },
-  })
-end)
+    lazy = true,
+    setup = function()
+      require('picker_patches')
+
+      vimrc.on_ui_ready(function()
+        local snacks = require('snacks')
+
+        if vimrc.has_gui_running() and vimrc.context.os == 'macos' then
+          map('Find Files', '<D-t>', { 'n', 'i', 't' }, function()
+            snacks.picker.git_files({ untracked = true })
+          end)
+          map('Find Files', '<D-p>', { 'n', 'i', 't' }, function()
+            snacks.picker.git_files({ untracked = true })
+          end)
+          map('Search by Grep', '<D-F>', { 'n', 'i', 't' }, function()
+            snacks.picker.git_grep({ untracked = true })
+          end)
+        else
+          map('Find Files', '<C-p>', { 'n', 'i', 't' }, function()
+            snacks.picker.git_files({ untracked = true })
+          end)
+
+          map('Search by Grep', '<C-S-F>', { 'n', 'i', 't' }, function()
+            snacks.picker.git_grep({ untracked = true })
+          end)
+        end
+      end)
+
+      map('Search Diagnostics', '<leader>sd', 'n', function()
+        Snacks.picker.diagnostics()
+      end)
+
+      map('Resume Search', '<leader>sr', 'n', function()
+        Snacks.picker.resume()
+      end)
+
+      map('Find Buffers', '<leader><leader>', 'n', function()
+        Snacks.picker.buffers()
+      end)
+    end,
+  },
+})
+

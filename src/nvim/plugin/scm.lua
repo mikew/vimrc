@@ -1,11 +1,15 @@
 local vimrc = require('vimrc')
+local vimrc_pack = require('vimrc_pack')
 local symbols = require('symbols')
 
 local map = vimrc.keymap
 
-vim.pack.add({ 'https://github.com/lewis6991/gitsigns.nvim' })
-vimrc.setup_plugin_lazy(function()
-  require('gitsigns').setup({
+vimrc_pack.add({
+  {
+    'https://github.com/lewis6991/gitsigns.nvim',
+    lazy = true,
+    setup = function()
+      require('gitsigns').setup({
     preview_config = {
       border = symbols.border.nvim_style,
     },
@@ -99,4 +103,6 @@ vimrc.setup_plugin_lazy(function()
       )
     end,
   })
-end)
+    end,
+  },
+})

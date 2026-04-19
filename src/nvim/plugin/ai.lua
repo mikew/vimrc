@@ -1,8 +1,7 @@
-local vimrc = require('vimrc')
+local vimrc_pack = require('vimrc_pack')
 
 -- {
 --   'github/copilot.vim',
---   cond = not vim.g.vscode,
 --   init = function()
 --     vim.g.copilot_no_tab_map = true
 --     vim.g.copilot_node_command =
@@ -15,37 +14,45 @@ local vimrc = require('vimrc')
 --   config = function() end,
 -- },
 
-vim.pack.add({ 'https://github.com/zbirenbaum/copilot.lua' })
-vimrc.setup_plugin_lazy(function()
-  require('copilot').setup({
-    panel = {
-      enabled = false,
-    },
-    suggestion = {
-      enabled = true,
-      auto_trigger = true,
-      keymap = {
-        accept = '<C-CR>',
-        -- accept_word = false,
-        -- accept_line = false,
-        -- next = '<M-]>',
-        -- prev = '<M-[>',
-        -- dismiss = '<C-]>',
-      },
-    },
-    filetypes = {
-      yaml = true,
-      markdown = true,
-      gitcommit = true,
-      gitrebase = false,
-    },
-  })
-end)
-
-vim.pack.add({
-  'https://github.com/nvim-lua/plenary.nvim',
-  'https://github.com/olimorris/codecompanion.nvim',
+vimrc_pack.add({
+  {
+    'https://github.com/zbirenbaum/copilot.lua',
+    lazy = true,
+    setup = function()
+      require('copilot').setup({
+        panel = {
+          enabled = false,
+        },
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          keymap = {
+            accept = '<C-CR>',
+            -- accept_word = false,
+            -- accept_line = false,
+            -- next = '<M-]>',
+            -- prev = '<M-[>',
+            -- dismiss = '<C-]>',
+          },
+        },
+        filetypes = {
+          yaml = true,
+          markdown = true,
+          gitcommit = true,
+          gitrebase = false,
+        },
+      })
+    end,
+  },
 })
-vimrc.setup_plugin_lazy(function()
-  require('codecompanion').setup({})
-end)
+
+vimrc_pack.add({
+  { 'https://github.com/nvim-lua/plenary.nvim' },
+  {
+    'https://github.com/olimorris/codecompanion.nvim',
+    lazy = true,
+    setup = function()
+      require('codecompanion').setup({})
+    end,
+  },
+})
