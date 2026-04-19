@@ -9,64 +9,66 @@ vimrc_pack.add({
   {
     'https://github.com/folke/snacks.nvim',
     data = {
-      enabled = true,
-      ui_select = false,
+      picker = {
+        enabled = true,
+        ui_select = false,
 
-      on_show = function(picker)
-        -- Fix when launching a picker from terminal.
-        -- https://github.com/folke/snacks.nvim/discussions/2164#discussioncomment-14278259
-        vim.schedule(function()
-          vim.cmd('startinsert')
-        end)
-      end,
+        on_show = function(picker)
+          -- Fix when launching a picker from terminal.
+          -- https://github.com/folke/snacks.nvim/discussions/2164#discussioncomment-14278259
+          vim.schedule(function()
+            vim.cmd('startinsert')
+          end)
+        end,
 
-      matcher = {
-        sort_empty = true,
-        frecency = true,
-        history_bonus = true,
-      },
-
-      sources = {
-        git_grep = {
-          ignorecase = true,
+        matcher = {
+          sort_empty = true,
+          frecency = true,
+          history_bonus = true,
         },
-      },
 
-      jump = {
-        reuse_win = true, -- reuse an existing window if the buffer is already open
-        match = true, -- jump to the first match position. (useful for `lines`)
-      },
-
-      win = {
-        input = {
-          keys = {
-            ['<CR>'] = { 'tabdrop', mode = { 'n', 'i' } },
-            ['<C-CR>'] = { 'split', mode = { 'n', 'i' } },
-            ['<S-CR>'] = { 'vsplit', mode = { 'n', 'i' } },
+        sources = {
+          git_grep = {
+            ignorecase = true,
           },
         },
 
-        list = {
-          wo = {
-            statuscolumn = '',
-            signcolumn = 'no',
-            number = false,
-            foldcolumn = '0',
-          },
-
-          keys = {
-            ['<CR>'] = 'tabdrop',
-            ['<C-CR>'] = 'split',
-            ['<S-CR>'] = 'vsplit',
-          },
+        jump = {
+          reuse_win = true, -- reuse an existing window if the buffer is already open
+          match = true, -- jump to the first match position. (useful for `lines`)
         },
 
-        preview = {
-          wo = {
-            statuscolumn = '',
-            signcolumn = 'no',
-            number = false,
-            foldcolumn = '0',
+        win = {
+          input = {
+            keys = {
+              ['<CR>'] = { 'tabdrop', mode = { 'n', 'i' } },
+              ['<C-CR>'] = { 'split', mode = { 'n', 'i' } },
+              ['<S-CR>'] = { 'vsplit', mode = { 'n', 'i' } },
+            },
+          },
+
+          list = {
+            wo = {
+              statuscolumn = '',
+              signcolumn = 'no',
+              number = false,
+              foldcolumn = '0',
+            },
+
+            keys = {
+              ['<CR>'] = 'tabdrop',
+              ['<C-CR>'] = 'split',
+              ['<S-CR>'] = 'vsplit',
+            },
+          },
+
+          preview = {
+            wo = {
+              statuscolumn = '',
+              signcolumn = 'no',
+              number = false,
+              foldcolumn = '0',
+            },
           },
         },
       },
@@ -113,4 +115,3 @@ vimrc_pack.add({
     end,
   },
 })
-

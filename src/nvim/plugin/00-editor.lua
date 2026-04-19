@@ -411,69 +411,71 @@ vimrc_pack.add({
   {
     'https://github.com/RRethy/base16-nvim',
     setup = function()
-  vim.cmd('colorscheme base16-oceanicnext')
+      vim.cmd('colorscheme base16-oceanicnext')
 
-  local function apply_additional_highlights()
-    local theme = {}
+      local function apply_additional_highlights()
+        local theme = {}
 
-    theme.background = vimrc_colors.get_hl_color('Normal', 'bg') or '#000000'
-    theme.background_alt = vimrc_colors.darken(theme.background, 0.3)
+        theme.background = vimrc_colors.get_hl_color('Normal', 'bg')
+          or '#000000'
+        theme.background_alt = vimrc_colors.darken(theme.background, 0.3)
 
-    theme.text_primary = vimrc_colors.get_hl_color('Normal', 'fg') or '#ffffff'
-    theme.text_quiet1 =
-      vimrc_colors.mix(theme.text_primary, theme.background, 0.5)
-    theme.text_quiet2 =
-      vimrc_colors.mix(theme.text_primary, theme.background, 0.8)
+        theme.text_primary = vimrc_colors.get_hl_color('Normal', 'fg')
+          or '#ffffff'
+        theme.text_quiet1 =
+          vimrc_colors.mix(theme.text_primary, theme.background, 0.5)
+        theme.text_quiet2 =
+          vimrc_colors.mix(theme.text_primary, theme.background, 0.8)
 
-    vim.api.nvim_set_hl(0, 'VimrcNormalNC', {
-      fg = theme.text_quiet1,
-      bg = theme.background_alt,
-      force = true,
-    })
-    vim.api.nvim_set_hl(0, 'FloatBorder', {
-      fg = theme.text_quiet2,
-      force = true,
-    })
-    vim.api.nvim_set_hl(0, 'WinSeparator', {
-      fg = theme.text_quiet2,
-      force = true,
-    })
+        vim.api.nvim_set_hl(0, 'VimrcNormalNC', {
+          fg = theme.text_quiet1,
+          bg = theme.background_alt,
+          force = true,
+        })
+        vim.api.nvim_set_hl(0, 'FloatBorder', {
+          fg = theme.text_quiet2,
+          force = true,
+        })
+        vim.api.nvim_set_hl(0, 'WinSeparator', {
+          fg = theme.text_quiet2,
+          force = true,
+        })
 
-    vim.api.nvim_set_hl(0, 'LineNr', {
-      link = 'CursorLineNr',
-      force = true,
-    })
-    vim.api.nvim_set_hl(0, 'FoldColumn', {
-      link = 'CursorLineNr',
-      force = true,
-    })
-    vim.api.nvim_set_hl(0, 'SignColumn', {
-      link = 'CursorLineNr',
-      force = true,
-    })
+        vim.api.nvim_set_hl(0, 'LineNr', {
+          link = 'CursorLineNr',
+          force = true,
+        })
+        vim.api.nvim_set_hl(0, 'FoldColumn', {
+          link = 'CursorLineNr',
+          force = true,
+        })
+        vim.api.nvim_set_hl(0, 'SignColumn', {
+          link = 'CursorLineNr',
+          force = true,
+        })
 
-    vim.api.nvim_set_hl(0, 'NvimTreeIndentMarker', {
-      fg = theme.text_quiet2,
-      force = true,
-    })
+        vim.api.nvim_set_hl(0, 'NvimTreeIndentMarker', {
+          fg = theme.text_quiet2,
+          force = true,
+        })
 
-    vim.api.nvim_set_hl(0, 'IndentLine', {
-      fg = theme.text_quiet2,
-      force = true,
-    })
-    vim.api.nvim_set_hl(0, 'IndentLineCurrent', {
-      fg = theme.text_quiet1,
-      force = true,
-    })
-  end
+        vim.api.nvim_set_hl(0, 'IndentLine', {
+          fg = theme.text_quiet2,
+          force = true,
+        })
+        vim.api.nvim_set_hl(0, 'IndentLineCurrent', {
+          fg = theme.text_quiet1,
+          force = true,
+        })
+      end
 
-  vim.api.nvim_create_autocmd({ 'ColorScheme' }, {
-    callback = function()
+      vim.api.nvim_create_autocmd({ 'ColorScheme' }, {
+        callback = function()
+          apply_additional_highlights()
+        end,
+      })
+
       apply_additional_highlights()
-    end,
-  })
-
-  apply_additional_highlights()
     end,
   },
 })
@@ -492,71 +494,71 @@ vimrc_pack.add({
   {
     'https://github.com/luukvbaal/statuscol.nvim',
     setup = function()
-  local builtin = require('statuscol.builtin')
+      local builtin = require('statuscol.builtin')
 
-  local ft_ignore = {
-    'man',
-    'help',
-    'neo-tree',
-    'starter',
-    'TelescopePrompt',
-    'Trouble',
-    'NvimTree',
-    'nvcheatsheet',
-    'dapui_watches',
-    'dap-repl',
-    'dapui_console',
-    'spectre_panel',
-    'dapui_stacks',
-    'dapui_breakpoints',
-    'dapui_scopes',
-    -- 'snacks_picker_list',
-    -- 'snacks_picker_preview',
-  }
+      local ft_ignore = {
+        'man',
+        'help',
+        'neo-tree',
+        'starter',
+        'TelescopePrompt',
+        'Trouble',
+        'NvimTree',
+        'nvcheatsheet',
+        'dapui_watches',
+        'dap-repl',
+        'dapui_console',
+        'spectre_panel',
+        'dapui_stacks',
+        'dapui_breakpoints',
+        'dapui_scopes',
+        -- 'snacks_picker_list',
+        -- 'snacks_picker_preview',
+      }
 
-  require('statuscol').setup({
-    relculright = true,
-    setopt = true,
-    segments = {
-      { text = { builtin.lnumfunc }, click = 'v:lua.ScLa' },
+      require('statuscol').setup({
+        relculright = true,
+        setopt = true,
+        segments = {
+          { text = { builtin.lnumfunc }, click = 'v:lua.ScLa' },
 
-      {
-        sign = {
-          namespace = { 'diagnostic' },
-          maxwidth = 1,
-          colwidth = 1,
-          auto = false,
+          {
+            sign = {
+              namespace = { 'diagnostic' },
+              maxwidth = 1,
+              colwidth = 1,
+              auto = false,
+            },
+            click = 'v:lua.ScSa',
+          },
+
+          { text = { builtin.foldfunc }, click = 'v:lua.ScFa' },
+
+          {
+            sign = {
+              namespace = { 'gitsign' },
+              maxwidth = 1,
+              colwidth = 1,
+              auto = false,
+            },
+            click = 'v:lua.ScSa',
+          },
         },
-        click = 'v:lua.ScSa',
-      },
+      })
 
-      { text = { builtin.foldfunc }, click = 'v:lua.ScFa' },
-
-      {
-        sign = {
-          namespace = { 'gitsign' },
-          maxwidth = 1,
-          colwidth = 1,
-          auto = false,
-        },
-        click = 'v:lua.ScSa',
-      },
-    },
-  })
-
-  vim.api.nvim_create_autocmd('BufWinEnter', {
-    callback = function()
-      if vim.tbl_contains(ft_ignore, vim.bo.filetype) then
-        -- Intentionally not using `vim.wo[event.winid]` here since it
-        -- seems to mess up the options for windows opened from this
-        -- window.
-        vim.opt_local.statuscolumn = ''
-        vim.opt_local.signcolumn = 'no'
-        vim.opt_local.number = false
-        vim.opt_local.foldcolumn = '0'
-      end
-    end,
-  })
+      vim.api.nvim_create_autocmd('BufWinEnter', {
+        callback = function()
+          if vim.tbl_contains(ft_ignore, vim.bo.filetype) then
+            -- Intentionally not using `vim.wo[event.winid]` here since it
+            -- seems to mess up the options for windows opened from this
+            -- window.
+            vim.opt_local.statuscolumn = ''
+            vim.opt_local.signcolumn = 'no'
+            vim.opt_local.number = false
+            vim.opt_local.foldcolumn = '0'
+          end
+        end,
+      })
     end,
   },
 })
@@ -575,109 +577,109 @@ vimrc_pack.add({
   {
     'https://github.com/nvim-lualine/lualine.nvim',
     setup = function()
-  require('lualine').setup({
-    options = {
-      component_separators = { left = '|', right = '|' },
-      section_separators = { left = '', right = '' },
-    },
-
-    sections = {
-      lualine_a = { 'mode' },
-      lualine_b = {
-        'branch',
-      },
-      lualine_c = { 'filename' },
-
-      lualine_x = { 'filetype' },
-      lualine_y = {},
-      lualine_z = { 'location' },
-    },
-
-    tabline = {
-      lualine_a = {
-        {
-          'tabs',
-
-          mode = 1,
-          path = 0,
-          max_length = function()
-            return vim.o.columns
-          end,
-
-          --- @param fallback_name string
-          --- @param fmt_context {
-          --- buftype: string,
-          --- current: boolean,
-          --- file: string,
-          --- filetype: string,
-          --- first: boolean,
-          --- last: boolean,
-          --- options: table,
-          --- tabId: integer,
-          --- tabnr: integer,
-          --- }
-          fmt = function(fallback_name, fmt_context)
-            local no_name = '[No Name]'
-
-            local to_check = {
-              -- Start with the focused window.
-              vim.api.nvim_tabpage_get_win(fmt_context.tabId),
-            }
-            -- Then add all other windows in the tab.
-            vim.list_extend(
-              to_check,
-              vim.api.nvim_tabpage_list_wins(fmt_context.tabId)
-            )
-
-            --- @param wininfo { bufnr: integer, winid: integer, bufname: string, buftype: string }
-            local function should_skip(wininfo)
-              if
-                vim.tbl_contains(
-                  { 'nofile', 'quickfix', 'help' },
-                  wininfo.buftype
-                )
-              then
-                return true
-              end
-
-              if vimrc_pack.has_plugin('nvim-drawer') then
-                local drawer = require('nvim-drawer')
-
-                if drawer.find_instance_for_winid(wininfo.winid) then
-                  return true
-                end
-              end
-            end
-
-            for _, winid in ipairs(to_check) do
-              local bufnr = vim.api.nvim_win_get_buf(winid)
-              local bufname =
-                vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ':t')
-
-              if bufname == '' then
-                bufname = no_name
-              end
-
-              local wininfo = {
-                bufnr = bufnr,
-                winid = winid,
-                bufname = bufname,
-                buftype = vim.api.nvim_get_option_value('buftype', {
-                  buf = bufnr,
-                }),
-              }
-
-              if not should_skip(wininfo) then
-                return wininfo.bufname
-              end
-            end
-
-            return no_name
-          end,
+      require('lualine').setup({
+        options = {
+          component_separators = { left = '|', right = '|' },
+          section_separators = { left = '', right = '' },
         },
-      },
-    },
-  })
+
+        sections = {
+          lualine_a = { 'mode' },
+          lualine_b = {
+            'branch',
+          },
+          lualine_c = { 'filename' },
+
+          lualine_x = { 'filetype' },
+          lualine_y = {},
+          lualine_z = { 'location' },
+        },
+
+        tabline = {
+          lualine_a = {
+            {
+              'tabs',
+
+              mode = 1,
+              path = 0,
+              max_length = function()
+                return vim.o.columns
+              end,
+
+              --- @param fallback_name string
+              --- @param fmt_context {
+              --- buftype: string,
+              --- current: boolean,
+              --- file: string,
+              --- filetype: string,
+              --- first: boolean,
+              --- last: boolean,
+              --- options: table,
+              --- tabId: integer,
+              --- tabnr: integer,
+              --- }
+              fmt = function(fallback_name, fmt_context)
+                local no_name = '[No Name]'
+
+                local to_check = {
+                  -- Start with the focused window.
+                  vim.api.nvim_tabpage_get_win(fmt_context.tabId),
+                }
+                -- Then add all other windows in the tab.
+                vim.list_extend(
+                  to_check,
+                  vim.api.nvim_tabpage_list_wins(fmt_context.tabId)
+                )
+
+                --- @param wininfo { bufnr: integer, winid: integer, bufname: string, buftype: string }
+                local function should_skip(wininfo)
+                  if
+                    vim.tbl_contains(
+                      { 'nofile', 'quickfix', 'help' },
+                      wininfo.buftype
+                    )
+                  then
+                    return true
+                  end
+
+                  if vimrc_pack.has_plugin('nvim-drawer') then
+                    local drawer = require('nvim-drawer')
+
+                    if drawer.find_instance_for_winid(wininfo.winid) then
+                      return true
+                    end
+                  end
+                end
+
+                for _, winid in ipairs(to_check) do
+                  local bufnr = vim.api.nvim_win_get_buf(winid)
+                  local bufname =
+                    vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ':t')
+
+                  if bufname == '' then
+                    bufname = no_name
+                  end
+
+                  local wininfo = {
+                    bufnr = bufnr,
+                    winid = winid,
+                    bufname = bufname,
+                    buftype = vim.api.nvim_get_option_value('buftype', {
+                      buf = bufnr,
+                    }),
+                  }
+
+                  if not should_skip(wininfo) then
+                    return wininfo.bufname
+                  end
+                end
+
+                return no_name
+              end,
+            },
+          },
+        },
+      })
     end,
   },
 })
