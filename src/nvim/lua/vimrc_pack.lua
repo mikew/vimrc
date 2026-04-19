@@ -1,3 +1,5 @@
+local vimrc = require('vimrc')
+
 local mod = {}
 
 --- @type table<string, unknown>
@@ -61,10 +63,15 @@ end
 
 --- @type fun()[]
 local _plugin_setup_fns = {}
+local _did_run_plugin_setups = false
 
 --- @param fn fun()
 function mod.setup_plugin(fn)
-  table.insert(_plugin_setup_fns, vim.schedule_wrap(fn))
+  if _did_run_plugin_setups then
+    vim.schedule(fn)
+  else
+    table.insert(_plugin_setup_fns, vim.schedule_wrap(fn))
+  end
 end
 
 --- @type fun()[]
@@ -72,7 +79,11 @@ local _plugin_setup_lazy_fns = {}
 
 --- @param fn fun()
 function mod.setup_plugin_lazy(fn)
-  table.insert(_plugin_setup_lazy_fns, vim.schedule_wrap(fn))
+  if _did_run_plugin_setups then
+    vim.schedule(fn)
+  else
+    table.insert(_plugin_setup_lazy_fns, vim.schedule_wrap(fn))
+  end
 end
 
 function mod.run_plugin_setups()
@@ -92,6 +103,8 @@ function mod.run_plugin_setups()
       spec_data = {}
     end,
   })
+
+  _did_run_plugin_setups = true
 end
 
 --- @type table<string, boolean>
