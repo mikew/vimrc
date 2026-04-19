@@ -1,7 +1,5 @@
 local mod = {}
 
---- @module 'lazy'
-
 --- @class VimrcContext
 mod.context = {
   os = '',

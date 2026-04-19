@@ -1,19 +1,4 @@
 local vimrc = require('vimrc')
-local symbols = require('symbols')
-
--- Setup lazy.nvim
--- require('lazy-rtp')
--- require('lazy').setup({
---   spec = vimrc.context.plugins,
---   -- Configure any other settings here. See the documentation for more details.
---   -- colorscheme that will be used when installing plugins.
---   install = { colorscheme = { 'base16-oceanicnext' } },
---   -- automatically check for plugin updates
---   -- checker = { enabled = true },
---   ui = {
---     border = symbols.border.nvim_style,
---   },
--- })
 
 vim.api.nvim_create_user_command('BetterTabclose', function(args)
   vimrc.better_tabclose(tonumber(args.args))
