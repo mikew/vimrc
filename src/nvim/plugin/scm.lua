@@ -1,24 +1,15 @@
 local vimrc = require('vimrc')
+local vimrc_pack = require('vimrc_pack')
 local symbols = require('symbols')
-
-local mod = {}
 
 local map = vimrc.keymap
 
-mod.setup = vimrc.make_setup(function(context)
-  --- @type VimrcFeature
-  local feature = {
-    name = 'scm',
-  }
-
-  feature.plugins = {
-    {
-      'lewis6991/gitsigns.nvim',
-      cond = not vim.g.vscode,
-      --- @module 'gitsigns'
-      --- @type Gitsigns.Config
-      --- @diagnostic disable-next-line: missing-fields
-      opts = {
+vimrc_pack.add({
+  {
+    'https://github.com/lewis6991/gitsigns.nvim',
+    lazy = true,
+    setup = function()
+      require('gitsigns').setup({
         preview_config = {
           border = symbols.border.nvim_style,
         },
@@ -111,11 +102,7 @@ mod.setup = vimrc.make_setup(function(context)
             { buffer = bufnr }
           )
         end,
-      },
-    },
-  }
-
-  return feature
-end)
-
-return mod
+      })
+    end,
+  },
+})

@@ -1,24 +1,15 @@
-local vimrc = require('vimrc')
+local vimrc_pack = require('vimrc_pack')
 local symbols = require('symbols')
 
-local mod = {}
-
-mod.setup = vimrc.make_setup(function(context)
-  --- @type VimrcFeature
-  local feature = {
-    name = 'completion',
-  }
-
-  feature.plugins = {
-    {
-      'saghen/blink.cmp',
-      cond = not vim.g.vscode,
-      version = '1.*',
-      event = 'VimEnter',
-
+vimrc_pack.add({
+  {
+    'https://github.com/saghen/blink.cmp',
+    version = vim.version.range('1.*'),
+    lazy = true,
+    setup = function()
       ---@module 'blink.cmp'
       ---@type blink.cmp.Config
-      opts = {
+      require('blink.cmp').setup({
         keymap = {
           -- 'default' (recommended) for mappings similar to built-in completions
           --   <c-y> to accept ([y]es) the completion.
@@ -158,11 +149,7 @@ mod.setup = vimrc.make_setup(function(context)
             },
           },
         },
-      },
-    },
-  }
-
-  return feature
-end)
-
-return mod
+      })
+    end,
+  },
+})

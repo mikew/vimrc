@@ -1,47 +1,24 @@
 local mod = {}
 
---- @module 'lazy'
-
---- @class VimrcFeature
---- @field name string
---- @field plugins? LazySpec[]
-
 --- @class VimrcContext
 mod.context = {
   os = '',
   ui = '',
-
-  --- @type string[]
-  features = {},
-  --- @type LazySpec[]
-  plugins = {},
 }
 
 --- @type fun()[]
-mod._ui_ready_callbacks = {}
+local _ui_ready_callbacks = {}
 
 --- Queue a callback to run after UIEnter, once context.ui and context.os are set.
 --- Must be called at setup/startup time, not lazily.
 --- @param callback fun()
 function mod.on_ui_ready(callback)
-  table.insert(mod._ui_ready_callbacks, callback)
+  table.insert(_ui_ready_callbacks, callback)
 end
 
---- @param fn fun(context: VimrcContext): VimrcFeature
---- @return fun(context: VimrcContext): VimrcFeature
-function mod.make_setup(fn)
-  --- @param context VimrcContext
-  return function(context)
-    local feature = fn(context)
-    table.insert(context.features, feature.name)
-
-    if feature.plugins then
-      for _, plugin in ipairs(feature.plugins) do
-        table.insert(context.plugins, plugin)
-      end
-    end
-
-    return feature
+function mod.run_ui_ready_callbacks()
+  for _, cb in ipairs(_ui_ready_callbacks) do
+    cb()
   end
 end
 
@@ -229,11 +206,6 @@ function mod.go_to_file_or_open(path, pos)
       tabedit()
     end
   end
-end
-
---- @param name string
-function mod.has_feature(name)
-  return vim.list_contains(mod.context.features, name)
 end
 
 ---@param desc string
