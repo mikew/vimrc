@@ -5,7 +5,7 @@
       "src": "https://github.com/numToStr/Comment.nvim"
     },
     "base16-nvim": {
-      "rev": "4a6ef31745f851e11424a12b63fb3d2a80b2916c",
+      "rev": "17781884af64e4205f84dde41d6030a61d0eb0dc",
       "src": "https://github.com/RRethy/base16-nvim"
     },
     "blink.cmp": {
