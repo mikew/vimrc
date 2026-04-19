@@ -1,5 +1,3 @@
-local vimrc = require('vimrc')
-
 local mod = {}
 
 --- @type table<string, unknown>
@@ -91,18 +89,32 @@ function mod.run_plugin_setups()
     pcall(fn)
   end
 
-  _plugin_setup_fns = {}
+  vim.schedule(function()
+    _plugin_setup_fns = {}
+  end)
 
-  vim.api.nvim_create_autocmd('VimEnter', {
-    callback = function()
-      for _, fn in ipairs(_plugin_setup_lazy_fns) do
-        pcall(fn)
-      end
+  local function run_lazy_setups()
+    for _, fn in ipairs(_plugin_setup_lazy_fns) do
+      pcall(fn)
+    end
 
+    vim.schedule(function()
       _plugin_setup_lazy_fns = {}
       spec_data = {}
-    end,
-  })
+
+      _did_run_plugin_setups = true
+    end)
+  end
+
+  if vim.v.vim_did_enter then
+    run_lazy_setups()
+  else
+    vim.api.nvim_create_autocmd('VimEnter', {
+      callback = function()
+        run_lazy_setups()
+      end,
+    })
+  end
 
   _did_run_plugin_setups = true
 end
