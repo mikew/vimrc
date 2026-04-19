@@ -314,6 +314,80 @@ vimrc_pack.add({
     end,
   },
 })
+
+vimrc_pack.add({
+  {
+    'https://github.com/RRethy/base16-nvim',
+    setup = function()
+      vim.cmd('colorscheme base16-oceanicnext')
+
+      local function apply_additional_highlights()
+        local theme = {}
+
+        theme.background = vimrc_colors.get_hl_color('Normal', 'bg')
+          or '#000000'
+        theme.background_alt = vimrc_colors.darken(theme.background, 0.3)
+
+        theme.text_primary = vimrc_colors.get_hl_color('Normal', 'fg')
+          or '#ffffff'
+        theme.text_quiet1 =
+          vimrc_colors.mix(theme.text_primary, theme.background, 0.5)
+        theme.text_quiet2 =
+          vimrc_colors.mix(theme.text_primary, theme.background, 0.8)
+
+        vim.api.nvim_set_hl(0, 'VimrcNormalNC', {
+          fg = theme.text_quiet1,
+          bg = theme.background_alt,
+          force = true,
+        })
+        vim.api.nvim_set_hl(0, 'FloatBorder', {
+          fg = theme.text_quiet2,
+          force = true,
+        })
+        vim.api.nvim_set_hl(0, 'WinSeparator', {
+          fg = theme.text_quiet2,
+          force = true,
+        })
+
+        vim.api.nvim_set_hl(0, 'LineNr', {
+          link = 'CursorLineNr',
+          force = true,
+        })
+        vim.api.nvim_set_hl(0, 'FoldColumn', {
+          link = 'CursorLineNr',
+          force = true,
+        })
+        vim.api.nvim_set_hl(0, 'SignColumn', {
+          link = 'CursorLineNr',
+          force = true,
+        })
+
+        vim.api.nvim_set_hl(0, 'NvimTreeIndentMarker', {
+          fg = theme.text_quiet2,
+          force = true,
+        })
+
+        vim.api.nvim_set_hl(0, 'IndentLine', {
+          fg = theme.text_quiet2,
+          force = true,
+        })
+        vim.api.nvim_set_hl(0, 'IndentLineCurrent', {
+          fg = theme.text_quiet1,
+          force = true,
+        })
+      end
+
+      vim.api.nvim_create_autocmd({ 'ColorScheme' }, {
+        callback = function()
+          apply_additional_highlights()
+        end,
+      })
+
+      apply_additional_highlights()
+    end,
+  },
+})
+
 vimrc_pack.add({
   {
     'https://github.com/kylechui/nvim-surround',
@@ -403,79 +477,6 @@ vimrc_pack.add({
       require('indentmini').setup({
         char = symbols.indent.line,
       })
-    end,
-  },
-})
-
-vimrc_pack.add({
-  {
-    'https://github.com/RRethy/base16-nvim',
-    setup = function()
-      vim.cmd('colorscheme base16-oceanicnext')
-
-      local function apply_additional_highlights()
-        local theme = {}
-
-        theme.background = vimrc_colors.get_hl_color('Normal', 'bg')
-          or '#000000'
-        theme.background_alt = vimrc_colors.darken(theme.background, 0.3)
-
-        theme.text_primary = vimrc_colors.get_hl_color('Normal', 'fg')
-          or '#ffffff'
-        theme.text_quiet1 =
-          vimrc_colors.mix(theme.text_primary, theme.background, 0.5)
-        theme.text_quiet2 =
-          vimrc_colors.mix(theme.text_primary, theme.background, 0.8)
-
-        vim.api.nvim_set_hl(0, 'VimrcNormalNC', {
-          fg = theme.text_quiet1,
-          bg = theme.background_alt,
-          force = true,
-        })
-        vim.api.nvim_set_hl(0, 'FloatBorder', {
-          fg = theme.text_quiet2,
-          force = true,
-        })
-        vim.api.nvim_set_hl(0, 'WinSeparator', {
-          fg = theme.text_quiet2,
-          force = true,
-        })
-
-        vim.api.nvim_set_hl(0, 'LineNr', {
-          link = 'CursorLineNr',
-          force = true,
-        })
-        vim.api.nvim_set_hl(0, 'FoldColumn', {
-          link = 'CursorLineNr',
-          force = true,
-        })
-        vim.api.nvim_set_hl(0, 'SignColumn', {
-          link = 'CursorLineNr',
-          force = true,
-        })
-
-        vim.api.nvim_set_hl(0, 'NvimTreeIndentMarker', {
-          fg = theme.text_quiet2,
-          force = true,
-        })
-
-        vim.api.nvim_set_hl(0, 'IndentLine', {
-          fg = theme.text_quiet2,
-          force = true,
-        })
-        vim.api.nvim_set_hl(0, 'IndentLineCurrent', {
-          fg = theme.text_quiet1,
-          force = true,
-        })
-      end
-
-      vim.api.nvim_create_autocmd({ 'ColorScheme' }, {
-        callback = function()
-          apply_additional_highlights()
-        end,
-      })
-
-      apply_additional_highlights()
     end,
   },
 })

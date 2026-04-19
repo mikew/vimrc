@@ -3,8 +3,6 @@ local vimrc_pack = require('vimrc_pack')
 
 local map = vimrc.keymap
 
--- snacks.nvim is registered in plugin/editor.lua. This file configures the
--- picker feature specifically.
 vimrc_pack.add({
   {
     'https://github.com/folke/snacks.nvim',
