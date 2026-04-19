@@ -285,7 +285,14 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
 
 vimrc.on_ui_ready(function(ui_context)
   if ui_context.ui == 'nvim-qt' then
-    vimrc_pack.add({ { 'https://github.com/equalsraf/neovim-gui-shim' } })
+    vimrc_pack.add({
+      {
+        'https://github.com/equalsraf/neovim-gui-shim',
+        setup = function()
+          vim.cmd('call GuiClipboard()')
+        end,
+      },
+    })
   end
 end)
 
