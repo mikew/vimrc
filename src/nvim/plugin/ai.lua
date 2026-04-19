@@ -50,7 +50,6 @@ vimrc_pack.add({
   { 'https://github.com/nvim-lua/plenary.nvim' },
   {
     'https://github.com/olimorris/codecompanion.nvim',
-    lazy = true,
     setup = function()
       require('codecompanion').setup({})
     end,
