@@ -12,13 +12,13 @@ local _ui_ready_callbacks = {}
 --- Must be called at setup/startup time, not lazily.
 --- @param callback fun(context: VimrcUiContext)
 function mod.on_ui_ready(callback)
-  table.insert(_ui_ready_callbacks, callback)
+  table.insert(_ui_ready_callbacks, vim.schedule_wrap(callback))
 end
 
 --- @param ui_context VimrcUiContext
 function mod.run_ui_ready_callbacks(ui_context)
   for _, cb in ipairs(_ui_ready_callbacks) do
-    cb(ui_context)
+    pcall(cb, ui_context)
   end
 end
 

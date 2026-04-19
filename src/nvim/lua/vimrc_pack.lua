@@ -64,7 +64,7 @@ local _plugin_setup_fns = {}
 
 --- @param fn fun()
 function mod.setup_plugin(fn)
-  table.insert(_plugin_setup_fns, fn)
+  table.insert(_plugin_setup_fns, vim.schedule_wrap(fn))
 end
 
 --- @type fun()[]
@@ -72,7 +72,7 @@ local _plugin_setup_lazy_fns = {}
 
 --- @param fn fun()
 function mod.setup_plugin_lazy(fn)
-  table.insert(_plugin_setup_lazy_fns, fn)
+  table.insert(_plugin_setup_lazy_fns, vim.schedule_wrap(fn))
 end
 
 function mod.run_plugin_setups()
