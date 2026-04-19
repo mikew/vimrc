@@ -7,7 +7,6 @@ vimrc_pack.add({
   {
     'https://github.com/mikew/nvim-drawer',
     -- vim.fn.expand('~/Work/nvim-drawer'),
-    lazy = true,
     setup = function()
       local drawer = require('nvim-drawer')
 
@@ -121,7 +120,6 @@ vimrc_pack.add({
 
   {
     'https://github.com/nvim-tree/nvim-tree.lua',
-    lazy = true,
     setup = function()
       -- disable netrw (done here rather than in an `init` since we don't have that)
       vim.g.loaded_netrw = 1
