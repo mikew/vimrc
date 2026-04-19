@@ -310,7 +310,7 @@ vimrc_pack.add({
     },
     lazy = true,
     setup = function()
-      require('snacks').setup(vimrc_pack.get_options_for('snacks.nvim'))
+      require('snacks').setup(vimrc_pack.get_data_for('snacks.nvim'))
     end,
   },
 })

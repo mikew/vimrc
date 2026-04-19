@@ -1,7 +1,7 @@
 local mod = {}
 
 --- @type table<string, unknown>
-local options = {}
+local spec_data = {}
 
 --- Base spec from Neovim with `src` as `[1]` since that's annoying.
 --- @class VimPackSpec
@@ -32,8 +32,8 @@ function mod.add(specs, opts)
   for _, spec in ipairs(specs) do
     local name = spec.name or vim.fn.fnamemodify(spec[1], ':t')
 
-    options[name] =
-      vim.tbl_deep_extend('force', options[name] or {}, spec.data or {})
+    spec_data[name] =
+      vim.tbl_deep_extend('force', spec_data[name] or {}, spec.data or {})
 
     vim_pack_specs[#vim_pack_specs + 1] = {
       src = spec[1],
@@ -55,8 +55,8 @@ function mod.add(specs, opts)
 end
 
 --- @param name string
-function mod.get_options_for(name)
-  return options[name]
+function mod.get_data_for(name)
+  return spec_data[name]
 end
 
 --- @type fun()[]
@@ -89,7 +89,7 @@ function mod.run_plugin_setups()
       end
 
       _plugin_setup_lazy_fns = {}
-      options = {}
+      spec_data = {}
     end,
   })
 end
