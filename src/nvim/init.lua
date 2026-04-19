@@ -1,37 +1,19 @@
 local vimrc = require('vimrc')
 local symbols = require('symbols')
 
-require('features.editor').setup(vimrc.context)
-
-require('features.languages').setup(vimrc.context)
-
-require('features.scm').setup(vimrc.context)
-
-require('features.lsp').setup(vimrc.context)
-
-require('features.completion').setup(vimrc.context)
-
-require('features.drawer').setup(vimrc.context)
-
-require('features.grep').setup(vimrc.context)
-
-require('features.scrollbar').setup(vimrc.context)
-
-require('features.ai').setup(vimrc.context)
-
 -- Setup lazy.nvim
-require('lazy-rtp')
-require('lazy').setup({
-  spec = vimrc.context.plugins,
-  -- Configure any other settings here. See the documentation for more details.
-  -- colorscheme that will be used when installing plugins.
-  install = { colorscheme = { 'base16-oceanicnext' } },
-  -- automatically check for plugin updates
-  -- checker = { enabled = true },
-  ui = {
-    border = symbols.border.nvim_style,
-  },
-})
+-- require('lazy-rtp')
+-- require('lazy').setup({
+--   spec = vimrc.context.plugins,
+--   -- Configure any other settings here. See the documentation for more details.
+--   -- colorscheme that will be used when installing plugins.
+--   install = { colorscheme = { 'base16-oceanicnext' } },
+--   -- automatically check for plugin updates
+--   -- checker = { enabled = true },
+--   ui = {
+--     border = symbols.border.nvim_style,
+--   },
+-- })
 
 vim.api.nvim_create_user_command('BetterTabclose', function(args)
   vimrc.better_tabclose(tonumber(args.args))
@@ -135,10 +117,11 @@ vim.api.nvim_create_autocmd('UIEnter', {
       end
 
       vim.schedule(function()
-        require('ginit').setup()
-        for _, cb in ipairs(vimrc._ui_ready_callbacks) do
-          cb()
+        if vimrc.has_gui_running() then
+          require('ginit').setup()
         end
+
+        vimrc.run_ui_ready_callbacks()
       end)
     end
 
