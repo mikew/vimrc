@@ -46,15 +46,13 @@ vimrc_pack.add({
             return
           end
 
-          require('nvim-treesitter')
-            .install(ts_lang)
-            :await(function(_, success)
-              if not success then
-                return
-              end
+          require('nvim-treesitter').install(ts_lang):await(function(_, success)
+            if not success then
+              return
+            end
 
-              start_treesitter(bufnr, vim_filetype, ts_lang)
-            end)
+            start_treesitter(bufnr, vim_filetype, ts_lang)
+          end)
         end,
       })
     end,
