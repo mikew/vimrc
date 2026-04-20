@@ -81,7 +81,7 @@ function mod.register_setup_fn(calltime, fn)
   end
 
   if calltime == 'Immediate' then
-    fn()
+    pcall(fn)
   elseif calltime == 'VimEnter' then
     table.insert(_plugin_setup_fns_by_time.VimEnter, vim.schedule_wrap(fn))
   else
