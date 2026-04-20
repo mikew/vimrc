@@ -299,43 +299,7 @@ vimrc_pack.register_setup_fn('VimEnter', function()
       --  For example, in C this would take you to the header.
       map('Goto Declaration', 'gD', 'n', vim.lsp.buf.declaration)
 
-      -- The following two autocommands are used to highlight references of the
-      -- word under your cursor when your cursor rests there for a little while.
-      -- See `:help CursorHold` for information about when this is executed
-      --
-      -- When you move your cursor, the highlights will be cleared (the second autocommand).
       local client = vim.lsp.get_client_by_id(event.data.client_id)
-      if
-        client
-        and client:supports_method(
-          vim.lsp.protocol.Methods.textDocument_documentHighlight
-        )
-      then
-        local highlight_augroup = vimrc.create_augroup('lsp-highlight', false)
-
-        vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-          buffer = event.buf,
-          group = highlight_augroup,
-          callback = vim.lsp.buf.document_highlight,
-        })
-
-        vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-          buffer = event.buf,
-          group = highlight_augroup,
-          callback = vim.lsp.buf.clear_references,
-        })
-
-        vim.api.nvim_create_autocmd('LspDetach', {
-          group = vimrc.create_augroup('lsp-detach'),
-          callback = function(lsp_detach_event)
-            vim.lsp.buf.clear_references()
-            vim.api.nvim_clear_autocmds({
-              group = highlight_augroup,
-              buffer = lsp_detach_event.buf,
-            })
-          end,
-        })
-      end
 
       -- The following code creates a keymap to toggle inlay hints in your
       -- code, if the language server you are using supports them
