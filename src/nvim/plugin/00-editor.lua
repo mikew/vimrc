@@ -315,7 +315,7 @@ vimrc_pack.add({
       statuscolumn = { enabled = false },
       words = { enabled = false },
     },
-    lazy = true,
+    lazy = 'VimEnter',
     setup = function()
       require('snacks').setup(vimrc_pack.get_data_for('snacks.nvim'))
     end,
@@ -325,6 +325,7 @@ vimrc_pack.add({
 vimrc_pack.add({
   {
     'https://github.com/RRethy/base16-nvim',
+    lazy = 'Immediate',
     setup = function()
       vim.cmd('colorscheme base16-oceanicnext')
 
@@ -399,7 +400,7 @@ vimrc_pack.add({
   {
     'https://github.com/kylechui/nvim-surround',
     version = vim.version.range('*'),
-    lazy = true,
+    lazy = 'VimEnter',
     setup = function()
       require('nvim-surround').setup()
     end,
@@ -407,7 +408,10 @@ vimrc_pack.add({
 })
 
 vimrc_pack.add({
-  { 'https://github.com/michaeljsmith/vim-indent-object' },
+  {
+    'https://github.com/michaeljsmith/vim-indent-object',
+    lazy = 'VimEnter',
+  },
 })
 
 -- Detect tabstop and shiftwidth automatically
@@ -416,7 +420,7 @@ vimrc_pack.add({ { 'https://github.com/tpope/vim-sleuth' } })
 vimrc_pack.add({
   {
     'https://github.com/numToStr/Comment.nvim',
-    lazy = true,
+    lazy = 'VimEnter',
     setup = function()
       require('Comment').setup({
         ignore = '^(%s*)$',
@@ -469,7 +473,7 @@ vimrc_pack.add({
 vimrc_pack.add({
   {
     'https://github.com/windwp/nvim-autopairs',
-    lazy = true,
+    lazy = 'VimEnter',
     setup = function()
       require('nvim-autopairs').setup()
     end,
@@ -479,7 +483,7 @@ vimrc_pack.add({
 vimrc_pack.add({
   {
     'https://github.com/nvimdev/indentmini.nvim',
-    lazy = true,
+    lazy = 'VimEnter',
     setup = function()
       require('indentmini').setup({
         char = symbols.indent.line,
@@ -491,7 +495,7 @@ vimrc_pack.add({
 vimrc_pack.add({
   {
     'https://github.com/RRethy/vim-illuminate',
-    lazy = true,
+    lazy = 'VimEnter',
     setup = function()
       require('illuminate').configure()
     end,
@@ -574,7 +578,7 @@ vimrc_pack.add({
 vimrc_pack.add({
   {
     'https://github.com/andymass/vim-matchup',
-    lazy = true,
+    lazy = 'VimEnter',
     setup = function()
       require('match-up').setup({})
     end,
@@ -696,7 +700,6 @@ vimrc_pack.add({
   { 'https://github.com/kevinhwang91/promise-async' },
   {
     'https://github.com/kevinhwang91/nvim-ufo',
-    lazy = true,
     setup = function()
       require('ufo').setup({
         provider_selector = function(bufnr, filetype, buftype)

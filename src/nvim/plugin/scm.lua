@@ -7,7 +7,7 @@ local map = vimrc.keymap
 vimrc_pack.add({
   {
     'https://github.com/lewis6991/gitsigns.nvim',
-    lazy = true,
+    lazy = 'VimEnter',
     setup = function()
       require('gitsigns').setup({
         preview_config = {

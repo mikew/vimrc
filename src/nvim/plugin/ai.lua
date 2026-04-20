@@ -17,7 +17,7 @@ local vimrc_pack = require('vimrc_pack')
 vimrc_pack.add({
   {
     'https://github.com/zbirenbaum/copilot.lua',
-    lazy = true,
+    lazy = 'VimEnter',
     setup = function()
       require('copilot').setup({
         panel = {
@@ -50,7 +50,7 @@ vimrc_pack.add({
   { 'https://github.com/nvim-lua/plenary.nvim' },
   {
     'https://github.com/olimorris/codecompanion.nvim',
-    lazy = true,
+    lazy = 'VimEnter',
     setup = function()
       require('codecompanion').setup({})
     end,

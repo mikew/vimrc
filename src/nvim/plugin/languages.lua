@@ -33,7 +33,7 @@ vimrc_pack.add({
   {
     'https://github.com/nvim-treesitter/nvim-treesitter',
     version = 'main',
-    lazy = true,
+    lazy = 'VimEnter',
     setup = function()
       local all_parsers = require('nvim-treesitter').get_available()
       vim.api.nvim_create_autocmd('FileType', {

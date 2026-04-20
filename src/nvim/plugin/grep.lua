@@ -6,6 +6,7 @@ local map = vimrc.keymap
 vimrc_pack.add({
   {
     'https://github.com/folke/snacks.nvim',
+    lazy = 'VimEnter',
     data = {
       picker = {
         enabled = true,
@@ -71,7 +72,6 @@ vimrc_pack.add({
         },
       },
     },
-    lazy = true,
     setup = function()
       require('picker_patches')
 

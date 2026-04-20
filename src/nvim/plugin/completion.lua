@@ -5,7 +5,7 @@ vimrc_pack.add({
   {
     'https://github.com/saghen/blink.cmp',
     version = vim.version.range('1.*'),
-    lazy = true,
+    lazy = 'VimEnter',
     setup = function()
       ---@module 'blink.cmp'
       ---@type blink.cmp.Config

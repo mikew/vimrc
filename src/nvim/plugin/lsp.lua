@@ -14,7 +14,7 @@ vimrc_pack.add({
   { 'https://github.com/b0o/schemastore.nvim' },
   { 'https://github.com/antosha417/nvim-lsp-file-operations' },
 })
-vimrc_pack.setup_plugin_lazy(function()
+vimrc_pack.register_setup_fn('VimEnter', function()
   -- By default, Neovim doesn't support everything that is in the LSP specification.
   -- When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
   -- So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
@@ -391,7 +391,7 @@ end)
 vimrc_pack.add({
   {
     'https://github.com/folke/lazydev.nvim',
-    lazy = true,
+    lazy = 'VimEnter',
     setup = function()
       require('lazydev').setup({})
     end,
