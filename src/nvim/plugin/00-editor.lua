@@ -700,6 +700,7 @@ vimrc_pack.add({
   { 'https://github.com/kevinhwang91/promise-async' },
   {
     'https://github.com/kevinhwang91/nvim-ufo',
+    lazy = 'VimEnter',
     setup = function()
       require('ufo').setup({
         provider_selector = function(bufnr, filetype, buftype)
