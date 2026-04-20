@@ -21,8 +21,10 @@ local spec_data = {}
 --- URI from which to install and pull updates. Any format supported by `git clone` is allowed.
 --- @field [1] string
 --- @field setup? fun()
---- @field lazy? boolean
+--- @field lazy? 'VimEnter'|'Schedule'|'Immediate'
 --- @field pack_add_options? vim.pack.keyset.add
+
+--- @alias VimrcPackSetupCalltime 'VimEnter'|'Schedule'|'Immediate'
 
 ---@param specs VimrcPackSpec[]
 function mod.add(specs, opts)
@@ -41,17 +43,15 @@ function mod.add(specs, opts)
       version = spec.version,
       data = spec.data,
     }
-
-    if spec.setup then
-      if spec.lazy then
-        mod.setup_plugin_lazy(spec.setup)
-      else
-        mod.setup_plugin(spec.setup)
-      end
-    end
   end
 
   vim.pack.add(vim_pack_specs, opts)
+
+  for _, spec in ipairs(specs) do
+    if spec.setup then
+      mod.register_setup_fn(spec.lazy or 'Schedule', spec.setup)
+    end
+  end
 end
 
 --- @param name string
@@ -59,47 +59,53 @@ function mod.get_data_for(name)
   return spec_data[name]
 end
 
---- @type fun()[]
-local _plugin_setup_fns = {}
 local _did_run_plugin_setups = false
 
+--- @type table<VimrcPackSetupCalltime, fun()[]>
+local _plugin_setup_fns_by_time = {
+  VimEnter = {},
+  Schedule = {},
+  Immediate = {},
+}
+
+--- @param calltime VimrcPackSetupCalltime
 --- @param fn fun()
-function mod.setup_plugin(fn)
+function mod.register_setup_fn(calltime, fn)
   if _did_run_plugin_setups then
-    vim.schedule(fn)
-  else
-    table.insert(_plugin_setup_fns, vim.schedule_wrap(fn))
+    if calltime == 'Immediate' then
+      pcall(fn)
+    else
+      vim.schedule(fn)
+    end
+    return
   end
-end
 
---- @type fun()[]
-local _plugin_setup_lazy_fns = {}
-
---- @param fn fun()
-function mod.setup_plugin_lazy(fn)
-  if _did_run_plugin_setups then
-    vim.schedule(fn)
+  if calltime == 'Immediate' then
+    fn()
+  elseif calltime == 'VimEnter' then
+    table.insert(_plugin_setup_fns_by_time.VimEnter, vim.schedule_wrap(fn))
   else
-    table.insert(_plugin_setup_lazy_fns, vim.schedule_wrap(fn))
+    table.insert(_plugin_setup_fns_by_time.Schedule, vim.schedule_wrap(fn))
   end
 end
 
 function mod.run_plugin_setups()
-  for _, fn in ipairs(_plugin_setup_fns) do
+  for _, fn in ipairs(_plugin_setup_fns_by_time.Schedule) do
     pcall(fn)
   end
 
   vim.schedule(function()
-    _plugin_setup_fns = {}
+    _plugin_setup_fns_by_time.Immediate = {}
+    _plugin_setup_fns_by_time.Schedule = {}
   end)
 
-  local function run_lazy_setups()
-    for _, fn in ipairs(_plugin_setup_lazy_fns) do
+  local function run_vim_enter_setups()
+    for _, fn in ipairs(_plugin_setup_fns_by_time.VimEnter) do
       pcall(fn)
     end
 
     vim.schedule(function()
-      _plugin_setup_lazy_fns = {}
+      _plugin_setup_fns_by_time.VimEnter = {}
       spec_data = {}
 
       _did_run_plugin_setups = true
@@ -107,11 +113,11 @@ function mod.run_plugin_setups()
   end
 
   if vim.v.vim_did_enter then
-    run_lazy_setups()
+    run_vim_enter_setups()
   else
     vim.api.nvim_create_autocmd('VimEnter', {
       callback = function()
-        run_lazy_setups()
+        run_vim_enter_setups()
       end,
     })
   end
