@@ -283,6 +283,10 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
   end,
 })
 
+vim.cmd('command! Q q')
+vim.cmd('command! Qa qa')
+vim.cmd('command! QA qa')
+
 vimrc.on_ui_ready(function(ui_context)
   if ui_context.ui == 'nvim-qt' then
     vimrc_pack.add({
