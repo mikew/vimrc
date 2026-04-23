@@ -128,14 +128,11 @@ end
 --- @param path string
 --- @param pos? (integer | nil)[]
 function mod.go_to_file_or_open(path, pos)
-  local function go_to_pos()
+  --- @param winid integer
+  local function go_to_pos(winid)
     if pos and pos[1] ~= nil then
-      vim.schedule(function()
-        vim.schedule(function()
-          vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] or 0 })
-          vim.cmd('norm! zzzv')
-        end)
-      end)
+      vim.api.nvim_win_set_cursor(winid, { pos[1], pos[2] or 0 })
+      vim.cmd('norm! zzzv')
     end
   end
 
@@ -143,13 +140,13 @@ function mod.go_to_file_or_open(path, pos)
 
   if window_info then
     vim.api.nvim_set_current_win(window_info.winid)
-    go_to_pos()
+    go_to_pos(window_info.winid)
   else
     local first_window = vim.api.nvim_tabpage_list_wins(0)[1] or -1
 
     local function tabedit()
       vim.cmd('tabedit ' .. vim.fn.fnameescape(path))
-      go_to_pos()
+      go_to_pos(vim.api.nvim_get_current_win())
     end
 
     if first_window == -1 then
@@ -170,7 +167,7 @@ function mod.go_to_file_or_open(path, pos)
     if is_first_window_empty then
       vim.api.nvim_win_call(first_window, function()
         vim.cmd('edit ' .. vim.fn.fnameescape(path))
-        go_to_pos()
+        go_to_pos(first_window)
       end)
 
       vim.api.nvim_set_current_win(first_window)

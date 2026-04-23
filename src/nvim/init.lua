@@ -272,6 +272,8 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
       return
     end
 
+    -- TODO vim.schedule???? Some sort of
+    -- `_G._vimrc_goto_pos_is_happening_yes`????
     local cur = vim.api.nvim_win_get_cursor(0)
     if cur[1] > 1 or cur[2] > 0 then
       return
