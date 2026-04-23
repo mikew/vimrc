@@ -6,8 +6,7 @@ local map = vimrc.keymap
 vimrc_pack.add({
   {
     'https://github.com/mikew/nvim-drawer',
-    -- vim.fn.expand('~/Work/nvim-drawer'),
-    lazy = true,
+    lazy = 'VimEnter',
     setup = function()
       local drawer = require('nvim-drawer')
 
