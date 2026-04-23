@@ -21,6 +21,7 @@ local spec_data = {}
 --- URI from which to install and pull updates. Any format supported by `git clone` is allowed.
 --- @field [1] string
 --- @field setup? fun()
+--- @field immediate? fun()
 --- @field lazy? 'VimEnter'|'Schedule'|'Immediate'
 --- @field pack_add_options? vim.pack.keyset.add
 
@@ -50,6 +51,10 @@ function mod.add(specs, opts)
   for _, spec in ipairs(specs) do
     if spec.setup then
       mod.register_setup_fn(spec.lazy or 'Schedule', spec.setup)
+    end
+
+    if spec.immediate then
+      mod.register_setup_fn('Immediate', spec.immediate)
     end
   end
 end

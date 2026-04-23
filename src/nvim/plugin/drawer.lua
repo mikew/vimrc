@@ -122,11 +122,12 @@ vimrc_pack.add({
   {
     'https://github.com/nvim-tree/nvim-tree.lua',
     lazy = 'VimEnter',
-    setup = function()
-      -- disable netrw (done here rather than in an `init` since we don't have that)
+    immediate = function()
+      -- disable netrw
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
-
+    end,
+    setup = function()
       local drawer = require('nvim-drawer')
 
       drawer.create_drawer({
