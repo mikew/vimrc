@@ -3,7 +3,7 @@ local symbols = require('symbols')
 
 local map = vimrc.keymap
 
-for _, tool in ipairs({ 'node', 'python' }) do
+for _, tool in ipairs({ 'node', 'python', 'go' }) do
   vimrc.prepend_mise_tool_path(tool)
 end
 
