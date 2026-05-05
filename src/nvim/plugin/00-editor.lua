@@ -186,6 +186,27 @@ vimrc_pack.add({
             'v',
             '<Plug>(comment_toggle_linewise_visual)gv'
           )
+
+          if os.getenv('TMUX') ~= nil then
+            map(
+              'Toggle comment linewise',
+              '<C-_>',
+              'n',
+              '<Plug>(comment_toggle_linewise_current)'
+            )
+            map(
+              'Toggle comment linewise',
+              '<C-_>',
+              'i',
+              '<C-o><Plug>(comment_toggle_linewise_current)'
+            )
+            map(
+              'Toggle comment linewise',
+              '<C-_>',
+              'v',
+              '<Plug>(comment_toggle_linewise_visual)gv'
+            )
+          end
         end
       end)
     end,
