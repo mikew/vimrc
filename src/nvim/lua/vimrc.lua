@@ -5,11 +5,9 @@ local mod = {}
 --- @field ui string
 --- @field has_gui boolean
 
---- @type fun(context: VimrcUiContext)[]
+--- @type fun(ui_context: VimrcUiContext)[]
 local _ui_ready_callbacks = {}
 
---- Queue a callback to run after UIEnter, once context.ui and context.os are set.
---- Must be called at setup/startup time, not lazily.
 --- @param callback fun(context: VimrcUiContext)
 function mod.on_ui_ready(callback)
   table.insert(_ui_ready_callbacks, vim.schedule_wrap(callback))
