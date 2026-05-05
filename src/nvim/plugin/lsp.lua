@@ -4,6 +4,10 @@ local symbols = require('symbols')
 
 local map = vimrc.keymap
 
+if vimrc.is_feature_disabled('lsp') then
+  return
+end
+
 vimrc_pack.add({
   { 'https://github.com/mason-org/mason.nvim' },
   { 'https://github.com/mason-org/mason-lspconfig.nvim' },

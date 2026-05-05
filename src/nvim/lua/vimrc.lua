@@ -213,4 +213,21 @@ function mod.prepend_mise_tool_path(binary)
   end
 end
 
+--- @type string[]|nil
+local _disabled_features = nil
+--- @param feature string
+function mod.is_feature_disabled(feature)
+  if _disabled_features == nil then
+    local disabled_features = os.getenv('NVIM_DISABLED_FEATURES')
+
+    if disabled_features == nil then
+      _disabled_features = {}
+    else
+      _disabled_features = vim.split(disabled_features, ',')
+    end
+  end
+
+  return vim.tbl_contains(_disabled_features, feature)
+end
+
 return mod
