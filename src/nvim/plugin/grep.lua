@@ -96,6 +96,11 @@ vimrc_pack.add({
           map('Search by Grep', '<C-S-F>', { 'n', 'i', 't' }, function()
             snacks.picker.git_grep({ untracked = true })
           end)
+          if os.getenv('TMUX') ~= nil then
+            map('Search by Grep', '<C-F>', { 'n', 'i', 't' }, function()
+              snacks.picker.git_grep({ untracked = true })
+            end)
+          end
         end
       end)
 

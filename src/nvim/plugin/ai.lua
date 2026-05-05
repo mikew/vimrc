@@ -24,6 +24,12 @@ vimrc_pack.add({
     'https://github.com/zbirenbaum/copilot.lua',
     lazy = 'VimEnter',
     setup = function()
+      -- TODO This should be done in an on_ui_enter callback.
+      local accept_key = '<C-CR>'
+      if os.getenv('TMUX') ~= nil then
+        accept_key = '<C-M>'
+      end
+
       require('copilot').setup({
         panel = {
           enabled = false,
@@ -32,7 +38,7 @@ vimrc_pack.add({
           enabled = true,
           auto_trigger = true,
           keymap = {
-            accept = '<C-CR>',
+            accept = accept_key,
             -- accept_word = false,
             -- accept_line = false,
             -- next = '<M-]>',

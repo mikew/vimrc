@@ -46,6 +46,12 @@ vimrc_pack.add({
           map('Focus or toggle terminal', '<C-`>', { 'n', 't' }, function()
             event.instance.focus_or_toggle()
           end)
+          -- TODO This should be done in an on_ui_enter callback.
+          if os.getenv('TMUX') then
+            map('Focus or toggle terminal', '<C-Space>', { 'n', 't' }, function()
+              event.instance.focus_or_toggle()
+            end)
+          end
           map('Open new terminal', '<leader>tn', 'n', function()
             event.instance.open({ mode = 'new' })
           end)
