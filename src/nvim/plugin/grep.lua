@@ -80,25 +80,25 @@ vimrc_pack.add({
 
         if ui_context.has_gui and ui_context.os == 'macos' then
           map('Find Files', '<D-t>', { 'n', 'i', 't' }, function()
-            snacks.picker.git_files({ untracked = true })
+            snacks.picker.git_files({ untracked = true, cwd = vim.fn.getcwd() })
           end)
           map('Find Files', '<D-p>', { 'n', 'i', 't' }, function()
-            snacks.picker.git_files({ untracked = true })
+            snacks.picker.git_files({ untracked = true, cwd = vim.fn.getcwd() })
           end)
           map('Search by Grep', '<D-F>', { 'n', 'i', 't' }, function()
-            snacks.picker.git_grep({ untracked = true })
+            snacks.picker.git_grep({ untracked = true, cwd = vim.fn.getcwd() })
           end)
         else
           map('Find Files', '<C-p>', { 'n', 'i', 't' }, function()
-            snacks.picker.git_files({ untracked = true })
+            snacks.picker.git_files({ untracked = true, cwd = vim.fn.getcwd() })
           end)
 
           map('Search by Grep', '<C-S-F>', { 'n', 'i', 't' }, function()
-            snacks.picker.git_grep({ untracked = true })
+            snacks.picker.git_grep({ untracked = true, cwd = vim.fn.getcwd() })
           end)
           if os.getenv('TMUX') ~= nil then
             map('Search by Grep', '<C-F>', { 'n', 'i', 't' }, function()
-              snacks.picker.git_grep({ untracked = true })
+              snacks.picker.git_grep({ untracked = true, cwd = vim.fn.getcwd() })
             end)
           end
         end
