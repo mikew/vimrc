@@ -126,8 +126,6 @@ function mod.run_plugin_setups()
       end,
     })
   end
-
-  _did_run_plugin_setups = true
 end
 
 --- @type table<string, boolean>
