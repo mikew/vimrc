@@ -20,7 +20,9 @@ vimrc_pack.add({
     lazy = 'VimEnter',
     setup = function()
       --- @param bufnr integer
-      local function start_treesitter(bufnr)
+      --- @param ts_lang string
+      --- @param vim_filetype string
+      local function start_treesitter(bufnr, ts_lang, vim_filetype)
         -- Enables syntax highlighting and other treesitter features
         vim.treesitter.start(bufnr)
 
@@ -29,8 +31,10 @@ vimrc_pack.add({
         -- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 
         -- enables treesitter based indentation
-        -- vim.bo.indentexpr =
-        --   "v:lua.require'nvim-treesitter'.indentexpr()"
+        local has_indents = vim.treesitter.query.get(ts_lang, 'indents')
+        if has_indents then
+          vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
       end
 
       local all_parsers = require('nvim-treesitter').get_available()
@@ -49,7 +53,7 @@ vimrc_pack.add({
               return
             end
 
-            start_treesitter(bufnr)
+            start_treesitter(bufnr, ts_lang, vim_filetype)
           end)
         end,
       })
