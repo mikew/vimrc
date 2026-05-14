@@ -1,3 +1,5 @@
+vim.loader.enable(true)
+
 local vimrc = require('vimrc')
 local symbols = require('symbols')
 
