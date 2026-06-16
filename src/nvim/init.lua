@@ -286,11 +286,6 @@ vim.cmd('command! Q q')
 vim.cmd('command! Qa qa')
 vim.cmd('command! QA qa')
 
-vim.o.autoread = true
-vim.api.nvim_create_autocmd({ 'BufEnter', 'FocusGained' }, {
-  command = 'if mode() != "c" | checktime | endif',
-})
-
 vim.api.nvim_create_user_command('BetterTabclose', function(args)
   vimrc.better_tabclose(tonumber(args.args))
 end, { nargs = 1 })

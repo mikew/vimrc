@@ -453,3 +453,21 @@ vimrc_pack.add({
     end,
   },
 })
+
+vimrc_pack.add({
+  {
+    'https://github.com/ccntrq/autoreload.nvim',
+    lazy = 'VimEnter',
+    setup = function()
+      require('autoreload').setup({
+        autoread = true,
+        timer = {
+          enabled = false,
+        },
+        notify = {
+          on_reload = false,
+        },
+      })
+    end,
+  },
+})
