@@ -3,6 +3,9 @@ local mod = {}
 --- @type table<string, unknown>
 local spec_data = {}
 
+--- @type table<string, boolean>
+local _plugin_cache = {}
+
 --- Base spec from Neovim with `src` as `[1]` since that's annoying.
 --- @class VimPackSpec
 --- Name of plugin. Will be used as directory name. Default: `src` repository name.
@@ -37,6 +40,8 @@ function mod.add(specs, opts)
 
     spec_data[name] =
       vim.tbl_deep_extend('force', spec_data[name] or {}, spec.data or {})
+
+    _plugin_cache[name] = true
 
     vim_pack_specs[#vim_pack_specs + 1] = {
       src = spec[1],
@@ -128,13 +133,10 @@ function mod.run_plugin_setups()
   end
 end
 
---- @type table<string, boolean>
-local _plugin_cache = {}
-
 --- @param name string
 function mod.has_plugin(name)
-  if _plugin_cache[name] then
-    return true
+  if _plugin_cache[name] ~= nil then
+    return _plugin_cache[name]
   end
 
   for _, plug in ipairs(vim.pack.get()) do
@@ -143,6 +145,8 @@ function mod.has_plugin(name)
       return true
     end
   end
+
+  _plugin_cache[name] = false
 
   return false
 end
