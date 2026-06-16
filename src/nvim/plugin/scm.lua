@@ -4,6 +4,10 @@ local symbols = require('symbols')
 
 local map = vimrc.keymap
 
+if vimrc.is_feature_disabled('scm') then
+  return
+end
+
 vimrc_pack.add({
   {
     'https://github.com/lewis6991/gitsigns.nvim',

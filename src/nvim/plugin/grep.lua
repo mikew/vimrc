@@ -1,6 +1,10 @@
 local vimrc = require('vimrc')
 local vimrc_pack = require('vimrc_pack')
 
+if vimrc.is_feature_disabled('grep') then
+  return
+end
+
 local map = vimrc.keymap
 
 vimrc_pack.add({

@@ -1,4 +1,9 @@
+local vimrc = require('vimrc')
 local vimrc_pack = require('vimrc_pack')
+
+if vimrc.is_feature_disabled('languages') then
+  return
+end
 
 vimrc_pack.add({ { 'https://github.com/RRethy/nvim-treesitter-endwise' } })
 

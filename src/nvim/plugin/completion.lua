@@ -1,5 +1,10 @@
+local vimrc = require('vimrc')
 local vimrc_pack = require('vimrc_pack')
 local symbols = require('symbols')
+
+if vimrc.is_feature_disabled('completion') then
+  return
+end
 
 vimrc_pack.add({
   {

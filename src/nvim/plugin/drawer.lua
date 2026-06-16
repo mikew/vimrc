@@ -1,6 +1,11 @@
 local vimrc = require('vimrc')
 local vimrc_pack = require('vimrc_pack')
 local symbols = require('symbols')
+
+if vimrc.is_feature_disabled('drawer') then
+  return
+end
+
 local map = vimrc.keymap
 
 vimrc_pack.add({
@@ -48,9 +53,14 @@ vimrc_pack.add({
           end)
           -- TODO This should be done in an on_ui_enter callback.
           if os.getenv('TMUX') then
-            map('Focus or toggle terminal', '<C-Space>', { 'n', 't' }, function()
-              event.instance.focus_or_toggle()
-            end)
+            map(
+              'Focus or toggle terminal',
+              '<C-Space>',
+              { 'n', 't' },
+              function()
+                event.instance.focus_or_toggle()
+              end
+            )
           end
           map('Open new terminal', '<leader>tn', 'n', function()
             event.instance.open({ mode = 'new' })
