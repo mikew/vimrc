@@ -24,7 +24,8 @@ local _plugin_cache = {}
 --- URI from which to install and pull updates. Any format supported by `git clone` is allowed.
 --- @field [1] string
 --- @field setup? fun()
---- @field immediate? fun()
+--- @field before_packadd? fun()
+--- @field after_packadd? fun()
 --- @field lazy? 'VimEnter'|'Schedule'|'Immediate'
 --- @field pack_add_options? vim.pack.keyset.add
 
@@ -43,6 +44,10 @@ function mod.add(specs, opts)
 
     _plugin_cache[name] = true
 
+    if spec.before_packadd then
+      pcall(spec.before_packadd)
+    end
+
     vim_pack_specs[#vim_pack_specs + 1] = {
       src = spec[1],
       name = name,
@@ -58,8 +63,8 @@ function mod.add(specs, opts)
       mod.register_setup_fn(spec.lazy or 'Schedule', spec.setup)
     end
 
-    if spec.immediate then
-      mod.register_setup_fn('Immediate', spec.immediate)
+    if spec.after_packadd then
+      pcall(spec.after_packadd)
     end
   end
 end
@@ -117,9 +122,9 @@ function mod.run_plugin_setups()
     vim.schedule(function()
       _plugin_setup_fns_by_time.VimEnter = {}
       spec_data = {}
-
-      _did_run_plugin_setups = true
     end)
+
+    _did_run_plugin_setups = true
   end
 
   if vim.v.vim_did_enter then

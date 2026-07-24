@@ -137,7 +137,7 @@ vimrc_pack.add({
   {
     'https://github.com/nvim-tree/nvim-tree.lua',
     lazy = 'VimEnter',
-    immediate = function()
+    before_packadd = function()
       -- disable netrw
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
