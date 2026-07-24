@@ -471,3 +471,13 @@ vimrc_pack.add({
     end,
   },
 })
+
+vimrc_pack.add({
+  {
+    'https://github.com/lambdalisue/vim-suda',
+    lazy = 'Immediate',
+    before_packadd = function()
+      vim.g.suda_smart_edit = 1
+    end,
+  },
+})
