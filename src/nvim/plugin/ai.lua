@@ -58,12 +58,24 @@ vimrc_pack.add({
 })
 
 vimrc_pack.add({
-  { 'https://github.com/nvim-lua/plenary.nvim' },
   {
-    'https://github.com/olimorris/codecompanion.nvim',
+    'https://github.com/sudo-tee/opencode.nvim',
     lazy = 'VimEnter',
     setup = function()
-      require('codecompanion').setup({})
+      require('opencode').setup({
+        default_mode = 'plan',
+
+        server = {
+          url = '10.0.1.99',
+          port = 4096,
+          password = function()
+            local keyfile = vim.fn.expand('~/.secrets/opencode-serve-key')
+            if vim.fn.filereadable(keyfile) == 1 then
+              return vim.fn.trim(vim.fn.readfile(keyfile)[1])
+            end
+          end,
+        },
+      })
     end,
   },
 })
