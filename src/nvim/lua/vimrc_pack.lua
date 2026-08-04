@@ -156,4 +156,23 @@ function mod.has_plugin(name)
   return false
 end
 
+function mod.pack_sync()
+  -- loop through all plugins and check if they were explicitly installed via vimrc_pack.add()
+  -- collect the names of those that were not, and remove them
+  local to_remove = {}
+  for _, plug in ipairs(vim.pack.get()) do
+    if not _plugin_cache[plug.spec.name] then
+      table.insert(to_remove, plug.spec.name)
+    end
+  end
+
+  vim.print(
+    'Removing plugins not in vimrc_pack.add(): ' .. vim.inspect(to_remove)
+  )
+
+  if #to_remove > 0 then
+    vim.pack.del(to_remove)
+  end
+end
+
 return mod
