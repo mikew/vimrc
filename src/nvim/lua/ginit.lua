@@ -32,7 +32,7 @@ function mod.setup(ui_context)
 
   local font_size = get_value_or_star({
     ['macos'] = 13,
-    ['*'] = 10,
+    ['*'] = 11,
   }, client_lookups)
 
   local linespace = get_value_or_star({
