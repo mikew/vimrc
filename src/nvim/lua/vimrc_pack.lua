@@ -26,7 +26,7 @@ local _plugin_cache = {}
 --- @field setup? fun()
 --- @field before_packadd? fun()
 --- @field after_packadd? fun()
---- @field lazy? 'VimEnter'|'Schedule'|'Immediate'
+--- @field lazy? VimrcPackSetupCalltime
 --- @field pack_add_options? vim.pack.keyset.add
 
 --- @alias VimrcPackSetupCalltime 'VimEnter'|'Schedule'|'Immediate'
