@@ -52,7 +52,10 @@ function mod.add(specs, opts)
       src = spec[1],
       name = name,
       version = spec.version,
-      data = spec.data,
+      -- Multiple calls to `vim.pack.add()` with different data isn't actually
+      -- respected by `vim.pack`. Use `vimrc_pack.get_data_for()` to get the
+      -- merged data for a plugin instead. Just doing this for posterity.
+      data = spec_data[name],
     }
   end
 
